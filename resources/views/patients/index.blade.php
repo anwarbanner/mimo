@@ -10,13 +10,18 @@
 
     <div class="container mx-auto">
         <h1 class="text-4xl font-extrabold text-center text-blue-600 mb-8">Liste des Patients</h1>
-
+        @if (session('success'))
+            <div class="bg-green-500 text-white p-4 rounded mb-6">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="flex justify-end mb-6">
             <a href="{{ route('patients.create') }}" 
                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
                 Ajouter un Patient
             </a>
         </div>
+        
 
         <table class="w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-blue-600 text-white">
