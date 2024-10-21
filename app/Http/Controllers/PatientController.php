@@ -33,8 +33,10 @@ class PatientController extends Controller
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:patients',
             'telephone' => 'required|string|max:20',
-            'adresse' => 'required|string|max:255',
+            'adresse' => 'required|string',
             'date_naissance' => 'required|date',
+            'sexe' => 'required|in:M,F',
+            'observations' => 'nullable|string',
         ]);
 
         Patient::create($validatedData);
@@ -70,8 +72,10 @@ class PatientController extends Controller
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:patients,email,' . $id,
             'telephone' => 'required|string|max:20',
-            'adresse' => 'required|string|max:255',
+            'adresse' => 'required|string',
             'date_naissance' => 'required|date',
+            'sexe' => 'required|in:M,F',
+            'observations' => 'nullable|string',
         ]);
 
         $patient = Patient::findOrFail($id);

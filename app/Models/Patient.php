@@ -14,6 +14,8 @@ class Patient extends Model
         'email',
         'telephone',
         'adresse',
-        'date_naissance'
+        'date_naissance',
+        'sexe',
+        'observations',
     ];
 }

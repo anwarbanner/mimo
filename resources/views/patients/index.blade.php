@@ -9,23 +9,27 @@
 <body class="bg-gray-100 p-10">
 
     <div class="container mx-auto">
-        <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Liste des Patients</h1>
+        <h1 class="text-4xl font-extrabold text-center text-blue-600 mb-8">Liste des Patients</h1>
 
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('patients.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        <div class="flex justify-end mb-6">
+            <a href="{{ route('patients.create') }}" 
+               class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
                 Ajouter un Patient
             </a>
         </div>
 
-        <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-blue-600 text-white">
                 <tr>
-                    <th class="w-1/12 px-4 py-2 text-left">ID</th>
-                    <th class="w-2/12 px-4 py-2 text-left">Nom</th>
-                    <th class="w-2/12 px-4 py-2 text-left">Prénom</th>
-                    <th class="w-3/12 px-4 py-2 text-left">Email</th>
-                    <th class="w-2/12 px-4 py-2 text-left">Téléphone</th>
-                    <th class="w-1/12 px-4 py-2 text-center">Actions</th>
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Nom</th>
+                    <th class="px-4 py-2">Prénom</th>
+                    <th class="px-4 py-2">Email</th>
+                    <th class="px-4 py-2">Téléphone</th>
+                    <th class="px-4 py-2">Sexe</th>
+                    <th class="px-4 py-2">Date de Naissance</th>
+                    <th class="px-4 py-2">Observations</th>
+                    <th class="px-4 py-2 text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,18 +40,25 @@
                         <td class="px-4 py-2">{{ $patient->prenom }}</td>
                         <td class="px-4 py-2">{{ $patient->email }}</td>
                         <td class="px-4 py-2">{{ $patient->telephone }}</td>
+                        <td class="px-4 py-2">{{ $patient->sexe }}</td>
+                        <td class="px-4 py-2">{{ $patient->date_naissance }}</td>
+                        <td class="px-4 py-2">{{ $patient->observations ?? 'Aucune' }}</td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex space-x-2 justify-center">
-                                <a href="{{ route('patients.show', $patient->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">
+                                <a href="{{ route('patients.show', $patient->id) }}" 
+                                   class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                                     Voir
                                 </a>
-                                <a href="{{ route('patients.edit', $patient->id) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded">
+                                <a href="{{ route('patients.edit', $patient->id) }}" 
+                                   class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                                     Modifier
                                 </a>
-                                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');">
+                                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded">
+                                    <button type="submit" 
+                                            class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                                         Supprimer
                                     </button>
                                 </form>
@@ -56,14 +67,15 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-gray-500">Aucun patient trouvé.</td>
+                        <td colspan="9" class="text-center py-4 text-gray-500">Aucun patient trouvé.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
-        <div class="mt-4">
-            <a href="/" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+        <div class="mt-6">
+            <a href="/" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                 Retour à l'accueil
             </a>
         </div>
