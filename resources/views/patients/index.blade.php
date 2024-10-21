@@ -23,39 +23,39 @@
         </div>
         
 
-        <table class="w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full table-auto bg-white shadow-lg rounded-lg overflow-hidden">
             <thead class="bg-blue-600 text-white">
                 <tr>
-                    <th class="px-4 py-2">ID</th>
-                    <th class="px-4 py-2">Nom</th>
-                    <th class="px-4 py-2">Prénom</th>
-                    <th class="px-4 py-2">Email</th>
-                    <th class="px-4 py-2">Téléphone</th>
-                    <th class="px-4 py-2">Sexe</th>
-                    <th class="px-4 py-2">Date de Naissance</th>
-                    <th class="px-4 py-2">Observations</th>
-                    <th class="px-4 py-2 text-center">Actions</th>
+                    <th class="px-4 py-3 text-left">ID</th>
+                    <th class="px-4 py-3 text-left">Nom</th>
+                    <th class="px-4 py-3 text-left">Prénom</th>
+                    <th class="px-4 py-3 text-left">Email</th>
+                    <th class="px-4 py-3 text-left">Téléphone</th>
+                    <th class="px-4 py-3 text-left">Sexe</th>
+                    <th class="px-4 py-3 text-left">Date de Naissance</th>
+                    <th class="px-4 py-3 text-left">Observations</th>
+                    <th class="px-4 py-3 text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($patients as $patient)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-2">{{ $patient->id }}</td>
-                        <td class="px-4 py-2">{{ $patient->nom }}</td>
-                        <td class="px-4 py-2">{{ $patient->prenom }}</td>
-                        <td class="px-4 py-2">{{ $patient->email }}</td>
-                        <td class="px-4 py-2">{{ $patient->telephone }}</td>
-                        <td class="px-4 py-2">{{ $patient->sexe }}</td>
-                        <td class="px-4 py-2">{{ $patient->date_naissance }}</td>
-                        <td class="px-4 py-2">{{ $patient->observations ?? 'Aucune' }}</td>
-                        <td class="px-4 py-2 text-center">
+                    <tr class="border-b hover:bg-gray-100 transition duration-200">
+                        <td class="px-4 py-3">{{ $patient->id }}</td>
+                        <td class="px-4 py-3">{{ $patient->nom }}</td>
+                        <td class="px-4 py-3">{{ $patient->prenom }}</td>
+                        <td class="px-4 py-3">{{ $patient->email }}</td>
+                        <td class="px-4 py-3">{{ $patient->telephone }}</td>
+                        <td class="px-4 py-3">{{ $patient->sexe == 'M' ? 'Masculin' : 'Féminin' }}</td>
+                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
+                        <td class="px-4 py-3">{{ $patient->observations ?? 'Aucune' }}</td>
+                        <td class="px-4 py-3 text-center">
                             <div class="flex space-x-2 justify-center">
                                 <a href="{{ route('patients.show', $patient->id) }}" 
-                                   class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                                   class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
                                     Voir
                                 </a>
                                 <a href="{{ route('patients.edit', $patient->id) }}" 
-                                   class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                                   class="bg-yellow-500 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
                                     Modifier
                                 </a>
                                 <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
@@ -63,7 +63,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
-                                            class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                                            class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
                                         Supprimer
                                     </button>
                                 </form>
