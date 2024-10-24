@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
 Route::resource('products', ProductController::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +21,5 @@ Route::resource('products', ProductController::class);
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('patients', PatientController::class);
