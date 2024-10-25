@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\RdvController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,3 +22,8 @@ Route::get('/', function () {
 });
 
 Route::resource('patients', PatientController::class);
+
+Route::resource('rdvs', RdvController::class);
+Route::get('fullcalender', [FullCalenderController::class, 'index']);
+
+Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);

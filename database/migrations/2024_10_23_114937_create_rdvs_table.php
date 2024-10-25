@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('rdvs', function (Blueprint $table) {
             $table->id();
-            $table->string("motif");
-            $table->string("date");
-            $table->timestamp("heure_debut");
-            $table->timestamp("heure_fin");
-            $table->string("etat");
+            $table->bigInteger('patient_id')->unsigned();
+            $table->string('motif');
+            $table->date('date'); // Use date or dateTime as appropriate
+            $table->timestamp('heure_debut');
+            $table->timestamp('heure_fin')->nullable(); // Nullable if applicable
+            $table->string('etat')->nullable(); // Nullable if applicable
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
