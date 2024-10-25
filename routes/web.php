@@ -4,6 +4,9 @@ use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RdvController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+
+Route::resource('products', ProductController::class);
 
 
 /*
