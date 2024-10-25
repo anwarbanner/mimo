@@ -4,11 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<<<<<<< HEAD
-        <title>title of this project </title>
-=======
-        <title>title of this project</title>
->>>>>>> 162a4f953e2eabfa263b8d8941ed1190fa7ce71c
+        <title>mimo</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
