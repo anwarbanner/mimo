@@ -1,8 +1,9 @@
 <?php
-
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\FullCalenderController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\RdvController;
+use Illuminate\Support\Facades\Route;
 
 
 
@@ -31,3 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 
 });
+
+Route::resource('patients', PatientController::class);
+
+
+Route::resource('rdvs', RdvController::class);
+Route::get('fullcalender', [FullCalenderController::class, 'index']);
+
+Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
