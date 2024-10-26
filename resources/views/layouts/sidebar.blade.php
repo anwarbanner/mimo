@@ -21,6 +21,15 @@
     </a>
   </li>
 
+  
+  <li class="nav-item">
+    <a class="nav-link" href="/patients">
+      <i class="fas fa-fw fa-solid fa-users"></i>
+      <span>Gestion des patients</span>
+    </a>
+  </li>
+
+
   <li class="nav-item">
     <a class="nav-link" href="">
       <i class="fas fa-fw fa-solid fa-mortar-pestle"></i>
@@ -28,12 +37,7 @@
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="">
-      <i class="fas fa-fw fa-solid fa-users"></i>
-      <span>Gestion des patients</span>
-    </a>
-  </li>
+
 
   <!-- Nav Item - Profile -->
   <li class="nav-item">

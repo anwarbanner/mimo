@@ -1,90 +1,57 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Patients</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-10">
+@extends('layouts.app')
 
-    <div class="container mx-auto">
-        <h1 class="text-4xl font-extrabold text-center text-blue-600 mb-8">Liste des Patients</h1>
-        @if (session('success'))
-            <div class="bg-green-500 text-white p-4 rounded mb-6">
-                {{ session('success') }}
-            </div>
-        @endif
-        <div class="flex justify-end mb-6">
-            <a href="{{ route('patients.create') }}" 
-               class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-                Ajouter un Patient
-            </a>
+@section('title')
+
+@section('contents')
+<div class="container mx-auto p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Liste des Patients</h1>
+        <a href="{{ route('patients.create') }}" 
+           class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-green-700 transition duration-300">
+            Ajouter un Patient
+        </a>
+    </div>
+    
+    @if(Session::has('success'))
+        <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-700 rounded-lg" role="alert">
+            {{ Session::get('success') }}
         </div>
-        
+    @endif
 
-        <table class="w-full table-auto bg-white shadow-lg rounded-lg overflow-hidden">
-            <thead class="bg-blue-600 text-white">
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-indigo-600 text-white">
                 <tr>
-                    <th class="px-4 py-3 text-left">ID</th>
-                    <th class="px-4 py-3 text-left">Nom</th>
-                    <th class="px-4 py-3 text-left">Prénom</th>
-                    <th class="px-4 py-3 text-left">Email</th>
-                    <th class="px-4 py-3 text-left">Téléphone</th>
-                    <th class="px-4 py-3 text-left">Sexe</th>
-                    <th class="px-4 py-3 text-left">Date de Naissance</th>
-                    <th class="px-4 py-3 text-left">Observations</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium">Nom</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium">Prénom</th>
+                    <th class="px-6 py-3 text-center text-sm font-medium">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="bg-gray-50 divide-y divide-gray-200">
                 @forelse($patients as $patient)
-                    <tr class="border-b hover:bg-gray-100 transition duration-200">
-                        <td class="px-4 py-3">{{ $patient->id }}</td>
-                        <td class="px-4 py-3">{{ $patient->nom }}</td>
-                        <td class="px-4 py-3">{{ $patient->prenom }}</td>
-                        <td class="px-4 py-3">{{ $patient->email }}</td>
-                        <td class="px-4 py-3">{{ $patient->telephone }}</td>
-                        <td class="px-4 py-3">{{ $patient->sexe == 'M' ? 'Masculin' : 'Féminin' }}</td>
-                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
-                        <td class="px-4 py-3">{{ $patient->observations ?? 'Aucune' }}</td>
-                        <td class="px-4 py-3 text-center">
-                            <div class="flex space-x-2 justify-center">
-                                <a href="{{ route('patients.show', $patient->id) }}" 
-                                   class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                                    Voir
-                                </a>
-                                <a href="{{ route('patients.edit', $patient->id) }}" 
-                                   class="bg-yellow-500 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                                    Modifier
-                                </a>
-                                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                                        Supprimer
-                                    </button>
-                                </form>
+                    <tr class="hover:bg-gray-100 transition duration-200">
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ $patient->nom }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ $patient->prenom }}</td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex justify-center space-x-2">
+                            <a 
+    href="{{ route('patients.show', $patient->id) }}" 
+    class="bg-blue-500 text-white py-1 px-3 rounded-lg shadow hover:bg-blue-600 transition duration-300">
+    Voir
+</a>
+
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-gray-500">Aucun patient trouvé.</td>
+                        <td class="text-center text-gray-500 py-4" colspan="3">Aucun patient trouvé.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-
-        <div class="mt-6">
-            <a href="/" 
-               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
-                Retour à l'accueil
-            </a>
-        </div>
     </div>
+</div>
 
-</body>
-</html>
+
+@endsection

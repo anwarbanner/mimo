@@ -66,23 +66,28 @@ class PatientController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email|unique:patients,email,' . $id,
-            'telephone' => 'required|string|max:20',
-            'adresse' => 'required|string',
-            'date_naissance' => 'required|date',
-            'sexe' => 'required|in:M,F',
-            'observations' => 'nullable|string',
-        ]);
+{
+    // Validate the incoming request
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'telephone' => 'required|string|max:20',
+        'adresse' => 'nullable|string|max:255',
+        'date_naissance' => 'nullable|date',
+        'sexe' => 'required|in:M,F',
+        'observations' => 'nullable|string',
+    ]);
 
-        $patient = Patient::findOrFail($id);
-        $patient->update($validatedData);
+    // Find the patient by ID and update
+    $patient = Patient::findOrFail($id);
+    $patient->update($request->all());
 
-        return redirect()->route('patients.index')->with('success', 'Patient mis à jour avec succès.');
-    }
+    // Redirect with success message
+    return redirect()->route('patients.show', $patient->id)
+                     ->with('success', 'Patient updated successfully');
+}
+
 
     /**
      * Remove the specified resource from storage.
