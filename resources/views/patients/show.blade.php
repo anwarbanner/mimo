@@ -61,10 +61,11 @@
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <button type="submit" 
-                    class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300">
-                modifier
-            </button>
+                 <button type="button" onclick="document.getElementById('updateForm').submit()"
+                        class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300">
+                 Modifier
+               </button>
+
 
             <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="w-full md:w-auto">
