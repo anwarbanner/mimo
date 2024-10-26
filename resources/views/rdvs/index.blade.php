@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel Fullcalendar Tutorial - ItSolutionStuff.com</title>
+    <title>Agenda</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -15,7 +15,7 @@
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center mb-6">Laravel FullCalendar Tutorial Example</h1>
+        <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
         <div id='calendar' class="bg-white shadow-lg rounded-lg overflow-hidden p-4"></div>
     </div>
 

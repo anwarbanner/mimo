@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('rdvs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('patient_id')->unsigned();
-            $table->string('motif');
-            $table->date('date'); // Use date or dateTime as appropriate
-            $table->timestamp('heure_debut');
-            $table->timestamp('heure_fin')->nullable(); // Nullable if applicable
-            $table->string('etat')->nullable(); // Nullable if applicable
-            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+            $table->bigInteger('patient_id')->unsigned()->nullable(); // Make nullable if not always required
+            $table->string('title'); // Use 'title' instead of 'motif'
+            $table->dateTime('start'); // Combine date and time into one column
+            $table->dateTime('end'); // Combine date and time into one column
+            $table->boolean('allDay')->default(false); // Add an allDay field
+            $table->string('etat')->default('ouvert'); // Set default status to 'ouvert'
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade')->nullable();
             $table->timestamps();
         });
+
+
     }
 
 

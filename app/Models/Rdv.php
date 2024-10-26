@@ -10,10 +10,10 @@ class Rdv extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
-        'motif',
-        'date',
-        'heure_debut',
-        'heure_fin',
+        'title',
+        'start',
+        'end',
+        'allDay',
         'etat',
     ];
 
