@@ -20,3 +20,4 @@ Route::get('/', function () {
 });
 
 Route::resource('patients', PatientController::class);
+Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');

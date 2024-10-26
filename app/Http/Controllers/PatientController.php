@@ -6,18 +6,15 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
+        
         $patients = Patient::all();
         return view('patients.index', compact('patients'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
+    
     public function create()
     {
         return view('patients.create');
