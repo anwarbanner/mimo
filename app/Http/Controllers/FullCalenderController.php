@@ -10,9 +10,9 @@ class FullCalenderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Rdv::whereDate('heure_debut', '>=', $request->start)
-                        ->whereDate('heure_fin', '<=', $request->end)
-                        ->get(['id', 'motif as title', 'heure_debut as start', 'heure_fin as end', 'etat']); // Include necessary fields
+            $data = Rdv::whereDate('start', '>=', $request->start)
+                        ->whereDate('end', '<=', $request->end)
+                        ->get(['id', 'title', 'start', 'end', 'etat']); // Include necessary fields
 
             return response()->json($data);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Patient;
 use App\Models\Rdv;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ class RdvController extends Controller
     // Display a listing of the resource
     public function index()
     {
-        
+
         $rdvs = Rdv::all();
         return view('rdvs.index', compact('rdvs')); // Make sure to create this view
     }
@@ -18,25 +19,34 @@ class RdvController extends Controller
     // Show the form for creating a new resource
     public function create()
     {
-        return view('rdvs.create'); // Create this view for the form
+        $patients = Patient::all();
+        return view('rdvs.create', compact('patients')); // Create this view for the form
     }
 
     // Store a newly created resource in storage
     public function store(Request $request)
     {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'motif' => 'required|string|max:255',
-            'date' => 'required|date',
-            'heure_debut' => 'required|date_format:H:i:s',
-            'heure_fin' => 'nullable|date_format:H:i:s',
-            'etat' => 'nullable|string|max:255',
+        $validatedData = $request->validate([
+            'patient_id' => 'nullable|exists:patients,id',
+            'title' => 'required|string|max:255',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
         ]);
 
-        Rdv::create($request->all());
+        Rdv::create([
+            'patient_id' => $validatedData['patient_id'],
+            'title' => $validatedData['title'],
+            'start' => $validatedData['start'],
+            'end' => $validatedData['end'],
+            'etat' => 'ouvert', // Default state
+        ]);
 
-        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous created successfully.');
+        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous créé avec succès');
     }
+
+
+
+
 
     // Display the specified resource
     public function show($id)
