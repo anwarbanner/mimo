@@ -45,15 +45,15 @@
                     <td class="px-4 py-2 text-center">
                         <div class="flex space-x-2 justify-center">
                             <a href="{{ route('patients.show', $patient->id) }}" 
-                               class="bg-blue-600 hover:bg-blue-800 text-white py-1 px-3 rounded-md transition duration-200 text-xs">Voir</a>
+                               class="bg-blue-600 hover:bg-blue-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Voir</a>
                             <a href="{{ route('patients.edit', $patient->id) }}" 
-                               class="bg-yellow-600 hover:bg-yellow-800 text-white py-1 px-6 rounded-md transition duration-200 text-xs">Modifier</a>
+                               class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Modifier</a>
                             <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
                                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
-                                        class="bg-red-600 hover:bg-red-800 text-white py-1 px-3 rounded-md transition duration-200 text-xs">Supprimer</button>
+                                        class="bg-red-600 hover:bg-red-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Supprimer</button>
                             </form>
                         </div>
                     </td>
