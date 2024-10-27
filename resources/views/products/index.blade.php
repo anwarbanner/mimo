@@ -1,14 +1,28 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+<body>
+    
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold mb-4">Liste des Produits</h1>
         <a href="{{ route('products.create') }}" class="inline-block mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Ajouter un Produit</a>
 
         @if (session('success'))
-            <div class="mb-4 text-green-600">{{ session('success') }}</div>
+        <div class="mb-4 text-green-600">{{ session('success') }}</div>
         @endif
-
+        
         <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
             <thead>
                 <tr class="bg-gray-100">
@@ -25,9 +39,9 @@
                         <td class="py-4 px-4 border-b text-sm text-gray-600">{{ $product->name }}</td>
                         <td class="py-4 px-4 border-b text-sm text-gray-600">
                             @if ($product->image)
-                                <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" class="w-20 h-20 object-cover rounded-lg shadow-sm">
+                            <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" class="w-20 h-20 object-cover rounded-lg shadow-sm">
                             @else
-                                <p class="text-gray-500">No image available</p>
+                            <p class="text-gray-500">No image available</p>
                             @endif
                         </td>
                         <td class="py-4 px-4 border-b text-sm text-gray-600">{{ $product->description }}</td>
@@ -45,4 +59,5 @@
             </tbody>
         </table>
     </div>
-@endsection
+    
+</body>
