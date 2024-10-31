@@ -1,19 +1,17 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="title">Profile</x-slot> <!-- Set the page title if your layout includes it -->
 
-@section('title', 'Profile')
-
-@section('contents')
     <hr />
     @if(session('success'))
-    <div class="alert alert-success text-center">
-        {{ session('success') }}
-    </div>
+        <div class="alert alert-success text-center">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if(session('info'))
-    <div class="alert alert-info text-center">
-        {{ session('info') }}
-    </div>
+        <div class="alert alert-info text-center">
+            {{ session('info') }}
+        </div>
     @endif
 
     <form method="POST" enctype="multipart/form-data" id="profile_setup_frm" action="{{ route('profile.update') }}">
@@ -26,17 +24,16 @@
                         <h4 class="text-right">Profile</h4>
                     </div>
                     <div class="row" id="res"></div>
+
                     <div class="row mt-2">
                         <div class="col-md-6">
                             <label class="labels">Nom</label>
                             <input type="text" name="name" class="form-control" placeholder="nom et prenom" value="{{ auth()->user()->name }}">
                         </div>
-                        
                         <div class="col-md-6">
                             <label class="labels">Email</label>
                             <input type="text" name="email" class="form-control" value="{{ auth()->user()->email }}" placeholder="Email">
                         </div>
-                       
                     </div>
 
                     <hr class="border-2">
@@ -61,37 +58,30 @@
                         </div>
                         <div class="col-md-6">
                             <label class="labels">Confirmer mot de passe</label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm le mot de passe">
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmer le mot de passe">
                         </div>
                     </div>
-                      
+
                     <hr class="border-2">
 
                     <div class="row mt-4">  
                         <div class="col-md-6">
                             <label class="labels">Profile Image</label>
-                            <input type="file" name="logo_image" id="logo_image" class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />                     
-                                      @if(auth()->user()->profile_image)
-                            <div class="mt-2">
-                               <img src="{{ asset('images/profile/' . auth()->user()->profile_image) }}" alt="Profile Image" style="max-width: 200px; height: auto;">
-                            </div>
-                              @endif
+                            <input type="file" name="profile_image" id="profile_image" class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            @if(auth()->user()->profile_image)
+                                <div class="mt-2">
+                                    <img src="{{ asset('images/profile/' . auth()->user()->profile_image) }}" alt="Profile Image" style="max-width: 200px; height: auto;">
+                                </div>
+                            @endif
                         </div>
-                        <div class="col-md-6">
-                            <label class="labels">Logo Image</label>
-                            <input type="file" name="logo_image" class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                              @if(auth()->user()->logo_image)
-                             <div class="mt-2">
-                               <img src="{{ asset('images/logo/' . auth()->user()->logo_image) }}" alt="Logo Image" style="max-width: 200px; height: auto;">
-                             </div>
-                              @endif
-                        </div>
+                        
                     </div>
-                    
-                    <div class="mt-5 text-center"><button id="btn" class="btn btn-success profile-button" type="submit">Modifier</button></div>
+
+                    <div class="mt-5 text-center">
+                        <button id="btn" class="btn btn-success profile-button" type="submit">Modifier</button>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
-    
-@endsection
+</x-app-layout>

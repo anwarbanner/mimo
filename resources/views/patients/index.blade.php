@@ -4,6 +4,7 @@
 <div class="container mx-auto p-10 max-w-6xl">
     <h1 class="text-5xl font-extrabold text-center text-blue-700 mb-8">Liste des Patients</h1>
 
+
     <!-- Message de succès -->
     @if (session('success'))
         <div class="bg-green-600 text-white p-4 rounded-lg shadow-lg mb-6">
