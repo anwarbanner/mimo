@@ -13,7 +13,7 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'image', // Add image to the fillable array
+        'image', 
     ];
     
 }

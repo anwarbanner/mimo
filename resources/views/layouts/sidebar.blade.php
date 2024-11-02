@@ -47,6 +47,13 @@
     </a>
   </li>
 
+  <li class="nav-item">
+    <a class="nav-link" href="/rdvs">
+      <i class="fas fa-fw fa-solid fa-calendar"></i>
+      <span>Agenda</span>
+    </a>
+  </li>
+
   <!-- Divider -->
   <hr class="sidebar-divider">
 
