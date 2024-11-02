@@ -1,3 +1,5 @@
+
+<!-- resources/views/fullcalendar.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,137 +7,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Include Tailwind and other styles -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link href="admin_assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="admin_assets/img/tab-icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <!-- Include jQuery, Moment, and FullCalendar scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
-        <div id='calendar' class="bg-white shadow-lg rounded-lg overflow-hidden p-4"></div>
+
+    <div id="wrapper">
+
+
+
+        <x-sidebar />
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <x-navbar />
+
+                    <x-container>
+
+                        <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
+                        <div id='calendar' class="bg-white shadow-lg rounded-lg overflow-hidden p-4"></div>
+                        <x-fullcalendar-script />
+                    </x-container>
+                    <!-- Page Heading -->
+
+
+            </div>
+            <x-footer />
+        </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            var SITEURL = "{{ url('/') }}";
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-            var calendar = $('#calendar').fullCalendar({
-                editable: true,
-                events: SITEURL + "/fullcalender",
-                displayEventTime: false,
-                minTime: "07:00:00",
-                maxTime: "19:00:00",
+    <!-- JavaScript files -->
+    {{-- <script src="admin_assets/vendor/jquery/jquery.min.js"></script> --}}
+    {{-- <script src="admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> --}}
+    {{-- <script src="admin_assets/vendor/jquery-easing/jquery.easing.min.js"></script> --}}
+    <script src="admin_assets/js/sb-admin-2.min.js"></script>
 
-                eventRender: function(event, element) {
-                    var displayTitle = event.title;
-                    if (event.patient_id) {
-                        displayTitle += ' (' + event.patient_id + ')';
-                    }
-                    element.find('.fc-title').text(displayTitle);
-                },
 
-                selectable: true,
-                selectHelper: true,
+    <!-- Calendar Initialization Script -->
 
-                select: function(start, end, allDay) {
-                    var title = prompt('Event Title:');
-                    var patientId = prompt('Patient ID:');
-                    if (title && patientId) {
-                        var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                        var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-
-                        $.ajax({
-                            url: SITEURL + "/fullcalenderAjax",
-                            data: {
-                                title: title,
-                                patient_id: patientId,
-                                start: startDate,
-                                end: endDate,
-                                allDay: allDay,
-                                type: 'add'
-                            },
-                            type: "POST",
-                            success: function(data) {
-                                displayMessage("Event Created Successfully");
-                                calendar.fullCalendar('renderEvent', {
-                                    id: data.id,
-                                    title: title,
-                                    patient_id: patientId,
-                                    start: startDate,
-                                    end: endDate,
-                                    allDay: allDay
-                                }, true);
-                                calendar.fullCalendar('unselect');
-                            }
-                        });
-                    }
-                },
-
-                eventDrop: function(event) {
-                    var newStart = event.start ? event.start.format("YYYY-MM-DD HH:mm:ss") : null;
-                    var newEnd = event.end ? event.end.format("YYYY-MM-DD HH:mm:ss") : newStart;
-
-                    console.log("Event ID:", event.id, "New Start:", newStart, "New End:", newEnd);
-
-                    $.ajax({
-                        url: SITEURL + '/fullcalenderAjax',
-                        data: {
-                            id: event.id,
-                            title: event.title,
-                            start: newStart,
-                            end: newEnd,
-                            allDay: event.allDay,
-                            type: 'update'
-                        },
-                        type: "POST",
-                        success: function(response) {
-                            displayMessage("Event Updated Successfully");
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Update failed:", xhr.responseText);
-                        }
-                    });
-                },
-
-                eventClick: function(event) {
-                    var deleteConfirm = confirm("Do you really want to delete?");
-                    if (deleteConfirm) {
-                        $.ajax({
-                            type: "POST",
-                            url: SITEURL + '/fullcalenderAjax',
-                            data: {
-                                id: event.id,
-                                type: 'delete'
-                            },
-                            success: function(response) {
-                                calendar.fullCalendar('removeEvents', event.id);
-                                displayMessage("Event Deleted Successfully");
-                            }
-                        });
-                    }
-                },
-
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                }
-            });
-        });
-
-        function displayMessage(message) {
-            toastr.success(message, 'Event');
-        }
-    </script>
 </body>
 </html>
