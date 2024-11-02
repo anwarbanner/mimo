@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('contents')
+<x-app-layout>
+<x-slot name="title">Dashboard</x-slot>
 <div class="container mx-auto p-6 max-w-4xl xl:max-w-6xl">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Modifier le Patient</h1>
 
@@ -83,4 +82,4 @@
         </div>
     </form>
 </div>
-@endsection
+</x-app-layout>
