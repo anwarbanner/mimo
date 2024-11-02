@@ -4,7 +4,7 @@
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
     <!-- Display Logo Image if available, otherwise fallback to default logo -->
     <img class="rounded-circle" 
-         src="{{ auth()->user()->logo_image ? asset('images/logo/' . auth()->user()->logo_image) : 'path_to_default_logo_image' }}" 
+         src="" 
          alt="Logo" 
          style="width: 90px; height: 90px; object-fit: cover; border-radius: 50%;">
   </a>
@@ -31,7 +31,7 @@
 
 
   <li class="nav-item">
-    <a class="nav-link" href="">
+    <a class="nav-link" href="/products">
       <i class="fas fa-fw fa-solid fa-mortar-pestle"></i>
       <span>Gestion des produits</span>
     </a>
