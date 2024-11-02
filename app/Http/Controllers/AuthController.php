@@ -82,7 +82,7 @@ class AuthController extends Controller
             'address' => 'nullable|string|max:255',
             'password' => 'nullable|confirmed|min:8', 
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
-            'logo_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+             
         ]);
     
         $user = auth()->user();
@@ -123,13 +123,7 @@ class AuthController extends Controller
             $changesDetected = true;
         }
     
-        // Handle logo image upload
-        if ($request->hasFile('logo_image')) {
-            $logoImageName = time() . '.' . $request->logo_image->extension();
-            $request->logo_image->move(public_path('images/logo'), $logoImageName);
-            $user->logo_image = $logoImageName;
-            $changesDetected = true;
-        }
+        
     
         // Save the updated user data if any changes were detected
         if ($changesDetected) {

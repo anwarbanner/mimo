@@ -1,8 +1,6 @@
-@extends('layouts.app')
-  
-@section('title')
-  
-@section('contents')
+<x-app-layout>
+<x-slot name="title">Dashboard</x-slot>
+
 <div class="container-fluid">
 
                     <!-- Page Heading -->
@@ -178,4 +176,4 @@
                         </div>
                     </div>
                 </div>
-@endsection
+</x-app-layout>
