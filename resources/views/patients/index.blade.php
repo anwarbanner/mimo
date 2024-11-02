@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('contents')
+<x-app-layout>
+<x-slot name="title">Dashboard</x-slot>
 <div class="container mx-auto p-10 max-w-6xl">
     <h1 class="text-5xl font-extrabold text-center text-blue-700 mb-8">Liste des Patients</h1>
 
@@ -45,15 +44,15 @@
                     <td class="px-4 py-2">{{ $patient->observations ?? 'Aucune' }}</td>
                     <td class="px-4 py-2 text-center">
                         <div class="flex space-x-2 justify-center">
-                            <a href="{{ route('patients.show', $patient->id) }}" 
+                            <a href="{{ route('patients.show', $patient->id) }}"
                                class="bg-blue-600 hover:bg-blue-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Voir</a>
-                            <a href="{{ route('patients.edit', $patient->id) }}" 
+                            <a href="{{ route('patients.edit', $patient->id) }}"
                                class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Modifier</a>
-                            <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
+                            <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
                                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
+                                <button type="submit"
                                         class="bg-red-600 hover:bg-red-800 text-white py-2 px-6 rounded-md transition duration-200 text-xs">Supprimer</button>
                             </form>
                         </div>
@@ -80,4 +79,4 @@
         });
     });
 </script>
-@endsection
+</x-app-layout>

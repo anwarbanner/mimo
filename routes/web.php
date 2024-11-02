@@ -6,7 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RdvController;
 use Illuminate\Support\Facades\Route;
 
-
+//comment
 
 Route::get('/', function () {
     return view('auth/login');
