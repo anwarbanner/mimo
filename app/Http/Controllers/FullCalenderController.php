@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Rdv;
@@ -10,13 +9,23 @@ class FullCalenderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Rdv::whereDate('start', '>=', $request->start)
+            $data = Rdv::with('patient') // Eager load patient relation
+                        ->whereDate('start', '>=', $request->start)
                         ->whereDate('end', '<=', $request->end)
-                        ->get(['id', 'title', 'start', 'end', 'etat']); // Include necessary fields
+                        ->get(['id', 'title', 'start', 'end', 'etat', 'patient_id']);
 
-            return response()->json($data);
+            return response()->json($data->map(function($event) {
+                return [
+                    'id' => $event->id,
+                    'title' => $event->title . ' (' . $event->patient->nom . ' ' . $event->patient->prenom . ')',
+                    'start' => $event->start,
+                    'end' => $event->end,
+                    'etat' => $event->etat,
+                    'patient_id' => $event->patient_id,
+                ];
+            }));
         }
-        return view('rdvs.index'); // Ensure you have this view
+        return view('rdvs.index');
     }
 
     public function ajax(Request $request)
@@ -24,32 +33,44 @@ class FullCalenderController extends Controller
         switch ($request->type) {
             case 'add':
                 $event = Rdv::create([
-                    'patient_id' => $request->patient_id, // Make sure to pass this in the request
-                    'motif' => $request->title, // Assuming 'title' is used for the motif
-                    'date' => $request->date, // Include this if you're passing a date
-                    'heure_debut' => $request->heure_debut,
-                    'heure_fin' => $request->heure_fin,
-                    'etat' => $request->etat, // Optional
+                    'patient_id' => $request->patient_id,
+                    'title' => $request->title,
+                    'start' => $request->start,
+                    'end' => $request->end,
+                    'allDay' => $request->allDay ?? false, // Default to false if not set
+                    'etat' => $request->etat ?? 'ouvert', // Default to 'ouvert' if not set
                 ]);
 
                 return response()->json($event);
 
-            case 'update':
-                $event = Rdv::find($request->id);
-                $event->update([
-                    'motif' => $request->title, // Assuming 'title' is the motif
-                    'heure_debut' => $request->heure_debut,
-                    'heure_fin' => $request->heure_fin,
-                    'etat' => $request->etat, // Optional
-                ]);
+                case 'update':
+                    $event = Rdv::find($request->id);
+                    if (!$event) {
+                        return response()->json(['success' => false, 'message' => 'Event not found.']);
+                    }
 
-                return response()->json($event);
+                    $validatedData = $request->validate([
+                        'title' => 'required|string',
+                        'start' => 'required|date',
+                        'end' => 'required|date',
+                    ]);
 
+                    $event->update([
+                        'title' => $validatedData['title'],
+                        'start' => $validatedData['start'],
+                        'end' => $validatedData['end'],
+                        'allDay' => $request->allDay ? 1 : 0,
+                        'etat' => $request->etat ?? $event->etat,
+                    ]);
+
+                    return response()->json(['success' => true, 'event' => $event]);
             case 'delete':
                 $event = Rdv::find($request->id);
-                $event->delete();
-
-                return response()->json(['success' => true]);
+                if ($event) {
+                    $event->delete();
+                    return response()->json(['success' => true]);
+                }
+                return response()->json(['success' => false, 'message' => 'Event not found.']);
 
             default:
                 return response()->json(['success' => false, 'message' => 'Invalid request type.']);

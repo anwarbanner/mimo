@@ -33,33 +33,35 @@
                 editable: true,
                 events: SITEURL + "/fullcalender",
                 displayEventTime: false,
-                minTime: "07:00:00",  // Set minimum time to 7 AM
-                maxTime: "19:00:00",  // Set maximum time to 7 PM
-                views: {
-                    agenda: {
-                        // You can also set options for agenda views here if needed
-                    }
-                },
+                minTime: "07:00:00",
+                maxTime: "19:00:00",
+
                 eventRender: function(event, element) {
-                    if (event.allDay === 'true') {
-                        event.allDay = true;
-                    } else {
-                        event.allDay = false;
+                    var displayTitle = event.title;
+                    if (event.patient_id) {
+                        displayTitle += ' (' + event.patient_id + ')';
                     }
+                    element.find('.fc-title').text(displayTitle);
                 },
+
                 selectable: true,
                 selectHelper: true,
+
                 select: function(start, end, allDay) {
                     var title = prompt('Event Title:');
-                    if (title) {
-                        var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
-                        var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
+                    var patientId = prompt('Patient ID:');
+                    if (title && patientId) {
+                        var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                        var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+
                         $.ajax({
                             url: SITEURL + "/fullcalenderAjax",
                             data: {
                                 title: title,
-                                start: start,
-                                end: end,
+                                patient_id: patientId,
+                                start: startDate,
+                                end: endDate,
+                                allDay: allDay,
                                 type: 'add'
                             },
                             type: "POST",
@@ -68,8 +70,9 @@
                                 calendar.fullCalendar('renderEvent', {
                                     id: data.id,
                                     title: title,
-                                    start: start,
-                                    end: end,
+                                    patient_id: patientId,
+                                    start: startDate,
+                                    end: endDate,
                                     allDay: allDay
                                 }, true);
                                 calendar.fullCalendar('unselect');
@@ -77,27 +80,36 @@
                         });
                     }
                 },
-                eventDrop: function(event, delta) {
-                    var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
-                    var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
+
+                eventDrop: function(event) {
+                    var newStart = event.start ? event.start.format("YYYY-MM-DD HH:mm:ss") : null;
+                    var newEnd = event.end ? event.end.format("YYYY-MM-DD HH:mm:ss") : newStart;
+
+                    console.log("Event ID:", event.id, "New Start:", newStart, "New End:", newEnd);
+
                     $.ajax({
                         url: SITEURL + '/fullcalenderAjax',
                         data: {
-                            title: event.title,
-                            start: start,
-                            end: end,
                             id: event.id,
+                            title: event.title,
+                            start: newStart,
+                            end: newEnd,
+                            allDay: event.allDay,
                             type: 'update'
                         },
                         type: "POST",
                         success: function(response) {
                             displayMessage("Event Updated Successfully");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Update failed:", xhr.responseText);
                         }
                     });
                 },
+
                 eventClick: function(event) {
-                    var deleteMsg = confirm("Do you really want to delete?");
-                    if (deleteMsg) {
+                    var deleteConfirm = confirm("Do you really want to delete?");
+                    if (deleteConfirm) {
                         $.ajax({
                             type: "POST",
                             url: SITEURL + '/fullcalenderAjax',
@@ -112,13 +124,13 @@
                         });
                     }
                 },
+
                 header: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
                 }
             });
-
         });
 
         function displayMessage(message) {
