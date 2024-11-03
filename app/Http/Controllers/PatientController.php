@@ -81,8 +81,8 @@ class PatientController extends Controller
     $patient->update($request->all());
 
     // Redirect with success message
-    return redirect()->route('patients.show', $patient->id)
-                     ->with('success', 'Patient updated successfully');
+    return redirect()->route('patients.index', $patient->id)
+                     ->with('success', 'Patient modifié avec succès');
 }
 
 

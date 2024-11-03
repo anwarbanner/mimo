@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('patients', PatientController::class);
 
 
+
 Route::resource('rdvs', RdvController::class);
 Route::get('fullcalender', [FullCalenderController::class, 'index']);
 
