@@ -3,6 +3,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SoinController;
 use App\Http\Controllers\RdvController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('patients', PatientController::class);
 
+Route::resource('soins', SoinController::class);
 
 
 Route::resource('rdvs', RdvController::class);

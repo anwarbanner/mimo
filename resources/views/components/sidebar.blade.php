@@ -37,6 +37,19 @@
     </a>
   </li>
 
+  <li class="nav-item">
+    <a class="nav-link" href="/soins">
+      <i class="fas fa-fw fa-solid fa-hand-holding-heart"></i>
+      <span>Gestion des Soins</span>
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" href="/rdvs">
+      <i class="fas fa-fw fa-solid fa-calendar"></i>
+      <span>Agenda</span>
+    </a>
+  </li>
 
 
   <!-- Nav Item - Profile -->
@@ -47,12 +60,6 @@
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="/rdvs">
-      <i class="fas fa-fw fa-solid fa-calendar"></i>
-      <span>Agenda</span>
-    </a>
-  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider">
