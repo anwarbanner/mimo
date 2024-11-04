@@ -10,7 +10,7 @@
                                 class="fas fa-download fa-sm text-white-50"></i> generer le rapport</a>
                     </div>
 
-                    <!-- Content Row -->
+  <!-- Content Row -->
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
@@ -20,8 +20,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                nombre des clients</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
+                                            Nombre des patients</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $patientCount }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-solid fa-users fa-2x text-gray-300"></i>
@@ -30,6 +30,8 @@
                                 </div>
                             </div>
                         </div>
+
+                                      
 
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">

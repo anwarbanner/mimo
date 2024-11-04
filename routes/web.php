@@ -40,6 +40,9 @@ Route::resource('patients', PatientController::class);
 Route::resource('soins', SoinController::class);
 
 
+Route::get('/dashboard', [PatientController::class, 'dashboard'])->name('dashboard');
+
+
 Route::resource('rdvs', RdvController::class);
 Route::get('fullcalender', [FullCalenderController::class, 'index']);
 
