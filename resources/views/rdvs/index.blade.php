@@ -1,7 +1,7 @@
-
 <!-- resources/views/fullcalendar.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link href="admin_assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="admin_assets/img/tab-icon.png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
@@ -23,6 +25,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
+
 <body class="bg-gray-100">
 
     <div id="wrapper">
@@ -36,13 +39,13 @@
             <div id="content">
                 <x-navbar />
 
-                    <x-container>
+                <x-container>
 
-                        <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
-                        <div id='calendar' class="bg-white shadow-lg rounded-lg overflow-hidden p-4"></div>
-                        <x-fullcalendar-script />
-                    </x-container>
-                    <!-- Page Heading -->
+                    <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
+                    <div id='calendar' class="bg-white shadow-lg rounded-lg overflow-hidden p-4"></div>
+                    <x-fullcalendar-script />
+                </x-container>
+                <!-- Page Heading -->
 
 
             </div>
@@ -56,14 +59,10 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- JavaScript files -->
-    {{-- <script src="admin_assets/vendor/jquery/jquery.min.js"></script> --}}
-    {{-- <script src="admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> --}}
-    {{-- <script src="admin_assets/vendor/jquery-easing/jquery.easing.min.js"></script> --}}
     <script src="admin_assets/js/sb-admin-2.min.js"></script>
 
 
-    <!-- Calendar Initialization Script -->
 
 </body>
+
 </html>
