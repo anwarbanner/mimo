@@ -23,12 +23,13 @@
                     <tr class="hover:bg-gray-50 transition duration-200">
                         <td class="py-4 px-4 border-b text-sm text-gray-600">{{ $product->name }}</td>
                         <td class="py-4 px-4 border-b text-sm text-gray-600">
-                            @if ($product->image)
-                            <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" class="w-20 h-20 object-cover rounded-lg shadow-sm">
-                            @else
-                            <p class="text-gray-500">No image available</p>
-                            @endif
-                        </td>
+    @if ($product->image)
+        <img src="data:image/jpeg;base64,{{ $product->image }}" alt="Product Image" class="w-20 h-20 object-cover rounded-lg shadow-sm">
+    @else
+        <p class="text-gray-500">No image available</p>
+    @endif
+</td>
+
                         <td class="py-4 px-4 border-b text-sm text-gray-600">{{ $product->description }}</td>
                         <td class="py-4 px-4 border-b text-sm text-gray-600">{{ $product->price }}</td>
                         <td class="py-4 px-4 border-b text-sm">

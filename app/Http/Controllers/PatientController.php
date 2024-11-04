@@ -81,11 +81,19 @@ class PatientController extends Controller
     $patient->update($request->all());
 
     // Redirect with success message
-    return redirect()->route('patients.show', $patient->id)
-                     ->with('success', 'Patient updated successfully');
+    return redirect()->route('patients.index', $patient->id)
+                     ->with('success', 'Patient modifié avec succès');
 }
 
 
+public function dashboard() // Replace with your actual method name
+{
+    // Get the count of patients
+    $patientCount = Patient::count();
+
+    // Pass the count to the view
+    return view('dashboard', compact('patientCount')); // Replace with your actual view name
+}
     /**
      * Remove the specified resource from storage.
      */
