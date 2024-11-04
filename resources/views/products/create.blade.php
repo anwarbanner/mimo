@@ -1,3 +1,4 @@
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,3 +46,4 @@
         </form>
     </div>
 </body>
+</x-app-layout>
