@@ -17,9 +17,7 @@
 
             eventRender: function(event, element) {
                 var displayTitle = event.title;
-                if (event.patient_id) {
-                    displayTitle += ' (' + event.patient_id + ')';
-                }
+              
                 element.find('.fc-title').text(displayTitle);
             },
 
