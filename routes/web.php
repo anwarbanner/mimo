@@ -49,6 +49,7 @@ Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
 Route::resource('products', ProductController::class);
 Route::resource('invoices', InvoiceController::class);
+Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 
 Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
 

@@ -14,11 +14,19 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the invoices.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $invoices = Invoice::with('patient')->get(); // Get all invoices with related patient data
+        $query = Invoice::with('patient');
+    
+        if ($request->has('search') && $request->search != '') {
+            $query->where('id', $request->search);
+        }
+    
+        $invoices = $query->get();
+    
         return view('invoices.index', compact('invoices'));
     }
+    
 
     /**
      * Show the form for creating a new invoice.
