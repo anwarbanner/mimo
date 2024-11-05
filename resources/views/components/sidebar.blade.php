@@ -43,7 +43,12 @@
       <span>Gestion des Soins</span>
     </a>
   </li>
-
+  <li class="nav-item">
+    <a class="nav-link" href="/invoices">
+      <i class="fas fa-fw fa-solid fa-book"></i>
+      <span>factures</span>
+    </a>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="/rdvs">
       <i class="fas fa-fw fa-solid fa-calendar"></i>

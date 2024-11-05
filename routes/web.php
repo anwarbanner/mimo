@@ -6,8 +6,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SoinController;
 use App\Http\Controllers\RdvController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InvoiceController;
 
-//comment
+
 
 Route::get('/', function () {
     return view('auth/login');
@@ -49,3 +50,7 @@ Route::get('fullcalender', [FullCalenderController::class, 'index']);
 Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
 Route::resource('products', ProductController::class);
+Route::resource('invoices', InvoiceController::class);
+
+Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
+

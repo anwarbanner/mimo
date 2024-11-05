@@ -15,4 +15,9 @@ class Soin extends Model
         'price',
         
     ];
+    public function invoices()
+{
+    return $this->belongsToMany(Invoice::class)->withPivot('quantity');
+}
+
 }

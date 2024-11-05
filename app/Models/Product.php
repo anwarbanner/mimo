@@ -15,5 +15,10 @@ class Product extends Model
         'price',
         'image', 
     ];
+    public function invoices()
+{
+    return $this->belongsToMany(Invoice::class)->withPivot('quantity');
+}
+
     
 }

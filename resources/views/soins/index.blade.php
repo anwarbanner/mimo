@@ -1,7 +1,7 @@
 <x-app-layout>
     
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold mb-4">Liste des Soins</h1>
+    <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Soins</h1>
         <a href="{{ route('soins.create') }}" class="inline-block mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Ajouter un Soin</a>
        
         @if (session('success'))
