@@ -25,7 +25,7 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:patients',
@@ -34,9 +34,27 @@ class PatientController extends Controller
             'date_naissance' => 'required|date',
             'sexe' => 'required|in:M,F',
             'observations' => 'nullable|string',
+            'image' => 'nullable|image|max:2048'
         ]);
+        $patient = new Patient();
+        $patient->nom = $request->nom;
+        $patient->prenom = $request->prenom;
+        $patient->email = $request->email;
+        $patient->telephone = $request->telephone;
+        $patient->adresse = $request->adresse;
+        $patient->date_naissance = $request->date_naissance;
+        $patient->sexe = $request->sexe;
+        $patient->observations = $request->observations;
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageData = base64_encode(file_get_contents($image->path()));
+            $patient->image = $imageData;
+        }
+    
+        $patient->save();
 
-        Patient::create($validatedData);
+        // Patient::create($validatedData);
 
         return redirect()->route('patients.index')->with('success', 'Patient ajouté avec succès.');
     }
@@ -63,27 +81,40 @@ class PatientController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    // Validate the incoming request
-    $request->validate([
-        'nom' => 'required|string|max:255',
-        'prenom' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'telephone' => 'required|string|max:20',
-        'adresse' => 'nullable|string|max:255',
-        'date_naissance' => 'nullable|date',
-        'sexe' => 'required|in:M,F',
-        'observations' => 'nullable|string',
-    ]);
+    {
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telephone' => 'required|string|max:15',
+            'adresse' => 'nullable|string',
+            'date_naissance' => 'nullable|date',
+            'sexe' => 'nullable|string|in:M,F',
+            'observations' => 'nullable|string',
+            'image' => 'nullable|image|max:2048', // Validation de l'image
+        ]);
 
-    // Find the patient by ID and update
-    $patient = Patient::findOrFail($id);
-    $patient->update($request->all());
+        $patient = Patient::findOrFail($id);
+        $patient->nom = $request->nom;
+        $patient->prenom = $request->prenom;
+        $patient->email = $request->email;
+        $patient->telephone = $request->telephone;
+        $patient->adresse = $request->adresse;
+        $patient->date_naissance = $request->date_naissance;
+        $patient->sexe = $request->sexe;
+        $patient->observations = $request->observations;
 
-    // Redirect with success message
-    return redirect()->route('patients.index', $patient->id)
-                     ->with('success', 'Patient modifié avec succès');
-}
+        // Gestion de l'image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageData = base64_encode(file_get_contents($image->path()));
+            $patient->image = $imageData; // Stockage de l'image en base64
+        }
+
+        $patient->save();
+
+        return redirect()->route('patients.index')->with('success', 'Patient mis à jour avec succès !');
+    }
 
 
     /**
