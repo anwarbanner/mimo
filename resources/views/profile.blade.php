@@ -64,18 +64,7 @@
 
                     <hr class="border-2">
 
-                    <div class="row mt-4">  
-                        <div class="col-md-6">
-                            <label class="labels">Profile Image</label>
-                            <input type="file" name="profile_image" id="profile_image" class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                            @if(auth()->user()->profile_image)
-                                <div class="mt-2">
-                                    <img src="{{ asset('images/profile/' . auth()->user()->profile_image) }}" alt="Profile Image" style="max-width: 200px; height: auto;">
-                                </div>
-                            @endif
-                        </div>
-                        
-                    </div>
+                    
 
                     <div class="mt-5 text-center">
                         <button id="btn" class="btn btn-success profile-button" type="submit">Modifier</button>

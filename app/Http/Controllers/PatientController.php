@@ -117,6 +117,14 @@ class PatientController extends Controller
     }
 
 
+public function dashboard() // Replace with your actual method name
+{
+    // Get the count of patients
+    $patientCount = Patient::count();
+
+    // Pass the count to the view
+    return view('dashboard', compact('patientCount')); // Replace with your actual view name
+}
     /**
      * Remove the specified resource from storage.
      */

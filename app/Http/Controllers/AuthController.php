@@ -81,7 +81,6 @@ class AuthController extends Controller
             'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'password' => 'nullable|confirmed|min:8', 
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
              
         ]);
     
@@ -116,12 +115,7 @@ class AuthController extends Controller
         }
     
         // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $profileImageName = time() . '.' . $request->profile_image->extension();
-            $request->profile_image->move(public_path('images/profile'), $profileImageName);
-            $user->profile_image = $profileImageName;
-            $changesDetected = true;
-        }
+        
     
         
     
