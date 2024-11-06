@@ -1,33 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Ajouter rendez vous</title>
-
-    <link href="admin_assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <link rel="shortcut icon" type="x-icon" href="admin_assets/img/tab-icon.png">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
-
-</head>
-
-<body>
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold mb-4">Créer un Rendez-vous</h1>
+<x-app-layout>
+{{-- <x-slot name="title">Créer un Rendez-vous</x-slot> --}}
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Créer un Rendez-vous</h1>
 
         @if ($errors->any())
-            <div class="mb-4">
-                <ul class="text-red-600">
+            <div class="mb-6">
+                <ul class="text-red-600 list-disc pl-5">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -35,12 +13,13 @@
             </div>
         @endif
 
-        <form action="{{ route('rdvs.store') }}" method="POST">
+        <form action="{{ route('rdvs.store') }}" method="POST" class="space-y-6">
             @csrf
 
-            <div class="mb-4">
+            <div>
                 <label for="patient_id" class="block text-sm font-medium text-gray-700">Patient</label>
-                <select name="patient_id" id="patient_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select name="patient_id" id="patient_id"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2">
                     <option value="">Sélectionnez un patient</option>
                     @foreach ($patients as $patient)
                         <option value="{{ $patient->id }}">{{ $patient->nom }} {{ $patient->prenom }}</option>
@@ -48,25 +27,29 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label for="motif" class="block text-sm font-medium text-gray-700">Motif</label>
-                <input type="text" name="title" id="motif" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+            <div>
+                <label for="motif" class="block text-sm font-medium text-gray-700">Motif du rendez-vous</label>
+                <input type="text" name="title" id="motif" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2"
+                    placeholder="Entrez le motif" />
             </div>
 
-            <div class="mb-4">
-                <label for="heure_debut" class="block text-sm font-medium text-gray-700">Date</label>
-                <input type="datetime-local" name="start" id="heure_debut" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+            <div>
+                <label for="heure_debut" class="block text-sm font-medium text-gray-700">Date et Heure de Début</label>
+                <input type="datetime-local" name="start" id="heure_debut" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2" />
             </div>
 
-            <div class="mb-4">
-                <label for="heure_fin" class="block text-sm font-medium text-gray-700">Heure de Début</label>
-                <input type="datetime-local" name="end" id="heure_fin" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+            <div>
+                <label for="heure_fin" class="block text-sm font-medium text-gray-700">Date et Heure de Fin</label>
+                <input type="datetime-local" name="end" id="heure_fin" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2" />
             </div>
 
-            
-
-            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-200">Créer Rendez-vous</button>
+            <button type="submit"
+                class="w-full sm:w-auto inline-flex justify-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition duration-200">
+                Créer Rendez-vous
+            </button>
         </form>
     </div>
-
-</body>
+</x-app-layout>
