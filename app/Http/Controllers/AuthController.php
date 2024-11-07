@@ -77,57 +77,45 @@ class AuthController extends Controller
         // Validation rules
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id, // Validate email update
+            'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id,
             'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            'password' => 'nullable|confirmed|min:8', 
-             
+            'cie' => 'nullable|string|max:255', // Validate CIE
+            'fiscal_id' => 'nullable|string|max:255', // Validate Identifiant Fiscal
+            'register_number' => 'nullable|string|max:255', // Validate Numéro de Registre
+            'password' => 'nullable|confirmed|min:8',
         ]);
     
         $user = auth()->user();
-        $changesDetected = false; // Initialize the flag to track changes
+        $changesDetected = false;
     
-        // Check if any fields have changed
-        if ($user->name != $request->name) {
-            $user->name = $request->name;
-            $changesDetected = true;
-        }
-        
-        if ($user->email != $request->email) {
-            $user->email = $request->email;
+        // Check for changes
+        if ($user->cie != $request->cie) {
+            $user->cie = $request->cie;
             $changesDetected = true;
         }
     
-        if ($user->phone != $request->phone) {
-            $user->phone = $request->phone;
+        if ($user->fiscal_id != $request->fiscal_id) {
+            $user->fiscal_id = $request->fiscal_id;
             $changesDetected = true;
         }
     
-        if ($user->address != $request->address) {
-            $user->address = $request->address;
+        if ($user->register_number != $request->register_number) {
+            $user->register_number = $request->register_number;
             $changesDetected = true;
         }
     
-        // Update password if provided
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-            $changesDetected = true;
-        }
+        // (Other fields as before)
     
-        // Handle profile image upload
-        
-    
-        
-    
-        // Save the updated user data if any changes were detected
+        // Save changes if detected
         if ($changesDetected) {
             $user->save();
-            return redirect()->back()->with('success', 'Informations modifiées avec succès.'); // Success message
+            return redirect()->back()->with('success', 'Informations modifiées avec succès.');
         }
     
-        // If no changes were detected
-        return redirect()->back()->with('info', 'Aucune modification détectée.'); // No changes detected message
+        return redirect()->back()->with('info', 'Aucune modification détectée.');
     }
+    
     
     
 

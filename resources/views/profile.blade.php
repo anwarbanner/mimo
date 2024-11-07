@@ -64,6 +64,26 @@
 
                     <hr class="border-2">
 
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">CIE</label>
+                            <input type="text" name="cie" class="form-control" placeholder="CIE" value="{{ auth()->user()->cie }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Identifiant Fiscal</label>
+                            <input type="text" name="fiscal_id" class="form-control" placeholder="Identifiant Fiscal" value="{{ auth()->user()->fiscal_id }}">
+                        </div>
+                    </div>
+                    <hr class="border-2">
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">Numéro de Registre</label>
+                            <input type="text" name="register_number" class="form-control" placeholder="Numéro de Registre" value="{{ auth()->user()->register_number }}">
+                        </div>
+                    </div>
+
+                    <hr class="border-2">
+
                     
 
                     <div class="mt-5 text-center">
