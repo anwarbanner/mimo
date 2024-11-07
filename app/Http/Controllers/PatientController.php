@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-
+use App\Models\Invoice;
+use App\Models\Product;
 class PatientController extends Controller
 {
    
@@ -117,14 +118,17 @@ class PatientController extends Controller
     }
 
 
-public function dashboard() // Replace with your actual method name
-{
-    // Get the count of patients
-    $patientCount = Patient::count();
-
-    // Pass the count to the view
-    return view('dashboard', compact('patientCount')); // Replace with your actual view name
-}
+    public function dashboard()
+    {
+        // Get the count of patients and invoices
+        $patientCount = Patient::count();
+        $invoiceCount = Invoice::count();
+        $productCount = Product::count();
+    
+        // Pass both counts to the view
+        return view('dashboard', compact('patientCount', 'invoiceCount' ,'productCount'));
+    }
+    
     /**
      * Remove the specified resource from storage.
      */
