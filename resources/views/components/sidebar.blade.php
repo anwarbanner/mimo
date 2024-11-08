@@ -45,7 +45,7 @@
   </li>
   <li class="nav-item">
     <a class="nav-link" href="/invoices">
-      <i class="fas fa-fw fa-solid fa-book"></i>
+      <i class="fas fa-fw fa-solid fa-file-invoice"></i>
       <span>factures</span>
     </a>
   </li>
