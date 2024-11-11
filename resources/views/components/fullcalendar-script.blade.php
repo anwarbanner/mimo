@@ -7,6 +7,22 @@
             }
         });
 
+        // Configure toastr globally
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "closeMethod": "fadeOut",
+            "closeEasing": "linear",
+            "closeDuration": 200
+        };
+
         $('#calendar').fullCalendar({
             locale: 'fr',
             editable: true,
@@ -14,11 +30,16 @@
             displayEventTime: false,
             minTime: "07:00:00",
             maxTime: "19:00:00",
+
+            // Render event details on the calendar
             eventRender: function(event, element) {
-                element.find('.fc-title').text(event.title);
+                element.find('.fc-title').html(event.title + "<br>" + event.patient_nom + " " +
+                    event.patient_prenom);
             },
+
             selectable: true,
             selectHelper: true,
+            // Add a new event with patient information
             select: function(start, end, allDay) {
                 var title = prompt("Titre de l'événement:");
                 var patientId = prompt("ID du patient:");
@@ -51,9 +72,12 @@
                     });
                 }
             },
-            eventDrop: function(event) {
+
+            // Update event start and end time
+            eventDrop: function(event, delta, revertFunc) {
                 var newStart = event.start ? event.start.format("YYYY-MM-DD HH:mm:ss") : null;
                 var newEnd = event.end ? event.end.format("YYYY-MM-DD HH:mm:ss") : newStart;
+
                 $.ajax({
                     url: SITEURL + '/fullcalenderAjax',
                     type: "POST",
@@ -66,29 +90,113 @@
                         type: 'update'
                     },
                     success: function(response) {
-                        toastr.success("Événement mis à jour avec succès", "Succès");
+                        if (response.success) {
+                            toastr.success("Événement mis à jour avec succès",
+                                "Succès");
+                        } else {
+                            toastr.error("Erreur lors de la mise à jour: " + response
+                                .message, "Erreur");
+                            revertFunc(); // Revert event if update fails
+                        }
                     },
                     error: function(xhr) {
                         toastr.error("Erreur lors de la mise à jour", "Erreur");
+                        revertFunc();
                     }
                 });
             },
+
+            // Display event details on click
             eventClick: function(event) {
-                if (confirm("Voulez-vous vraiment supprimer cet événement?")) {
-                    $.ajax({
-                        type: "POST",
-                        url: SITEURL + '/fullcalenderAjax',
-                        data: {
-                            id: event.id,
-                            type: 'delete'
-                        },
-                        success: function(response) {
-                            $('#calendar').fullCalendar('removeEvents', event.id);
-                            toastr.success("Événement supprimé avec succès", "Succès");
-                        }
+                $('#eventTitle').text("Motif : " + event.title);
+                $('#eventPatientId').text("Patient : " + event.patient_nom + " " + event
+                    .patient_prenom);
+                $('#eventStart').text("Début : " + event.start.format("YYYY-MM-DD HH:mm:ss"));
+                $('#eventEnd').text("Fin : " + (event.end ? event.end.format(
+                    "YYYY-MM-DD HH:mm:ss") : "N/A"));
+
+                // Show modal with event details
+                $('#eventDetailsModal').show();
+
+                // Close modal on icon click
+                $('#closeModal').on('click', function() {
+                    $('#eventDetailsModal').hide();
+                });
+
+                // Delete event
+                $('#deleteEvent').off('click').on('click', function() {
+                    if (confirm("Voulez-vous vraiment supprimer cet événement?")) {
+                        $.ajax({
+                            type: "POST",
+                            url: SITEURL + '/fullcalenderAjax',
+                            data: {
+                                id: event.id,
+                                type: 'delete'
+                            },
+                            success: function(response) {
+                                $('#calendar').fullCalendar('removeEvents',
+                                    event.id);
+                                toastr.success("Événement supprimé avec succès",
+                                    "Succès");
+                                $('#eventDetailsModal').hide();
+                            },
+                            error: function(xhr) {
+                                toastr.error("Erreur lors de la suppression",
+                                    "Erreur");
+                            }
+                        });
+                    }
+                });
+
+                // Confirm appointment via WhatsApp
+                $('#confirmWhatsApp').off('click').on('click', function() {
+                    let patientPhoneNumber = event.telephone; // Patient's phone number
+                    let message =
+                        "Bonjour Cabinet X,\n\nVeuillez confirmer votre rendez-vous en répondant à ce message.\n\nCordialement,\nVotre Équipe de Santé";
+
+
+                    // Encode the message for URL
+                    let encodedMessage = encodeURIComponent(message);
+
+                    // WhatsApp URL construction
+                    let whatsappUrl =
+                        `https://wa.me/${patientPhoneNumber}?text=${encodedMessage}`;
+
+                    // Open WhatsApp URL in a new tab
+                    window.open(whatsappUrl, '_blank');
+                });
+
+
+                // Confirm appointment via Email (example - AJAX call to send confirmation)
+                $('#confirmEmail').off('click').on('click', function() {
+                    $('#confirmEmail').off('click').on('click', function() {
+                        // Retrieve the appointment ID (you might have it already in the event data)
+                        let appointmentId = event
+                        .id; // Replace with the actual variable holding the appointment ID
+
+                        // Send POST request to the server to trigger email sending
+                        axios.post('/appointments/' + appointmentId +
+                                '/send-confirmation-email')
+                            .then(response => {
+                                console.log(response
+                                .data); // Handle success (e.g., show a success message)
+                                toastr.success("Email de confirmation envoyé!",
+                                    "Succès");
+                                $('#eventDetailsModal')
+                            .hide(); // Optionally, close the modal
+                            })
+                            .catch(error => {
+                                console.error('Error:', error.response
+                                .data); // Handle error
+                                toastr.error(
+                                    "Erreur lors de l'envoi de l'email",
+                                    "Erreur");
+                            });
                     });
-                }
+
+                });
             },
+
             header: {
                 left: 'prev,next today',
                 center: 'title',

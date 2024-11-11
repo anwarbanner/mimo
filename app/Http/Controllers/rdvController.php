@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
+use App\Mail\AppointmentConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Patient;
 use App\Models\Rdv;
 use Illuminate\Http\Request;
@@ -11,7 +13,6 @@ class RdvController extends Controller
     // Display a listing of the resource
     public function index()
     {
-
         $rdvs = Rdv::all();
         return view('rdvs.index', compact('rdvs')); // Make sure to create this view
     }
@@ -23,16 +24,24 @@ class RdvController extends Controller
         return view('rdvs.create', compact('patients')); // Create this view for the form
     }
 
-    // Store a newly created resource in storage
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'patient_id' => 'nullable|exists:patients,id',
             'title' => 'required|string|max:255',
             'start' => 'required|date',
-            'end' => 'required|date|after:start',
+            'end' => 'required|date|after:start',  // Ensure 'end' is after 'start'
         ]);
 
+        // Check if start and end are on the same day
+        $startDate = \Carbon\Carbon::parse($validatedData['start']);
+        $endDate = \Carbon\Carbon::parse($validatedData['end']);
+
+        if ($startDate->toDateString() !== $endDate->toDateString()) {
+            return back()->withErrors(['end' => 'La date de fin doit être le même jour que la date de début.'])->withInput();
+        }
+
+        // Create the rendez-vous record with validated data
         Rdv::create([
             'patient_id' => $validatedData['patient_id'],
             'title' => $validatedData['title'],
@@ -44,11 +53,6 @@ class RdvController extends Controller
         return redirect()->route('rdvs.index')->with('success', 'Rendez-vous créé avec succès');
     }
 
-
-
-
-
-    // Display the specified resource
     public function show($id)
     {
         $rdv = Rdv::findOrFail($id);
@@ -67,6 +71,7 @@ class RdvController extends Controller
     {
         $rdv = Rdv::findOrFail($id);
 
+        // Validation logic for update
         $request->validate([
             'motif' => 'sometimes|required|string|max:255',
             'date' => 'sometimes|required|date',
@@ -75,6 +80,7 @@ class RdvController extends Controller
             'etat' => 'sometimes|nullable|string|max:255',
         ]);
 
+        // Update the rendez-vous record with validated data
         $rdv->update($request->all());
 
         return redirect()->route('rdvs.index')->with('success', 'Rendez-vous updated successfully.');
@@ -88,4 +94,26 @@ class RdvController extends Controller
 
         return redirect()->route('rdvs.index')->with('success', 'Rendez-vous deleted successfully.');
     }
+
+
+    public function sendConfirmationEmail($appointmentId)
+    {
+        // Find the appointment by ID
+        $appointment = Rdv::find($appointmentId);
+
+        if ($appointment) {
+            // Ensure the date is a Carbon instance
+            $appointment->date = Carbon::parse($appointment->date);
+
+            // Send confirmation email to the patient
+            Mail::to($appointment->patient->email)->send(new AppointmentConfirmationMail($appointment));
+
+            // Return success response
+            return response()->json(['message' => 'Email envoyé avec succès']);
+        } else {
+            // Return error if the appointment is not found
+            return response()->json(['message' => 'Rendez-vous non trouvé'], 404);
+        }
+    }
+
 }
