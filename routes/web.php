@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\PatientController;
@@ -35,28 +36,35 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::resource('patients', PatientController::class);
-
-
-
-Route::resource('rdvs', RdvController::class);
-Route::get('fullcalender', [FullCalenderController::class, 'index']);
-
-Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
-
-Route::resource('products', ProductController::class);
-Route::resource('invoices', InvoiceController::class);
-Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-
-Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
-
     Route::resource('patients', PatientController::class);
+
+
+
+    Route::resource('rdvs', RdvController::class);
+    Route::get('fullcalender', [FullCalenderController::class, 'index']);
+
+    Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
+
+    Route::resource('products', ProductController::class);
+    Route::resource('invoices', InvoiceController::class);
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+
+    Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
+//soins
     Route::resource('soins', SoinController::class);
+    //patients
+    Route::resource('patients', PatientController::class);
     Route::get('/dashboard', [PatientController::class, 'dashboard'])->name('dashboard');
+
+    //Rendez vous
     Route::resource('rdvs', RdvController::class);
     Route::get('fullcalender', [FullCalenderController::class, 'index']);
     Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
+
+    //produits
     Route::resource('products', ProductController::class);
+
+    //question
     Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
@@ -71,6 +79,8 @@ Route::get('/questions/merci', function() {
 })->name('questions.merci');
 Route::get('/patients/{patient}/start-questionnaire', [QuestionController::class, 'startForPatient'])
     ->name('patients.startQuestionnaire');
+ //mailing
+ Route::post('/appointments/{appointmentId}/send-confirmation-email', [RdvController::class, 'sendConfirmationEmail']);
 
 });
 
@@ -79,6 +89,3 @@ Route::get('/patients/{patient}/start-questionnaire', [QuestionController::class
 Route::fallback(function () {
     return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
 });
-
-
-
