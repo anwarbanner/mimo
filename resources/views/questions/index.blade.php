@@ -7,11 +7,10 @@
             
             <!-- Question -->
             <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">{{ $currentQuestion->texte }}</h1>
-
             <form action="{{ route('questions.storeResponses') }}" method="POST" class="space-y-6">
                 @csrf
                 <input type="hidden" name="question_id" value="{{ $currentQuestion->id }}">
-
+                <input type="hidden" name="patient_id" value="{{ session('currentPatientId') }}">
                 <!-- Affichage des options selon le type de question -->
                 @if ($currentQuestion->type === 'texte')
                     <!-- Champ de texte -->

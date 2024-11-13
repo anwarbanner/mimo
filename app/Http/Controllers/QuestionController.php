@@ -5,36 +5,66 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Choix;
 use App\Models\Reponse;
+use App\Models\Patient;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+    public function startForPatient($patientId)
+    { 
+        session(['currentPatientId' => $patientId]);
+        // Vérifier si le patient existe
+        $patient = Patient::findOrFail($patientId);
+
+        // Initialiser le questionnaire pour le patient
+        session(['currentPatientId' => $patient->id, 'currentQuestionId' => null, 'responses' => []]);
+
+        // Rediriger vers la première question
+        return redirect()->route('questions.index');
+    }
+
     public function index(Request $request)
-{
-    // Récupérer la dernière question affichée ou la première si aucune
-    $currentQuestionId = $request->session()->get('currentQuestionId');
-
-    // Si nous n'avons pas d'ID de question actuel, récupérons le premier choix
-    if (!$currentQuestionId) {
-        $choix = Choix::with('question')->first();
-        $currentQuestion = $choix ? $choix->question : null;
-    } else {
-        $currentQuestion = Question::with('choix')->find($currentQuestionId);
+    {
+        // Retrieve the patient ID from the URL if available
+        $patientId = $request->query('patient_id');
+        
+        // Store the patient ID in session if it's provided in the URL
+        if ($patientId) {
+            $request->session()->put('currentPatientId', $patientId);
+        } else {
+            // Redirect to an error page if patient ID is missing
+            if (!$request->session()->has('currentPatientId')) {
+                return redirect()->route('patients.index')->with('error', 'Patient non sélectionné.');
+            }
+        }
+    
+        // Fetch the current question ID from the session, defaulting to the first question if none
+        $currentQuestionId = $request->session()->get('currentQuestionId');
+    
+        if (!$currentQuestionId) {
+            // Get the first question if none exists in session
+            $currentQuestion = Question::with('choix')->first();
+        } else {
+            // Get the next question based on the current question ID
+            $currentQuestion = Question::with('choix')->where('id', '>', $currentQuestionId)->first();
+        }
+    
+        // If no more questions are available, redirect to a completed page
+        if (!$currentQuestion) {
+            return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
+        }
+    
+        // Update the session with the current question ID
+        $request->session()->put('currentQuestionId', $currentQuestion->id);
+    
+        // Get choices for the current question
+        $choices = $currentQuestion->choix;
+    
+        return view('questions.index', compact('currentQuestion', 'choices'));
     }
-
-    // Si aucune question n'est trouvée, gérer ce cas
-    if (!$currentQuestion) {
-        return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
-    }
-
-    // Récupérer tous les choix pour cette question
-    $choices = $currentQuestion->choix;
-
-    return view('questions.index', compact('currentQuestion', 'choices'));
-}
-
+    
     
 
 
@@ -144,7 +174,7 @@ class QuestionController extends Controller
                 ->orWhere('sexe', $patientSexe); // Questions spécifiques au sexe
         })->get();
 
-        return view('questions.show', compact('questions'));
+        return view('questions.index', compact('questions'));
     }
 
     public function show($id)
@@ -156,7 +186,11 @@ class QuestionController extends Controller
     
 
     public function storeResponses(Request $request)
-    {
+    {   
+        $currentPatientId = session('currentPatientId');
+        if (!$currentPatientId) {
+            return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+        }
         // Valider la réponse
         $request->validate([
             'reponse' => 'nullable', // Valider que la réponse est requise
@@ -171,6 +205,7 @@ class QuestionController extends Controller
             'valeur' => is_array($request->reponse) ? implode(',', $request->reponse) : $request->reponse,
             'date_reponse' => now(),
             'question_id' => $request->question_id,
+            'patient_id' => $currentPatientId,
         ];
 
         // Mettre à jour le tableau des réponses dans la session
@@ -192,17 +227,17 @@ class QuestionController extends Controller
 
     public function saveAllResponses(Request $request)
     {
+        $currentPatientId = session('currentPatientId');
         // Récupérer toutes les réponses stockées dans la session
         $responses = $request->session()->get('responses', []);
 
         // Insérer toutes les réponses en une seule fois dans la base de données
         foreach ($responses as $response) {
-            Reponse::create($response);
+            Reponse::create($response + ['patient_id' => $currentPatientId]);
         }
 
         // Vider les réponses de la session
-        $request->session()->forget('responses');
-        $request->session()->forget('currentQuestionId');
+        $request->session()->forget(['responses', 'currentQuestionId', 'currentPatientId']);
 
         // Rediriger vers une page de confirmation ou d'accueil
         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire et vos réponses ont été enregistrées.');
