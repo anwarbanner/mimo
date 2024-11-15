@@ -77,6 +77,8 @@ Route::post('/questions/confirm-responses', [QuestionController::class, 'confirm
 Route::get('/questions/merci', function() {
     return view('questions.merci');
 })->name('questions.merci');
+Route::get('/questions/next', [QuestionController::class, 'getNextQuestion'])->name('questions.next');
+
 Route::get('/patients/{patient}/start-questionnaire', [QuestionController::class, 'startForPatient'])
     ->name('patients.startQuestionnaire');
  //mailing
