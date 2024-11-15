@@ -10,7 +10,7 @@ class FullCalenderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Rdv::with('patient') // Eager load patient relation
+            $data = Rdv::with('patient')
                 ->whereDate('start', '>=', $request->start)
                 ->whereDate('end', '<=', $request->end)
                 ->get();
@@ -25,7 +25,8 @@ class FullCalenderController extends Controller
                     'patient_id' => $event->patient_id,
                     'patient_nom' => $event->patient->nom,
                     'patient_prenom' => $event->patient->prenom,
-                    'telephone'=> $event->patient->telephone,
+                    'telephone' => $event->patient->telephone,
+                    'sexe'=>$event->patient->sexe,
                 ];
             }));
         }
@@ -44,21 +45,21 @@ class FullCalenderController extends Controller
 
         // Additional message for custom validation
         $messages = [
-            'end.after_or_equal' => 'The end time must be after the start time.',
-            'same_day' => 'The event must start and end on the same day.',
+            'end.after_or_equal' => 'L\'heure de fin doit être après l\'heure de début.',
+            'same_day' => 'L\'événement doit commencer et se terminer le même jour.',
         ];
 
         switch ($request->type) {
             case 'add':
                 // Ensure start time is not in the past
                 if (strtotime($request->start) < time()) {
-                    return response()->json(['success' => false, 'message' => 'The start time cannot be in the past.']);
+                    return response()->json(['success' => false, 'message' => 'L\'heure de début ne peut pas être dans le passé.']);
                 }
 
                 // Validate event time constraints
                 $request->validate($rules + ['end' => function ($attribute, $value, $fail) use ($request) {
                     if (date('Y-m-d', strtotime($request->start)) !== date('Y-m-d', strtotime($value))) {
-                        $fail('The event must start and end on the same day.');
+                        $fail('L\'événement doit commencer et se terminer le même jour.');
                     }
                 }], $messages);
 
@@ -77,16 +78,14 @@ class FullCalenderController extends Controller
             case 'update':
                 // Ensure start time is not in the past
                 if (strtotime($request->start) < time()) {
-                    return response()->json(['success' => false, 'message' => 'The start time cannot be in the past.']);
+                    return response()->json(['success' => false, 'message' => 'L\'heure de début ne peut pas être dans le passé.']);
                 }
 
                 // Find and update the event
                 $event = Rdv::find($request->id);
                 if (!$event) {
-                    return response()->json(['success' => false, 'message' => 'Event not found.']);
+                    return response()->json(['success' => false, 'message' => 'Événement non trouvé.']);
                 }
-
-
 
                 // Update the event
                 $event->update([
@@ -105,10 +104,10 @@ class FullCalenderController extends Controller
                     $event->delete();
                     return response()->json(['success' => true]);
                 }
-                return response()->json(['success' => false, 'message' => 'Event not found.']);
+                return response()->json(['success' => false, 'message' => 'Événement non trouvé.']);
 
             default:
-                return response()->json(['success' => false, 'message' => 'Invalid action.']);
+                return response()->json(['success' => false, 'message' => 'Action invalide.']);
         }
     }
 }

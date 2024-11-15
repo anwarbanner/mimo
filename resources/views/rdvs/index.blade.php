@@ -118,9 +118,11 @@
     <div id="eventDetailsModal" class="modal" style="display: none;">
         <div class="modal-content relative">
             <!-- Close Icon -->
-            <span id="closeModal" class="absolute top-0 right-0 m-4 cursor-pointer text-gray-500 hover:text-gray-800 text-2xl">&times;</span>
+            <span id="closeModal"
+                class="absolute top-0 right-0 m-4 cursor-pointer text-gray-500 hover:text-gray-800 text-2xl">&times;</span>
 
             <h3>Détails du rendez-vous</h3>
+            <p id="eventId"></p>
             <p id="eventTitle"></p>
             <p id="eventPatientId"></p>
             <p id="eventStart"></p>
@@ -141,13 +143,19 @@
 
             <!-- Delete Event Button -->
             <button id="deleteEvent" class="bg-red-500 text-white px-4 py-2 rounded mt-4">Supprimer</button>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="hidden flex items-center justify-center mt-4">
+                <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                        stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span class="ml-2 text-gray-500">En attente...</span>
+            </div>
         </div>
     </div>
-
-
-
-
-
 
     <!-- SB Admin 2 Script -->
     <script src="admin_assets/js/sb-admin-2.min.js"></script>
@@ -155,6 +163,35 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <x-fullcalendar-script />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Set CSRF token for Axios globally
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute(
+            'content');
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const confirmEmailButton = document.getElementById("confirmEmail");
+            const loadingSpinner = document.getElementById("loadingSpinner");
+
+            confirmEmailButton.addEventListener("click", function() {
+                // Show loading spinner and disable the button
+                loadingSpinner.classList.remove("hidden");
+                confirmEmailButton.disabled = true;
+
+                // Actual email confirmation request
+                axios.post('/send-email-confirmation', {
+                        /* request data */ })
+                    .then(response => {
+                        loadingSpinner.classList.add("hidden");
+                        confirmEmailButton.disabled = false;
+                        toastr.success("Email de confirmation envoyé avec succès !");
+                    })
+                    .catch(error => {
+                       break
+                    });
+            });
+        });
+    </script>
 </body>
 
 </html>

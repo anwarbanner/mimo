@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 
     Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
-//soins
+    //soins
     Route::resource('soins', SoinController::class);
     //patients
     Route::resource('patients', PatientController::class);
@@ -66,22 +66,21 @@ Route::middleware('auth')->group(function () {
 
     //question
     Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
-Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
-Route::post('/questions/store-responses', [QuestionController::class, 'storeResponses'])->name('questions.storeResponses');
-Route::get('/questions/save-all-responses', [QuestionController::class, 'saveAllResponses'])->name('questions.saveAllResponses');
-Route::get('/questions/completed', [QuestionController::class, 'completed'])->name('questions.completed');
-//Route::post('/questions/previous', [QuestionController::class, 'previousQuestion'])->name('questions.previousQuestion');
-Route::get('/completed', [QuestionController::class, 'completed'])->name('questions.completed');
-Route::post('/questions/confirm-responses', [QuestionController::class, 'confirmResponses'])->name('questions.confirmResponses');
-Route::get('/questions/merci', function() {
-    return view('questions.merci');
-})->name('questions.merci');
-Route::get('/patients/{patient}/start-questionnaire', [QuestionController::class, 'startForPatient'])
-    ->name('patients.startQuestionnaire');
- //mailing
- Route::post('/appointments/{appointmentId}/send-confirmation-email', [RdvController::class, 'sendConfirmationEmail']);
-
+    Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+    Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+    Route::post('/questions/store-responses', [QuestionController::class, 'storeResponses'])->name('questions.storeResponses');
+    Route::get('/questions/save-all-responses', [QuestionController::class, 'saveAllResponses'])->name('questions.saveAllResponses');
+    Route::get('/questions/completed', [QuestionController::class, 'completed'])->name('questions.completed');
+    //Route::post('/questions/previous', [QuestionController::class, 'previousQuestion'])->name('questions.previousQuestion');
+    Route::get('/completed', [QuestionController::class, 'completed'])->name('questions.completed');
+    Route::post('/questions/confirm-responses', [QuestionController::class, 'confirmResponses'])->name('questions.confirmResponses');
+    Route::get('/questions/merci', function () {
+        return view('questions.merci');
+    })->name('questions.merci');
+    Route::get('/patients/{patient}/start-questionnaire', [QuestionController::class, 'startForPatient'])
+        ->name('patients.startQuestionnaire');
+    //mailing
+    Route::post('/appointments/{appointmentId}/send-confirmation-email', [RdvController::class, 'sendConfirmationEmail']);
 });
 
 
