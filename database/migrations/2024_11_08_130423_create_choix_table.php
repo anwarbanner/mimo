@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('texte');
             $table->integer('ordre');
             $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
