@@ -9,7 +9,7 @@
     <h1>Bonjour,</h1>
     <p>Nous confirmons votre rendez-vous avec les informations suivantes:</p>
     <ul>
-        <!-- resources/views/emails/appointment_confirmation.blade.php -->
+
 
         <p>Bonjour {{ $appointment->patient->name }},</p>
 
@@ -17,7 +17,7 @@
 
         <p>Veuillez confirmer votre rendez-vous en cliquant sur le bouton ci-dessous.</p>
 
-        <!-- Add any other content you need here -->
+     
 
 
     </ul>

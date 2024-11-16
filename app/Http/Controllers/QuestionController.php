@@ -25,44 +25,67 @@ class QuestionController extends Controller
         return redirect()->route('questions.index');
     }
 
+    // public function index(Request $request)
+    // {
+    //     // Retrieve the patient ID from the URL if available
+    //     $patientId = $request->query('patient_id');
+        
+    //     // Store the patient ID in session if it's provided in the URL
+    //     if ($patientId) {
+    //         $request->session()->put('currentPatientId', $patientId);
+    //     } else {
+    //         // Redirect to an error page if patient ID is missing
+    //         if (!$request->session()->has('currentPatientId')) {
+    //             return redirect()->route('patients.index')->with('error', 'Patient non sélectionné.');
+    //         }
+    //     }
+    
+    //     // Fetch the current question ID from the session, defaulting to the first question if none
+    //     $currentQuestionId = $request->session()->get('currentQuestionId');
+    
+    //     if (!$currentQuestionId) {
+    //         // Get the first question if none exists in session
+    //         $currentQuestion = Question::with('choix')->first();
+    //     } else {
+    //         // Get the next question based on the current question ID
+    //         $currentQuestion = Question::with('choix')->where('id', '>', $currentQuestionId)->first();
+    //     }
+    
+    //     // If no more questions are available, redirect to a completed page
+    //     if (!$currentQuestion) {
+    //         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
+    //     }
+    
+    //     // Update the session with the current question ID
+    //     $request->session()->put('currentQuestionId', $currentQuestion->id);
+    
+    //     // Get choices for the current question
+    //     $choices = $currentQuestion->choix;
+    
+    //     return view('questions.index', compact('currentQuestion', 'choices'));
+    // }
     public function index(Request $request)
     {
-        // Retrieve the patient ID from the URL if available
-        $patientId = $request->query('patient_id');
-        
-        // Store the patient ID in session if it's provided in the URL
-        if ($patientId) {
-            $request->session()->put('currentPatientId', $patientId);
-        } else {
-            // Redirect to an error page if patient ID is missing
-            if (!$request->session()->has('currentPatientId')) {
-                return redirect()->route('patients.index')->with('error', 'Patient non sélectionné.');
-            }
+        $currentPatientId = session('currentPatientId');
+        if (!$currentPatientId) {
+            return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
         }
-    
-        // Fetch the current question ID from the session, defaulting to the first question if none
+
         $currentQuestionId = $request->session()->get('currentQuestionId');
-    
         if (!$currentQuestionId) {
-            // Get the first question if none exists in session
-            $currentQuestion = Question::with('choix')->first();
+            $choix = Choix::with('question')->first();
+            $currentQuestion = $choix ? $choix->question : null;
         } else {
-            // Get the next question based on the current question ID
-            $currentQuestion = Question::with('choix')->where('id', '>', $currentQuestionId)->first();
+            $currentQuestion = Question::with('choix')->find($currentQuestionId);
         }
-    
-        // If no more questions are available, redirect to a completed page
+
         if (!$currentQuestion) {
             return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
         }
-    
-        // Update the session with the current question ID
-        $request->session()->put('currentQuestionId', $currentQuestion->id);
-    
-        // Get choices for the current question
+
         $choices = $currentQuestion->choix;
-    
-        return view('questions.index', compact('currentQuestion', 'choices'));
+
+        return view('questions.index', compact('currentQuestion', 'choices', 'currentPatientId'));
     }
     
     
@@ -182,8 +205,9 @@ class QuestionController extends Controller
         $question = Question::with('choix')->findOrFail($id);
         return view('questions.show', compact('question'));
     }
-
     
+    
+
 
     public function storeResponses(Request $request)
     {   
@@ -290,7 +314,40 @@ class QuestionController extends Controller
         // Redirect to a thank you page
         return redirect()->route('questions.merci')->with('message', 'Your responses have been saved.');
     }
+    public function getNextQuestion(Request $request)
+    {
+        $currentPatientId = session('currentPatientId');
+        if (!$currentPatientId) {
+            return response()->json(['status' => 'error', 'message' => 'Aucun patient sélectionné.'], 400);
+        }
 
+        $currentQuestionId = $request->session()->get('currentQuestionId');
+        if (!$currentQuestionId) {
+            $choix = Choix::with('question')->first();
+            $currentQuestion = $choix ? $choix->question : null;
+        } else {
+            $currentQuestion = Question::with('choix')->find($currentQuestionId);
+        }
+
+        if (!$currentQuestion) {
+            return response()->json(['status' => 'completed', 'message' => 'Vous avez terminé le questionnaire.']);
+        }
+
+        // Préparer les données de la question et des choix
+        $questionData = [
+            'id' => $currentQuestion->id,
+            'texte' => $currentQuestion->texte,
+            'type' => $currentQuestion->type,
+            'choices' => $currentQuestion->choix->map(function ($choix) {
+                return ['id' => $choix->id, 'texte' => $choix->texte];
+            })
+        ];
+
+        // Enregistrer la question actuelle dans la session
+        $request->session()->put('currentQuestionId', $currentQuestion->id);
+
+        return response()->json(['status' => 'success', 'question' => $questionData]);
+    }
 
 
 
