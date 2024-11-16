@@ -17,8 +17,10 @@ class Rdv extends Model
         'etat',
     ];
 
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class);
-    }
+   // In Rdv.php model
+public function patient()
+{
+    return $this->belongsTo(Patient::class);
+}
+
 }

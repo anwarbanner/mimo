@@ -82,15 +82,15 @@
         <div class="invoice-details-admin">
             <div class="invoice-details-admin-infos">
                 <p><b>- Institut:</b> Mi-Acup</p>
-                <p><b>- Adresse:</b> rfgergerg 4000 gdsfgfds</p>
-                <p><b>- Cie:</b> 9223372036854775807</p>
-                <p><b>- Identifiant Fiscal:</b> 11111111111123</p>
-                <p><b>- Numéro de registre:</b> 3333333333333</p>
+                <p><b>- Adresse:</b> {{ auth()->user()->adresse }}</p>
+                <p><b>- Cie:</b> {{ auth()->user()->cie }}</p>
+                <p><b>- Identifiant Fiscal:</b>{{ auth()->user()->fiscal_id }}</p>
+                <p><b>- Numéro de registre:</b>{{ auth()->user()->register_number }}</p>
             </div>
         </div>
         <div class="invoice-details-client">
             <div class="invoice-details-client-infos">
-                <p><b>- Client:</b> <a href="#"> {{ $invoice->patient->nom }} </a></p>
+                <p><b>- Client:</b> <a href="/patients/{{$invoice->patient->id }}/edit"> {{ $invoice->patient->nom }} </a></p>
                 <p><b>- Adresse:</b> {{ $invoice->patient->adresse ?? 'N/A' }}</p>
                 <p><b>- Téléphone:</b> {{ $invoice->patient->telephone ?? 'N/A' }}</p>
             </div>

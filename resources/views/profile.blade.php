@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="labels">Adresse</label>
-                            <input type="text" name="address" class="form-control" value="{{ auth()->user()->address }}" placeholder="Adresse">
+                            <input type="text" name="adresse" class="form-control" value="{{ auth()->user()->adresse }}" placeholder="Adresse">
                         </div>
                     </div>
 

@@ -83,7 +83,7 @@ class RdvController extends Controller
         // Update the rendez-vous record with validated data
         $rdv->update($request->all());
 
-        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous updated successfully.');
+        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous modifié avec succée.');
     }
 
     // Remove the specified resource from storage
@@ -92,7 +92,7 @@ class RdvController extends Controller
         $rdv = Rdv::findOrFail($id);
         $rdv->delete();
 
-        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous deleted successfully.');
+        return redirect()->route('rdvs.index')->with('success', 'Rendez-vous supprimé avec succée.');
     }
 
 
