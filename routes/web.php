@@ -68,7 +68,7 @@ Route::post('/visites/update', [VisiteController::class, 'update'])->name('visit
     Route::resource('products', ProductController::class);
 
     //question
-    Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
+Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::post('/questions/store-responses', [QuestionController::class, 'storeResponses'])->name('questions.storeResponses');

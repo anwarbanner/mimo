@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
     function loadNextQuestion() {
             fetch('{{ route("questions.next") }}')
                 .then(response => response.json())
@@ -138,7 +138,7 @@
         // Charger la première question dès le chargement de la page
         document.addEventListener('DOMContentLoaded', loadNextQuestion);
     </script>
-</script>
+</script> --}}
 
     
 </x-app-layout>
