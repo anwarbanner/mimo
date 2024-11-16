@@ -133,7 +133,7 @@ class QuestionController extends Controller
     }
 
     // Redirect with a success message
-    return redirect()->route('questions.index')->with('success', 'Question créée avec succès.');
+    return redirect()->route('questions.create')->with('success', 'Question créée avec succès.');
 }
 
     /**
