@@ -16,7 +16,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with('patient');
+        $query = Invoice::with('patient')->orderBy('id', 'desc'); // Order by ID in descending order
     
         if ($request->has('search') && $request->search != '') {
             $query->where('id', $request->search);

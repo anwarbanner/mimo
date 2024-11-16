@@ -9,7 +9,7 @@ use App\Http\Controllers\RdvController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceController;
-
+use App\Http\Controllers\VisiteController;
 
 
 Route::get('/', function () {
@@ -60,8 +60,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('rdvs', RdvController::class);
     Route::get('fullcalender', [FullCalenderController::class, 'index']);
     Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
-
-    //produits
+    Route::get('/visites', [VisiteController::class, 'index'])->name('visites.index');
+    Route::get('/visites/create', [VisiteController::class, 'create'])->name('visites.create');
+Route::post('/visites/store', [VisiteController::class, 'store'])->name('visites.store');
+Route::post('/visites/update', [VisiteController::class, 'update'])->name('visites.update');
+   //produits
     Route::resource('products', ProductController::class);
 
     //question
@@ -70,9 +73,12 @@ Route::get('/questions/create', [QuestionController::class, 'create'])->name('qu
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::post('/questions/store-responses', [QuestionController::class, 'storeResponses'])->name('questions.storeResponses');
 Route::get('/questions/save-all-responses', [QuestionController::class, 'saveAllResponses'])->name('questions.saveAllResponses');
+// Route for questions completed
 Route::get('/questions/completed', [QuestionController::class, 'completed'])->name('questions.completed');
-//Route::post('/questions/previous', [QuestionController::class, 'previousQuestion'])->name('questions.previousQuestion');
-Route::get('/completed', [QuestionController::class, 'completed'])->name('questions.completed');
+
+// Renamed route for completed (you can change the name to something else)
+Route::get('/completed', [QuestionController::class, 'completed'])->name('completed.questions');
+
 Route::post('/questions/confirm-responses', [QuestionController::class, 'confirmResponses'])->name('questions.confirmResponses');
 Route::get('/questions/merci', function() {
     return view('questions.merci');

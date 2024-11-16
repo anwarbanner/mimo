@@ -2,7 +2,8 @@
 <div class="container">
     <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Factures</h1>
     
-    <!-- Search Form -->
+    <!-- Search Form --> <a href="{{ route('invoices.create') }}" class="btn btn-primary mb-3">Créer une facture</a>
+
     <form action="{{ route('invoices.index') }}" method="GET" class="mb-4">
         <div class="form-group">
             <label for="search" class="form-label">Rechercher par ID de facture:</label>
@@ -11,8 +12,7 @@
         <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
     </form>
 
-    <a href="{{ route('invoices.create') }}" class="btn btn-primary mb-3">Créer une facture</a>
-
+   
     <table class="table">
         <thead>
             <tr>
