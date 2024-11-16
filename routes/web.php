@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 
     Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
-//soins
+    //soins
     Route::resource('soins', SoinController::class);
     //patients
     Route::resource('patients', PatientController::class);

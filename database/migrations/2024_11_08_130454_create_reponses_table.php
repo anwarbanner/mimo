@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('valeur');
             $table->date('date_reponse')->nullable();
             $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

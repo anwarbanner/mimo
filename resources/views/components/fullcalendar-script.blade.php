@@ -92,7 +92,7 @@
                     success: function(response) {
                         if (response.success) {
                             toastr.success("Événement mis à jour avec succès",
-                                "Succès");
+                            "Succès");
                         } else {
                             toastr.error("Erreur lors de la mise à jour: " + response
                                 .message, "Erreur");
@@ -108,6 +108,7 @@
 
             // Display event details on click
             eventClick: function(event) {
+                $('#eventId').text("Identifiant du rendez-vous : " + event.id);
                 $('#eventTitle').text("Motif : " + event.title);
                 $('#eventPatientId').text("Patient : " + event.patient_nom + " " + event
                     .patient_prenom);
@@ -151,10 +152,14 @@
                 // Confirm appointment via WhatsApp
                 $('#confirmWhatsApp').off('click').on('click', function() {
                     let patientPhoneNumber = event.telephone; // Patient's phone number
+                    let nom = event.patient_nom+" "+event.patient_prenom;
+                    let noun = event.sexe === "M" ? "Monsieur" : "Madame";
+                    let appointmentDate = event.start.format(
+                    "YYYY-MM-DD HH:mm");
+                    let cabinetName = "Acupencture Marrakech";
+
                     let message =
-                        "Bonjour Cabinet X,\n\nVeuillez confirmer votre rendez-vous en répondant à ce message.\n\nCordialement,\nVotre Équipe de Santé";
-
-
+                        `Bonjour ${noun} ${nom},\n\nNous vous contactons de la part de ${cabinetName}. Nous souhaitons confirmer votre rendez-vous prévu le ${appointmentDate}. Veuillez répondre à ce message pour confirmer.\n\nCordialement,\nVotre Équipe de Santé`;
                     // Encode the message for URL
                     let encodedMessage = encodeURIComponent(message);
 
@@ -167,33 +172,25 @@
                 });
 
 
-                // Confirm appointment via Email (example - AJAX call to send confirmation)
+                // Confirm appointment via Email (using Axios)
                 $('#confirmEmail').off('click').on('click', function() {
-                    $('#confirmEmail').off('click').on('click', function() {
-                        // Retrieve the appointment ID (you might have it already in the event data)
-                        let appointmentId = event
-                        .id; // Replace with the actual variable holding the appointment ID
+                    // Retrieve the appointment ID
+                    let appointmentId = event.id; // Use the event ID for the appointment
 
-                        // Send POST request to the server to trigger email sending
-                        axios.post('/appointments/' + appointmentId +
-                                '/send-confirmation-email')
-                            .then(response => {
-                                console.log(response
-                                .data); // Handle success (e.g., show a success message)
-                                toastr.success("Email de confirmation envoyé!",
-                                    "Succès");
-                                $('#eventDetailsModal')
-                            .hide(); // Optionally, close the modal
-                            })
-                            .catch(error => {
-                                console.error('Error:', error.response
-                                .data); // Handle error
-                                toastr.error(
-                                    "Erreur lors de l'envoi de l'email",
-                                    "Erreur");
-                            });
-                    });
-
+                    // Send POST request to the server to trigger email sending
+                    axios.post(`/appointments/${appointmentId}/send-confirmation-email`)
+                        .then(response => {
+                            console.log(response
+                            .data); // Handle success (e.g., show a success message)
+                            toastr.success("Email de confirmation envoyé!", "Succès");
+                            $('#eventDetailsModal')
+                        .hide(); // Optionally, close the modal
+                        })
+                        .catch(error => {
+                            console.error('Error:', error.response
+                            .data); // Handle error
+                            toastr.error("Erreur lors de l'envoi de l'email", "Erreur");
+                        });
                 });
             },
 

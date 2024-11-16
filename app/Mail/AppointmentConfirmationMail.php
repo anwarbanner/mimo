@@ -27,7 +27,7 @@ class AppointmentConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Appointment Confirmation Mail',
+            subject: 'Mail de Conirmation de Rendez-vous',
         );
     }
 
