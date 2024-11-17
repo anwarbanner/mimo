@@ -61,84 +61,52 @@
             </div>
         </div>
     </div>
-    <script>
-    function loadNextQuestion() {
-            fetch('{{ route("questions.next") }}')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Affiche la question et les choix dans le conteneur
-                        const questionContainer = document.getElementById('question-container');
-                        const question = data.question;
-                        let html = `<h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">${question.texte}</h1>`;
-                        html += `<form id="response-form" class="space-y-6">`;
-                        html += `<input type="hidden" name="question_id" value="${question.id}">`;
-
-                        if (question.type === 'texte') {
-                            html += `
-                                <div>
-                                    <label for="reponse" class="block text-lg font-medium text-gray-700">Votre réponse</label>
-                                    <input type="text" id="reponse" name="reponse" required class="border border-gray-300 rounded-lg p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>`;
-                        } else if (question.type === 'choix_unique') {
-                            html += `<div><span class="block text-lg font-medium text-gray-700 mb-2">Choisissez une option</span>`;
-                            question.choices.forEach(choice => {
-                                html += `
-                                    <div class="flex items-center space-x-3 mb-4">
-                                        <input type="radio" id="choix_${choice.id}" name="reponse" value="${choice.texte}" required class="form-radio h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500">
-                                        <label for="choix_${choice.id}" class="text-lg text-gray-700">${choice.texte}</label>
-                                    </div>`;
-                            });
-                            html += `</div>`;
-                        } else if (question.type === 'choix_multiple') {
-                            html += `<div><span class="block text-lg font-medium text-gray-700 mb-2">Sélectionnez vos réponses</span>`;
-                            question.choices.forEach(choice => {
-                                html += `
-                                    <div class="flex items-center space-x-3 mb-4">
-                                        <input type="checkbox" id="choix_${choice.id}" name="reponse[]" value="${choice.texte}" class="form-checkbox h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500">
-                                        <label for="choix_${choice.id}" class="text-lg text-gray-700">${choice.texte}</label>
-                                    </div>`;
-                            });
-                            html += `</div>`;
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+    
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+    
+                const formData = new FormData(form);
+    
+                try {
+                    // Envoyer les données de réponse
+                    await fetch("{{ route('questions.storeResponses') }}", {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
                         }
-                        html += `</form>`;
-                        questionContainer.innerHTML = html;
-                    } else if (data.status === 'completed') {
-                        window.location.href = '{{ route("questions.completed") }}';
+                    });
+    
+                    // Obtenir la prochaine question via AJAX
+                    const response = await fetch("{{ route('questions.getNextQuestion') }}");
+                    const data = await response.json();
+    
+                    if (data.status === "completed") {
+                        window.location.href = "{{ route('questions.completed') }}";
+                    } else {
+                        // Mettre à jour la question et les choix
+                        document.querySelector("h1").textContent = data.question.texte;
+                        const choicesContainer = document.querySelector("#choices-container");
+                        choicesContainer.innerHTML = "";
+    
+                        data.question.choices.forEach((choice) => {
+                            const choiceElement = document.createElement("div");
+                            choiceElement.innerHTML = `
+                                <input type="radio" id="choice_${choice.id}" name="reponse" value="${choice.texte}" required>
+                                <label for="choice_${choice.id}">${choice.texte}</label>
+                            `;
+                            choicesContainer.appendChild(choiceElement);
+                        });
                     }
-                })
-                .catch(error => console.error('Erreur:', error));
-        }
-
-        // Fonction pour envoyer la réponse via AJAX
-        function submitResponse() {
-            const formData = new FormData(document.getElementById('response-form'));
-            fetch('{{ route("questions.storeResponses") }}', {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    loadNextQuestion(); // Charger la question suivante
-                } else {
-                    alert("Erreur lors de l'enregistrement de la réponse.");
+                } catch (error) {
+                    console.error("Erreur:", error);
                 }
-            })
-            .catch(error => console.error('Erreur:', error));
-        }
-
-        // Écoutez le clic sur le bouton suivant pour envoyer la réponse et charger la question suivante
-        document.getElementById('next-button').addEventListener('click', function (e) {
-            e.preventDefault();
-            submitResponse();
+            });
         });
-
-        // Charger la première question dès le chargement de la page
-        document.addEventListener('DOMContentLoaded', loadNextQuestion);
-    </script>
-</script>
+    </script> --}}
 
     
 </x-app-layout>

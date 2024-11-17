@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rdvs', [RdvController::class, 'index'])->name('rdvs.index');
 
     //question
-    Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
+Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::post('/questions/store-responses', [QuestionController::class, 'storeResponses'])->name('questions.storeResponses');
@@ -76,6 +76,7 @@ Route::get('/questions/completed', [QuestionController::class, 'completed'])->na
 
 // Renamed route for completed (you can change the name to something else)
 Route::get('/completed', [QuestionController::class, 'completed'])->name('completed.questions');
+Route::get('/questions/next', [QuestionController::class, 'getNextQuestion'])->name('questions.getNextQuestion');
 
 Route::post('/questions/confirm-responses', [QuestionController::class, 'confirmResponses'])->name('questions.confirmResponses');
 Route::get('/questions/merci', function() {

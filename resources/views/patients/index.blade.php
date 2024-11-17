@@ -45,10 +45,8 @@
                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 justify-center">
                                 <a href="{{ route('patients.edit', $patient->id) }}"
                                    class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-3 lg:py-2 lg:px-6 rounded-md transition duration-200 text-xs">Voir</a>
-                                <a href="{{ route('questions.index', ['patient_id' => $patient->id]) }}"
-                                   class="bg-blue-600 hover:bg-blue-800 text-white py-2 px-3 lg:py-2 lg:px-6 rounded-md transition duration-200 text-xs">
-                                    Démarrer le questionnaire
-                                </a>
+                                <a href="{{ route('patients.startQuestionnaire', $patient->id) }}" class="btn btn-primary">Démarrer le questionnaire</a>
+
                                 <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
                                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline">
                                     @csrf
