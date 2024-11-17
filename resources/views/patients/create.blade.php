@@ -15,7 +15,7 @@
         @endif
 
         <!-- Formulaire avec enctype pour les fichiers -->
-        <form action="{{ route('patients.store') }}" method="POST" enctype="multipart/form-data" 
+        <form action="{{ route('patients.store') }}" method="POST" enctype="multipart/form-data"
               class="bg-white p-6 rounded-lg shadow-md space-y-6">
             @csrf
 
@@ -64,13 +64,6 @@
                     <option value="F" {{ old('sexe') == 'F' ? 'selected' : '' }}>Féminin</option>
                 </select>
             </div>
-
-            <div class="mb-4">
-                <label for="observations" class="block text-gray-700 font-semibold mb-2">Observations :</label>
-                <textarea name="observations" id="observations" rows="3"
-                          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">{{ old('observations') }}</textarea>
-            </div>
-
             <!-- Nouveau champ pour l'image -->
             <div class="mb-4">
                 <label for="image" class="block text-gray-700 font-semibold mb-2">Image :</label>
