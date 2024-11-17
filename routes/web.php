@@ -78,6 +78,7 @@ Route::get('/questions/completed', [QuestionController::class, 'completed'])->na
 
 // Renamed route for completed (you can change the name to something else)
 Route::get('/completed', [QuestionController::class, 'completed'])->name('completed.questions');
+Route::get('/questions/next', [QuestionController::class, 'getNextQuestion'])->name('questions.getNextQuestion');
 
 Route::post('/questions/confirm-responses', [QuestionController::class, 'confirmResponses'])->name('questions.confirmResponses');
 Route::get('/questions/merci', function() {
