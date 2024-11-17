@@ -1,5 +1,5 @@
+<x-app-layout>
 
-@section('content')
     <h1>Liste des Rendez-vous</h1>
 
     <table class="table">
@@ -22,4 +22,4 @@
             @endforeach
         </tbody>
     </table>
-@endsection
+</x-app-layout>

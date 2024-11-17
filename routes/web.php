@@ -60,12 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('rdvs', RdvController::class);
     Route::get('fullcalender', [FullCalenderController::class, 'index']);
     Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
-    Route::get('/visites', [VisiteController::class, 'index'])->name('visites.index');
-    Route::get('/visites/create', [VisiteController::class, 'create'])->name('visites.create');
-Route::post('/visites/store', [VisiteController::class, 'store'])->name('visites.store');
-Route::post('/visites/update', [VisiteController::class, 'update'])->name('visites.update');
+    Route::resource('visites', VisiteController::class);
    //produits
     Route::resource('products', ProductController::class);
+    Route::get('/rdvs', [RdvController::class, 'index'])->name('rdvs.index');
 
     //question
     Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');

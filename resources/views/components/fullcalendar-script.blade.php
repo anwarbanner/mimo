@@ -192,6 +192,14 @@
                             toastr.error("Erreur lors de l'envoi de l'email", "Erreur");
                         });
                 });
+                // commancer la visite
+                $('#Createviste').off('click').on('click', function() {
+                      // Redirect to the visites/create route with the rdv ID as a parameter
+                      let rdvId = event.id; // Assuming the rendezvous ID is the event ID
+                        let redirectUrl = `/visites/create?rdv=${rdvId}`;
+                        window.location.href = redirectUrl;
+                });
+
             },
 
             header: {

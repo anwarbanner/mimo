@@ -114,13 +114,10 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Event Details Modal -->
     <div id="eventDetailsModal" class="modal" style="display: none;">
         <div class="modal-content relative">
-            <!-- Close Icon -->
             <span id="closeModal"
                 class="absolute top-0 right-0 m-4 cursor-pointer text-gray-500 hover:text-gray-800 text-2xl">&times;</span>
-
             <h3>Détails du rendez-vous</h3>
             <p id="eventId"></p>
             <p id="eventTitle"></p>
@@ -129,17 +126,29 @@
             <p id="eventEnd"></p>
 
             <!-- Confirmation Buttons Row -->
-            <div class="flex space-x-4 mt-4">
-                <!-- Confirm via Email Button with Icon -->
-                <button id="confirmEmail" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded">
-                    <i class="fas fa-envelope mr-2"></i> Confirmer via Email
-                </button>
+          <!-- Responsive Confirmation Buttons Row -->
+<div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
+    <!-- Confirm via Email Button with Icon -->
+    <button id="confirmEmail" 
+            class="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+        <i class="fas fa-envelope mr-2"></i> Confirmer via Email
+    </button>
 
-                <!-- Confirm via WhatsApp Button with Icon -->
-                <button id="confirmWhatsApp" class="flex items-center bg-green-500 text-white px-4 py-2 rounded">
-                    <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
-                </button>
-            </div>
+    <!-- Confirm via WhatsApp Button with Icon -->
+    <button id="confirmWhatsApp" 
+            class="flex items-center justify-center bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+        <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
+    </button>
+</div>
+
+<!-- Separate Row for Créer Viste Button -->
+<div class="mt-4">
+    <button id="Createviste" 
+            class="w-full sm:w-auto bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded">
+        Créer Viste
+    </button>
+</div>
+
 
             <!-- Delete Event Button -->
             <button id="deleteEvent" class="bg-red-500 text-white px-4 py-2 rounded mt-4">Supprimer</button>
