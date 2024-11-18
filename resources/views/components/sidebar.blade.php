@@ -55,6 +55,12 @@
       <span>Agenda</span>
     </a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/visites">
+      <i class="fas fa-fw fa-solid fa-handshake"></i>
+      <span>Visites du jour</span>
+    </a>
+  </li>
 
 
   <!-- Nav Item - Profile -->
