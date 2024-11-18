@@ -1,8 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">Liste des Soins</x-slot>
     <div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-blue-700 mb-4 sm:mb-6">
-            Liste des Soins
-        </h1>
+        
         <a href="{{ route('soins.create') }}" 
            class="inline-block mb-3 sm:mb-4 px-3 py-2 sm:px-4 sm:py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300 text-sm sm:text-base">
             Ajouter un Soin

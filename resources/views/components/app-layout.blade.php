@@ -20,21 +20,30 @@
 </head>
 <body id="page-top">
     <div id="wrapper">
-        <x-sidebar />
-
+        <div class="hidden lg:block">
+            <x-sidebar />
+        </div>
+        
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
             <div id="content">
-                <x-navbar />
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">{{ $title ?? '' }}</h1>
+                
+               
+                    <x-navbar />
+                
+                
+                <!-- Add padding to the body for small devices to prevent overlap -->
+                <div class="sm:pt-16 pt-0">
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">{{ $title ?? '' }}</h1>
+                        </div>
+                        {{ $slot }}
                     </div>
-                    {{ $slot }}
                 </div>
             </div>
-            <x-footer />
+            
         </div>
     </div>
     <a class="scroll-to-top rounded" href="#page-top">

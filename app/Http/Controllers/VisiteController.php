@@ -15,7 +15,7 @@ class VisiteController extends Controller
      */
     public function index()
     {
-        
+
         $rdvs = Rdv::with('patient')->get();
 
         // Pass the data to the view

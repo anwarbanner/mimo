@@ -2,9 +2,6 @@
     <x-slot name="title">Liste des Produits</x-slot>
 
     <div class="max-w-full mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
-        <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-center text-blue-700 mb-4 sm:mb-6">
-            Liste des Produits
-        </h1>
         <a href="{{ route('products.create') }}"
            class="inline-block mb-3 sm:mb-4 px-4 py-2 sm:px-6 sm:py-3 bg-indigo-600 text-white rounded-md sm:rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 text-sm sm:text-base">
             Ajouter un Produit
@@ -37,7 +34,7 @@
                         <p class="text-sm text-gray-600 mb-3 sm:mb-4 truncate" style="max-width: 220px;">{{ $product->description }}</p>
 
                         <!-- Product Price -->
-                        <p class="text-lg font-semibold text-indigo-700 mb-3 sm:mb-4">{{ $product->price }} €</p>
+                        <p class="text-lg font-semibold text-indigo-700 mb-3 sm:mb-4">{{ $product->price }} DH</p>
 
                         <!-- Actions -->
                         <div class="flex justify-between items-center">

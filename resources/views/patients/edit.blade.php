@@ -22,7 +22,7 @@
         @endif
         @if($patient->image)
             <div class="flex justify-center mb-6">
-                <img src="data:image/jpeg;base64,{{ $patient->image }}" alt="Image du Patient" 
+                <img src="data:image/jpeg;base64,{{ $patient->image }}" alt="Image du Patient"
                      class="h-32 w-32 rounded-full border border-gray-300 shadow-lg">
             </div>
         @endif
@@ -37,31 +37,31 @@
                 <label class="block text-sm font-semibold mb-2" for="image">Modifier Image :</label>
                 <input type="file" id="image" name="image"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
-                
+
             </div>
 
             <!-- Champs de saisie avec valeurs actuelles du patient -->
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" value="{{ old('nom', $patient->nom) }}" 
+                <input type="text" id="nom" name="nom" value="{{ old('nom', $patient->nom) }}"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" value="{{ old('prenom', $patient->prenom) }}" 
+                <input type="text" id="prenom" name="prenom" value="{{ old('prenom', $patient->prenom) }}"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="email">Email :</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $patient->email) }}" 
+                <input type="email" id="email" name="email" value="{{ old('email', $patient->email) }}"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="telephone">Téléphone :</label>
-                <input type="tel" id="telephone" name="telephone" value="{{ old('telephone', $patient->telephone) }}" 
+                <input type="tel" id="telephone" name="telephone" value="{{ old('telephone', $patient->telephone) }}"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
@@ -73,25 +73,18 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="date_naissance">Date de Naissance :</label>
-                <input type="date" id="date_naissance" name="date_naissance" value="{{ old('date_naissance', $patient->date_naissance) }}" 
+                <input type="date" id="date_naissance" name="date_naissance" value="{{ old('date_naissance', $patient->date_naissance) }}"
                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="sexe">Sexe :</label>
-                <select id="sexe" name="sexe" 
+                <select id="sexe" name="sexe"
                         class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <option value="M" {{ old('sexe', $patient->sexe) == 'M' ? 'selected' : '' }}>Masculin</option>
                     <option value="F" {{ old('sexe', $patient->sexe) == 'F' ? 'selected' : '' }}>Féminin</option>
                 </select>
             </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="observations">Observations :</label>
-                <textarea id="observations" name="observations" rows="4"
-                          class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">{{ old('observations', $patient->observations) }}</textarea>
-            </div>
-
             <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
                 <a href="{{ route('patients.index') }}"
                    class="w-full sm:w-auto bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-center">
