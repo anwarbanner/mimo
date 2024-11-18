@@ -1,25 +1,35 @@
 <x-app-layout>
 
-    <h1>Liste des Rendez-vous</h1>
+   
+    <h1>Rendez-vous de {{ now()->toFormattedDateString() }}</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID Patient</th>
-                <th>Nom du Patient</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($rdvs as $rdv)
+    @if($rdvs->isEmpty())
+        <p>pas de rendez-vous aujourd'hui.</p>
+    @else
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ $rdv->patient->id }}</td>
-                    <td>{{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</td>
-                    <td>
-                        <a href="{{ route('visites.create', ['id_patient' => $rdv->patient->id, 'id_rdv' => $rdv->id]) }}" class="btn btn-primary">Créer Visite</a>
-                    </td>
+                    <th>motif </th>
+                    <th>Patient Name</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach($rdvs as $rdv)
+                    <tr>
+                        <td>{{ $rdv->title }}</td>
+                        <td>{{ $rdv->patient->id }}-{{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</td>
+                        <td>{{ $rdv->start->format('d-m-Y H:i') }}</td>
+                        <td>
+                            <a href="{{ route('visites.create', ['id_rdv' => $rdv->id]) }}" class="btn btn-primary">
+                                Create Visite
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
 </x-app-layout>
