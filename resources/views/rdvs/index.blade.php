@@ -100,6 +100,19 @@
                             Créer un Rendez-vous
                         </a>
                     </div>
+                    @if ($errors->any())
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert">
+                            <strong class="font-bold">Whoops!</strong>
+                            <span class="block sm:inline">There were some problems with your submission:</span>
+                            <ul class="mt-2 list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
 
                     <h1 class="text-2xl font-bold text-center mb-6">Agenda</h1>
 
@@ -126,28 +139,28 @@
             <p id="eventEnd"></p>
 
             <!-- Confirmation Buttons Row -->
-          <!-- Responsive Confirmation Buttons Row -->
-<div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
-    <!-- Confirm via Email Button with Icon -->
-    <button id="confirmEmail" 
-            class="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">
-        <i class="fas fa-envelope mr-2"></i> Confirmer via Email
-    </button>
+            <!-- Responsive Confirmation Buttons Row -->
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
+                <!-- Confirm via Email Button with Icon -->
+                <button id="confirmEmail"
+                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+                    <i class="fas fa-envelope mr-2"></i> Confirmer via Email
+                </button>
 
-    <!-- Confirm via WhatsApp Button with Icon -->
-    <button id="confirmWhatsApp" 
-            class="flex items-center justify-center bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded w-full sm:w-auto">
-        <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
-    </button>
-</div>
+                <!-- Confirm via WhatsApp Button with Icon -->
+                <button id="confirmWhatsApp"
+                    class="flex items-center justify-center bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+                    <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
+                </button>
+            </div>
 
-<!-- Separate Row for Créer Viste Button -->
-<div class="mt-4">
-    <button id="Createviste" 
-            class="w-full sm:w-auto bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded">
-        Créer Viste
-    </button>
-</div>
+            <!-- Separate Row for Créer Viste Button -->
+            <div class="mt-4">
+                <button id="Createviste"
+                    class="w-full sm:w-auto bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded">
+                    Créer Viste
+                </button>
+            </div>
 
 
             <!-- Delete Event Button -->
@@ -189,14 +202,15 @@
 
                 // Actual email confirmation request
                 axios.post('/send-email-confirmation', {
-                        /* request data */ })
+                        /* request data */
+                    })
                     .then(response => {
                         loadingSpinner.classList.add("hidden");
                         confirmEmailButton.disabled = false;
                         toastr.success("Email de confirmation envoyé avec succès !");
                     })
                     .catch(error => {
-                       break
+                        break
                     });
             });
         });

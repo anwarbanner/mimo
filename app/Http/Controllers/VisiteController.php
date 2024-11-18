@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Visite;
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\Patient;
+use App\Models\Product;
 use App\Models\Rdv;
+use App\Models\Soin;
 
 class VisiteController extends Controller
 {
@@ -28,9 +31,11 @@ class VisiteController extends Controller
     public function create(Request $request)
     {
         $id_rdv = $request->query('id_rdv');
-
+        $rdv = Rdv::with('patient')->where('id',$id_rdv)->first();
         // Pass necessary data to the view
-        return view('visites.create', compact('id_rdv'));
+        $products=Product::all();
+        $soins=Soin::all();
+        return view('visites.create', compact('rdv','products','soins'));
     }
 
     /**
@@ -38,20 +43,50 @@ class VisiteController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request data
         $validated = $request->validate([
             'id_rdv' => 'required|exists:rdvs,id',
             'observation' => 'nullable|string',
+            'products' => 'array',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
+            'soins' => 'array',
+            'soins.*.id' => 'required|exists:soins,id',
+            'soins.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Create a new visite record
-        Visite::create($validated);
+        // Check if a Visite already exists for the given rdv
+        if (Visite::where('id_rdv', $validated['id_rdv'])->exists()) {
+            return redirect()->back()->withErrors(['id_rdv' => 'A Visite for this RDV already exists.']);
+        }
 
-        // Redirect to the patient's detail page (adjust as needed)
-        $rdv = Rdv::find($request->id_rdv);
-        return redirect()
-            ->route('patients.show', $rdv->patient_id)
-            ->with('success', 'Visite created successfully.');
+        // Create the Visite
+        $visite = Visite::create([
+            'id_rdv' => $validated['id_rdv'],
+            'observation' => $validated['observation'] ?? '',
+        ]);
+
+        // Create the Invoice and associate it with the Visite
+        $invoice = Invoice::create([
+            'visites_id' => $visite->id,
+            'total_amount' => 0,
+        ]);
+
+        // Attach products and soins to the invoice
+        $totalAmount = 0;
+
+        foreach ($validated['products'] ?? [] as $product) {
+            $invoice->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+            $totalAmount += Product::find($product['id'])->price * $product['quantity'];
+        }
+
+        foreach ($validated['soins'] ?? [] as $soin) {
+            $invoice->soins()->attach($soin['id'], ['quantity' => $soin['quantity']]);
+            $totalAmount += Soin::find($soin['id'])->price * $soin['quantity'];
+        }
+
+        $invoice->update(['total_amount' => $totalAmount]);
+
+        return redirect()->route('visites.index')->with('success', 'Visite submitted successfully!');
     }
 
     /**

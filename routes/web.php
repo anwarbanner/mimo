@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
         ->name('patients.startQuestionnaire');
     //mailing
     Route::post('/appointments/{appointmentId}/send-confirmation-email', [RdvController::class, 'sendConfirmationEmail']);
-
+    
     //images de visite
     Route::post('/visite-images', [VisiteImageController::class, 'store']);
     Route::delete('/visite-images/{id}', [VisiteImageController::class, 'destroy']);

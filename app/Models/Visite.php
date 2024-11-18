@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Visite extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        
-        'id_rdv',
-        'section1_timer',
-        'section2_timer',
-        'section3_timer',
-    ];
+    protected $fillable = ['id_rdv', 'observation'];
+
+    public function images()
+    {
+        return $this->hasMany(VisiteImage::class);
+    }
     
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
 }
