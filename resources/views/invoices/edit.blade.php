@@ -17,10 +17,7 @@
             </select>
         </div>
 
-        <div class="form-group mb-4">
-            <label for="consultation_price" class="form-label">Prix de La Consultation</label>
-            <input type="number" name="consultation_price" id="consultation_price" class="form-control" value="{{ $invoice->consultation_price ?? 0 }}">
-        </div>
+       
 
        
         <div class="form-group mb-4">

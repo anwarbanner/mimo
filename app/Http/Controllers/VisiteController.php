@@ -10,20 +10,34 @@ use App\Models\Patient;
 use App\Models\Product;
 use App\Models\Rdv;
 use App\Models\Soin;
+use Carbon\Carbon;
 
 class VisiteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    
 
-        $rdvs = Rdv::with('patient')->get();
+public function index()
+{
+    // Get the current date
+    $currentDate = now()->toDateString();
 
-        // Pass the data to the view
-        return view('rdvs.index', compact('rdvs'));
+    // Retrieve rdvs of the current day with their associated patient information
+    $rdvs = Rdv::with('patient')
+        ->whereDate('start', $currentDate)
+        ->get();
+
+    // Ensure that the start field is parsed as a Carbon instance for formatting in the view
+    foreach ($rdvs as $rdv) {
+        $rdv->start = Carbon::parse($rdv->start);
     }
+
+    // Pass the data to the view
+    return view('visites.index', compact('rdvs'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -53,41 +67,69 @@ class VisiteController extends Controller
             'soins.*.id' => 'required|exists:soins,id',
             'soins.*.quantity' => 'required|integer|min:1',
         ]);
-
+    
         // Check if a Visite already exists for the given rdv
         if (Visite::where('id_rdv', $validated['id_rdv'])->exists()) {
             return redirect()->back()->withErrors(['id_rdv' => 'A Visite for this RDV already exists.']);
         }
-
+    
+        // Retrieve the RDV and its associated patient ID
+        $rdv = Rdv::findOrFail($validated['id_rdv']);
+        $patientId = $rdv->patient_id; // Assumes 'patient_id' exists in the rdvs table
+    
         // Create the Visite
         $visite = Visite::create([
             'id_rdv' => $validated['id_rdv'],
             'observation' => $validated['observation'] ?? '',
         ]);
-
+    
         // Create the Invoice and associate it with the Visite
         $invoice = Invoice::create([
             'visites_id' => $visite->id,
+            'patient_id' => $patientId, // Assign the patient ID
             'total_amount' => 0,
         ]);
-
+    
         // Attach products and soins to the invoice
         $totalAmount = 0;
-
+    
         foreach ($validated['products'] ?? [] as $product) {
             $invoice->products()->attach($product['id'], ['quantity' => $product['quantity']]);
             $totalAmount += Product::find($product['id'])->price * $product['quantity'];
         }
-
+    
         foreach ($validated['soins'] ?? [] as $soin) {
             $invoice->soins()->attach($soin['id'], ['quantity' => $soin['quantity']]);
             $totalAmount += Soin::find($soin['id'])->price * $soin['quantity'];
         }
-
+    
         $invoice->update(['total_amount' => $totalAmount]);
-
+    
         return redirect()->route('visites.index')->with('success', 'Visite submitted successfully!');
     }
+    
+  
+  
+    public function today(Request $request)
+{
+    $query = Rdv::with('patient') // Eager load patient relationship
+        ->whereDate('start', Carbon::today());
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', "%$search%")
+              ->orWhereHas('patient', function ($query) use ($search) {
+                  $query->where('nom', 'like', "%$search%")
+                        ->orWhere('prenom', 'like', "%$search%");
+              });
+        });
+    }
+
+    $rdvs = $query->get();
+
+    return view('visites.today', compact('rdvs'));
+}
 
     /**
      * Display the specified resource.

@@ -21,6 +21,11 @@ class Invoice extends Model
     {
         return $this->belongsToMany(Soin::class)->withPivot('quantity');
     }
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient_id'); // Replace 'patient_id' with the actual foreign key if it's different
+    }
+    
 
 
 }
