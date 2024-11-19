@@ -1,3 +1,4 @@
+<title>Patients</title>
 <x-app-layout>
     <div class="container mx-auto p-4 lg:p-10 max-w-6xl">
         <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Patients</h1>

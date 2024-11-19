@@ -15,7 +15,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <!-- Local Assets -->
-    <link rel="shortcut icon" href="{{ asset('admin_assets/img/tab-icon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo/logo-acup.jpg') }}">
+
     <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
 </head>
 <body id="page-top">

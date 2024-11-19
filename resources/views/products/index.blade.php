@@ -1,3 +1,4 @@
+<title>Produits</title>
 <x-app-layout>
     <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Produits</h1>
     <div class="max-w-full mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">

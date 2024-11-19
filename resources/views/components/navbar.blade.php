@@ -58,6 +58,11 @@
         Facture
       </a>
       <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/visites">
+        <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
+        Visite du jour
+      </a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="/rdvs">
         <i class="fas fa-calendar fa-sm fa-fw mr-2 text-gray-400"></i>
         Agenda

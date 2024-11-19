@@ -1,5 +1,5 @@
+<title>Questionnaire</title>
 <x-app-layout>
-    <x-slot name="title">Questionnaire</x-slot>
 
     <div class="min-h-screen flex items-start justify-center bg-gradient-to-b from-blue-50 to-blue-100 mt-20">
         <!-- Conteneur principal -->
