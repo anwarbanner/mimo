@@ -25,15 +25,13 @@ public function index()
     $currentDate = now()->toDateString();
 
     // Retrieve rdvs of the current day with their associated patient information
-    $rdvs = Rdv::with('patient')
-        ->whereDate('start', $currentDate)
-        ->get();
+    $rdvs = Rdv::with('patient')->whereDate('start', $currentDate)->get();
 
     // Ensure that the start field is parsed as a Carbon instance for formatting in the view
     foreach ($rdvs as $rdv) {
-        $rdv->start = Carbon::parse($rdv->start);
+        $rdv->start = Carbon::parse($rdv->start);$rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
     }
-
+    
     // Pass the data to the view
     return view('visites.index', compact('rdvs'));
 }
@@ -78,14 +76,12 @@ public function index()
         $patientId = $rdv->patient_id; // Assumes 'patient_id' exists in the rdvs table
     
         // Create the Visite
-        $visite = Visite::create([
-            'id_rdv' => $validated['id_rdv'],
-            'observation' => $validated['observation'] ?? '',
+        $visite = Visite::create(['id_rdv' => $validated['id_rdv'],'observation' => $validated['observation'] ?? '',
         ]);
     
         // Create the Invoice and associate it with the Visite
         $invoice = Invoice::create([
-            'visites_id' => $visite->id,
+            'visite_id' => $visite->id,
             'patient_id' => $patientId, // Assign the patient ID
             'total_amount' => 0,
         ]);
@@ -135,9 +131,13 @@ public function index()
      * Display the specified resource.
      */
     public function show(Visite $visite)
-    {
-        return view('visites.show', compact('visite'));
-    }
+{
+    // Load related RDV, patient, products, and soins
+    $visite->load('rdv.patient', 'invoice.products', 'invoice.soins');
+
+    return view('visites.show', compact('visite'));
+}
+
 
     /**
      * Show the form for editing the specified resource.

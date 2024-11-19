@@ -1,9 +1,6 @@
 <x-app-layout>
-    <x-slot name="title">Liste Patients</x-slot>
     <div class="container mx-auto p-4 lg:p-10 max-w-6xl">
         <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Patients</h1>
-
-        <!-- Button to add a new patient -->
         <div class="flex justify-between mb-4 lg:mb-6">
             <a href="{{ route('patients.create') }}"
                class="text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300"

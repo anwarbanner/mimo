@@ -61,6 +61,8 @@
                         </select>
                         <input type="number" name="soins[0][quantity]" placeholder="Quantité"
                             class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <input type="timer" name="soins[0][timer]" class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
+                        <button type="button" onclick="startTimer(0)" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
                     </div>
                 </div>
                 <button type="button" onclick="addSoin()"
@@ -109,9 +111,46 @@
                 </select>
                 <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
                     class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <input type="timer" name="soins[${soinIndex}][timer]" class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
+                <button type="button" onclick="startTimer(${soinIndex})" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
             `;
             document.getElementById('soins').appendChild(soinDiv);
             soinIndex++;
+        }
+
+        function startTimer(index) {
+            const timerInput = document.querySelector(`input[name="soins[${index}][timer]"]`);
+            const timerValue = timerInput.value.split(':');
+            let minutes = parseInt(timerValue[0], 10);
+            let seconds = parseInt(timerValue[1], 10);
+
+            let countdown = minutes * 60 + seconds;
+            const timerPopup = document.createElement('div');
+            timerPopup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'bg-white', 'p-6', 'shadow-lg', 'rounded-lg', 'z-50');
+            const timerDisplay = document.createElement('p');
+            timerDisplay.classList.add('text-xl', 'font-bold');
+            timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            const timerSound = new Audio('/mp3/Danger Alarm Sound Effect.mp3');  // Replace with actual sound file path
+
+            const countdownInterval = setInterval(function() {
+                countdown--;
+
+                minutes = Math.floor(countdown / 60);
+                seconds = countdown % 60;
+
+                timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    timerSound.play();
+                    timerPopup.innerHTML = '<p class="text-lg font-semibold text-red-500">Time is up!</p>';
+                    setTimeout(() => timerPopup.remove(), 3000);
+                }
+            }, 1000);
+
+            timerPopup.appendChild(timerDisplay);
+            document.body.appendChild(timerPopup);
         }
     </script>
 </x-app-layout>

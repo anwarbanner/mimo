@@ -1,5 +1,6 @@
 <x-app-layout>
 <x-slot name="title">Tableau de bord</x-slot>
+        
 
 <div class="container-fluid">
 

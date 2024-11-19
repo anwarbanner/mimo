@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $fillable = [
-        'patient_id', 'visites_id','total_amount'
+        'patient_id', 'visite_id','total_amount'
     ];
 
 

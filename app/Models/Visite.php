@@ -19,5 +19,12 @@ class Visite extends Model
     {
         return $this->hasOne(Invoice::class);
     }
+    // In App\Models\Visite
+
+public function rdv()
+{
+    return $this->belongsTo(Rdv::class, 'id_rdv', 'id'); // 'id_rdv' is the foreign key in 'visites' table, 'id' is the primary key in 'rdvs' table
+}
+
     
 }
