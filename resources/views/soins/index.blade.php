@@ -1,6 +1,6 @@
 <title>Soins</title>
 <x-app-layout>
-    <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8"  name="title">Liste des Soins</h1>
+    <h1 class="text-4xl lg:text-5xl  text-center text-blue-700 mb-6 lg:mb-8"  name="title">Liste des Soins</h1>
     <div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
         
         <a href="{{ route('soins.create') }}" 

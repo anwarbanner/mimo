@@ -1,6 +1,6 @@
 <title>Produits</title>
 <x-app-layout>
-    <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Produits</h1>
+    <h1 class="text-4xl lg:text-5xl  text-center text-blue-700 mb-6 lg:mb-8">Liste des Produits</h1>
     <div class="max-w-full mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <a href="{{ route('products.create') }}"
            class="inline-block mb-3 sm:mb-4 px-4 py-2 sm:px-6 sm:py-3 bg-indigo-600 text-white rounded-md sm:rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 text-sm sm:text-base">

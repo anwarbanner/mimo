@@ -1,6 +1,8 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Créer une Visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</h1>
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+            Créer une Visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}
+        </h1>
 
         <form action="{{ route('visites.store') }}" method="POST" class="space-y-6">
             @csrf
@@ -31,15 +33,15 @@
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Produits</label>
                 <div id="products" class="space-y-4">
-                    <div class="flex space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                         <select name="products[0][id]"
-                            class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->name }}</option>
                             @endforeach
                         </select>
                         <input type="number" name="products[0][quantity]" placeholder="Quantité"
-                            class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()"
@@ -52,16 +54,15 @@
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Soins</label>
                 <div id="soins" class="space-y-4">
-                    <div class="flex space-x-4">
-                        <select name="soins[0][id]"
-                            class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <select name="soins[0][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @foreach ($soins as $soin)
                                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
                             @endforeach
                         </select>
                         <input type="number" name="soins[0][quantity]" placeholder="Quantité"
-                            class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <input type="timer" name="soins[0][timer]" class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
+                            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <input type="timer" name="soins[0][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
                         <button type="button" onclick="startTimer(0)" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
                     </div>
                 </div>
@@ -86,15 +87,15 @@
 
         function addProduct() {
             const productDiv = document.createElement('div');
-            productDiv.classList.add('flex', 'space-x-4');
+            productDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4');
             productDiv.innerHTML = `
-                <select name="products[${productIndex}][id]" class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select name="products[${productIndex}][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                     @endforeach
                 </select>
                 <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité"
-                    class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             `;
             document.getElementById('products').appendChild(productDiv);
             productIndex++;
@@ -102,16 +103,16 @@
 
         function addSoin() {
             const soinDiv = document.createElement('div');
-            soinDiv.classList.add('flex', 'space-x-4');
+            soinDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4');
             soinDiv.innerHTML = `
-                <select name="soins[${soinIndex}][id]" class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select name="soins[${soinIndex}][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     @foreach ($soins as $soin)
                         <option value="{{ $soin->id }}">{{ $soin->name }}</option>
                     @endforeach
                 </select>
                 <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
-                    class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <input type="timer" name="soins[${soinIndex}][timer]" class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
+                    class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <input type="timer" name="soins[${soinIndex}][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
                 <button type="button" onclick="startTimer(${soinIndex})" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
             `;
             document.getElementById('soins').appendChild(soinDiv);
@@ -141,11 +142,13 @@
 
                 timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                if (countdown <= 0) {
+                if (countdown === 0) {
                     clearInterval(countdownInterval);
                     timerSound.play();
-                    timerPopup.innerHTML = '<p class="text-lg font-semibold text-red-500">Time is up!</p>';
-                    setTimeout(() => timerPopup.remove(), 3000);
+                    timerPopup.innerHTML = `<p class="text-red-600 text-xl">Time's up!</p>`;
+                    setTimeout(() => {
+                        timerPopup.remove();
+                    }, 2000);
                 }
             }, 1000);
 
