@@ -19,5 +19,5 @@ class Visite extends Model
     {
         return $this->hasOne(Invoice::class);
     }
-
+    
 }

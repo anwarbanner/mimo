@@ -26,7 +26,7 @@
             @forelse ($invoices as $invoice)
             <tr>
                 <td>{{ $invoice->id }}</td>
-                <td>{{ $invoice->patient->nom }}</td>
+                <td>{{ $invoice->patient->id }}- {{ $invoice->patient->nom }} {{ $invoice->patient->prenom }}</td>
                 <td>{{ $invoice->total_amount }} DH</td>
                 <td>
                     <a href="{{ route('invoices.show', $invoice->id) }}" class="btn btn-info">Voir</a>
