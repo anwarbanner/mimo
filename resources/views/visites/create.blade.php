@@ -1,92 +1,117 @@
 <x-app-layout>
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Créer une Visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</h1>
 
-    <h1>Créer une Visite</h1>
+        <form action="{{ route('visites.store') }}" method="POST" class="space-y-6">
+            @csrf
 
-    <form action="{{ route('visites.store') }}" method="POST">
-        @csrf
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                <strong class="font-bold">Whoops!</strong>
-                <span class="block sm:inline">There were some problems with your submission:</span>
-                <ul class="mt-2 list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <input type="hidden" name="id_rdv" value="{{ $rdv->id }}">
-
-        <div>
-            <label for="observation">Observation</label>
-            <textarea name="observation" id="observation" rows="4"></textarea>
-        </div>
-
-        <div>
-            <label>Products</label>
-            <div id="products">
-                <div>
-                    <select name="products[0][id]">
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+            @if ($errors->any())
+                <div class="bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-md">
+                    <strong class="font-bold">Whoops!</strong>
+                    <p class="mt-2">There were some problems with your submission:</p>
+                    <ul class="mt-2 list-disc pl-5 text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
-                    </select>
-                    <input type="number" name="products[0][quantity]" placeholder="Quantity">
+                    </ul>
                 </div>
-            </div>
-            <button type="button" onclick="addProduct()">Add Product</button>
-        </div>
+            @endif
 
-        <div>
-            <label>Soins</label>
-            <div id="soins">
-                <div>
-                    <select name="soins[0][id]">
-                        @foreach ($soins as $soin)
-                            <option value="{{ $soin->id }}">{{ $soin->name }}</option>
-                        @endforeach
-                    </select>
-                    <input type="number" name="soins[0][quantity]" placeholder="Quantity">
+            <input type="hidden" name="id_rdv" value="{{ $rdv->id }}">
+
+            <!-- Observation -->
+            <div>
+                <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>
+                <textarea name="observation" id="observation" rows="4"
+                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Écrivez vos observations ici..."></textarea>
+            </div>
+
+            <!-- Products Section -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Produits</label>
+                <div id="products" class="space-y-4">
+                    <div class="flex space-x-4">
+                        <select name="products[0][id]"
+                            class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                        <input type="number" name="products[0][quantity]" placeholder="Quantité"
+                            class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
                 </div>
+                <button type="button" onclick="addProduct()"
+                    class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
+                    + Ajouter un produit
+                </button>
             </div>
-            <button type="button" onclick="addSoin()">Add Soin</button>
-        </div>
 
-        <button type="submit">Submit Visite</button>
-    </form>
+            <!-- Soins Section -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Soins</label>
+                <div id="soins" class="space-y-4">
+                    <div class="flex space-x-4">
+                        <select name="soins[0][id]"
+                            class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            @foreach ($soins as $soin)
+                                <option value="{{ $soin->id }}">{{ $soin->name }}</option>
+                            @endforeach
+                        </select>
+                        <input type="number" name="soins[0][quantity]" placeholder="Quantité"
+                            class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <button type="button" onclick="addSoin()"
+                    class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
+                    + Ajouter un soin
+                </button>
+            </div>
 
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-all duration-200">
+                Soumettre la Visite
+            </button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
     <script>
         let productIndex = 1;
         let soinIndex = 1;
 
         function addProduct() {
             const productDiv = document.createElement('div');
+            productDiv.classList.add('flex', 'space-x-4');
             productDiv.innerHTML = `
-                    <select name="products[${productIndex}][id]">
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                        @endforeach
-                    </select>
-                    <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantity">
-                `;
+                <select name="products[${productIndex}][id]" class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    @endforeach
+                </select>
+                <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité"
+                    class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            `;
             document.getElementById('products').appendChild(productDiv);
             productIndex++;
         }
 
         function addSoin() {
             const soinDiv = document.createElement('div');
+            soinDiv.classList.add('flex', 'space-x-4');
             soinDiv.innerHTML = `
-                    <select name="soins[${soinIndex}][id]">
-                        @foreach ($soins as $soin)
-                            <option value="{{ $soin->id }}">{{ $soin->name }}</option>
-                        @endforeach
-                    </select>
-                    <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantity">
-                `;
+                <select name="soins[${soinIndex}][id]" class="w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    @foreach ($soins as $soin)
+                        <option value="{{ $soin->id }}">{{ $soin->name }}</option>
+                    @endforeach
+                </select>
+                <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
+                    class="w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            `;
             document.getElementById('soins').appendChild(soinDiv);
             soinIndex++;
         }
     </script>
-
-
 </x-app-layout>
