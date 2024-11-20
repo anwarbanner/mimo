@@ -10,7 +10,7 @@ use App\Models\Reponse;
 class Question extends Model
 {
     use HasFactory;
-    protected $fillable = ['texte', 'type', 'ordre', 'sexe'];
+    protected $fillable = ['texte', 'type', 'ordre', 'sexe','informationSup'];
 
     public function choix()
     {

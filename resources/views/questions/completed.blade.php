@@ -1,4 +1,3 @@
-<!-- resources/views/questions/completed.blade.php -->
 <x-app-layout>
     <x-slot name="title">Review Your Responses</x-slot>
 
@@ -9,8 +8,15 @@
             @csrf
             @foreach ($questionsWithResponses as $entry)
                 <div class="mb-6">
+                    <!-- Afficher la question -->
                     <h2 class="text-lg font-semibold">{{ $entry['question']->texte }}</h2>
 
+                    <!-- Afficher la réponse et ses informations supplémentaires -->
+                    
+
+                    
+
+                    <!-- Champs pour éditer les réponses -->
                     @if ($entry['question']->type === 'texte')
                         <input type="text" name="responses[{{ $entry['question']->id }}]" 
                                value="{{ $entry['reponse'] }}" 
@@ -37,6 +43,11 @@
                                 <label for="choix_{{ $choix->id }}" class="ml-2">{{ $choix->texte }}</label>
                             </div>
                         @endforeach
+                    @endif
+                    @if (!empty($entry['informationSup']))
+                        <p class="text-sm text-gray-500 italic mb-6">
+                            Information supplémentaire : {{ $entry['informationSup'] }}
+                        </p>
                     @endif
                 </div>
             @endforeach
