@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('adresse');
             $table->date('date_naissance');
             $table->enum('sexe', ['M', 'F']); // Champ pour le sexe
-            $table->text('observations')->nullable();
+            // $table->text('observations')->nullable();
             $table->timestamps();
         });
     }

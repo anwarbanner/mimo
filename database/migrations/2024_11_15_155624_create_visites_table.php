@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::create('visites', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('id_rdv');
+        $table->unsignedBigInteger('id_rdv')->unique();
         $table->string('observation');
         $table->foreign('id_rdv')->references('id')->on('rdvs')->onDelete('cascade');
         $table->timestamps();

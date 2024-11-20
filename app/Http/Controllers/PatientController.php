@@ -7,15 +7,15 @@ use App\Models\Invoice;
 use App\Models\Product;
 class PatientController extends Controller
 {
-   
+
     public function index()
     {
-        
+
         $patients = Patient::all();
         return view('patients.index', compact('patients'));
     }
-    
-    
+
+
     public function create()
     {
         return view('patients.create');
@@ -34,7 +34,6 @@ class PatientController extends Controller
             'adresse' => 'required|string',
             'date_naissance' => 'required|date',
             'sexe' => 'required|in:M,F',
-            'observations' => 'nullable|string',
             'image' => 'nullable|image|max:2048'
         ]);
         $patient = new Patient();
@@ -45,14 +44,13 @@ class PatientController extends Controller
         $patient->adresse = $request->adresse;
         $patient->date_naissance = $request->date_naissance;
         $patient->sexe = $request->sexe;
-        $patient->observations = $request->observations;
-        
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageData = base64_encode(file_get_contents($image->path()));
             $patient->image = $imageData;
         }
-    
+
         $patient->save();
 
         // Patient::create($validatedData);
@@ -91,7 +89,6 @@ class PatientController extends Controller
             'adresse' => 'nullable|string',
             'date_naissance' => 'nullable|date',
             'sexe' => 'nullable|string|in:M,F',
-            'observations' => 'nullable|string',
             'image' => 'nullable|image|max:2048', // Validation de l'image
         ]);
 
@@ -103,7 +100,6 @@ class PatientController extends Controller
         $patient->adresse = $request->adresse;
         $patient->date_naissance = $request->date_naissance;
         $patient->sexe = $request->sexe;
-        $patient->observations = $request->observations;
 
         // Gestion de l'image
         if ($request->hasFile('image')) {
@@ -124,11 +120,11 @@ class PatientController extends Controller
         $patientCount = Patient::count();
         $invoiceCount = Invoice::count();
         $productCount = Product::count();
-    
+
         // Pass both counts to the view
         return view('dashboard', compact('patientCount', 'invoiceCount' ,'productCount'));
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
