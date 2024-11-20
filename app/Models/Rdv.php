@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rdv extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'patient_id',
         'title',
@@ -17,8 +18,16 @@ class Rdv extends Model
         'etat',
     ];
 
+    // Cast the start and end attributes to datetime
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime',
+    ];
+
+    // Relationship with Patient
     public function patient()
     {
         return $this->belongsTo(Patient::class);
     }
 }
+

@@ -1,17 +1,16 @@
+<title>Questionnaire</title>
 <x-app-layout>
-    <x-slot name="title">Questionnaire</x-slot>
 
     <div class="min-h-screen flex items-start justify-center bg-gradient-to-b from-blue-50 to-blue-100 mt-20">
         <!-- Conteneur principal -->
         <div class="bg-white shadow-xl rounded-xl p-10 w-full sm:w-4/5 md:w-2/3 lg:w-1/2">
             
-            <!-- Question -->
+                <!-- Question -->
             <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">{{ $currentQuestion->texte }}</h1>
-
             <form action="{{ route('questions.storeResponses') }}" method="POST" class="space-y-6">
                 @csrf
                 <input type="hidden" name="question_id" value="{{ $currentQuestion->id }}">
-
+                <input type="hidden" name="patient_id" value="{{ session('currentPatientId') }}">
                 <!-- Affichage des options selon le type de question -->
                 @if ($currentQuestion->type === 'texte')
                     <!-- Champ de texte -->
@@ -56,6 +55,58 @@
                     </button>
                 </div>
             </form>
+            
+            <div id="progress-bar" class="w-full bg-gray-200 h-2 rounded mt-6">
+                <div id="progress" class="h-2 bg-blue-600 rounded" style="width: 0%;"></div>
+            </div>
         </div>
     </div>
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+    
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+    
+                const formData = new FormData(form);
+    
+                try {
+                    // Envoyer les données de réponse
+                    await fetch("{{ route('questions.storeResponses') }}", {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        }
+                    });
+    
+                    // Obtenir la prochaine question via AJAX
+                    const response = await fetch("{{ route('questions.getNextQuestion') }}");
+                    const data = await response.json();
+    
+                    if (data.status === "completed") {
+                        window.location.href = "{{ route('questions.completed') }}";
+                    } else {
+                        // Mettre à jour la question et les choix
+                        document.querySelector("h1").textContent = data.question.texte;
+                        const choicesContainer = document.querySelector("#choices-container");
+                        choicesContainer.innerHTML = "";
+    
+                        data.question.choices.forEach((choice) => {
+                            const choiceElement = document.createElement("div");
+                            choiceElement.innerHTML = `
+                                <input type="radio" id="choice_${choice.id}" name="reponse" value="${choice.texte}" required>
+                                <label for="choice_${choice.id}">${choice.texte}</label>
+                            `;
+                            choicesContainer.appendChild(choiceElement);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Erreur:", error);
+                }
+            });
+        });
+    </script> --}}
+
+    
 </x-app-layout>

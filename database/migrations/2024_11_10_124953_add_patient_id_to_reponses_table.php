@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->nullable();
-            $table->string('adresse')->nullable();
+        Schema::table('reponses', function (Blueprint $table) {
+            $table->foreignId('patient_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['phone', 'address']);
+        Schema::table('reponses', function (Blueprint $table) {
+            //
         });
     }
 };

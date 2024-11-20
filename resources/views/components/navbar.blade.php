@@ -1,30 +1,82 @@
+<style>
+  .full-width-dropdown {
+    position: absolute !important; /* Allow dropdown to break out of parent */
+    left: 0;
+    right: 0;
+    width: 90vw; /* Full viewport width */
+    margin: 5px; /* Remove default margins */
+    padding: 5px; /* Add spacing around content */
+    border-radius: 10; /* Remove rounded corners for a flat design */
+    z-index: 1050; /* Ensure it's above other content */
+}
+
+.full-width-dropdown .dropdown-item {
+    padding: 10px; /* Add spacing to dropdown items */
+}
+
+</style>
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
   
   <!-- Sidebar Toggle (Topbar) -->
-  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-    <i class="fa fa-bars"></i>
-  </button>
   
-  <!-- Topbar Search -->
-  <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-    <div class="input-group">
-      <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button">
-          <i class="fas fa-search fa-sm"></i>
-        </button>
-      </div>
+    <button 
+      class="btn btn-link d-md-none rounded-circle mr-3" 
+      id="sidebarDropdown" 
+      role="button" 
+      data-toggle="dropdown" 
+      aria-haspopup="true" 
+      aria-expanded="false">
+      <i class="fa fa-bars"></i>
+    </button>
+  
+    <!-- Dropdown menu -->
+    <div 
+      class="dropdown-menu full-width-dropdown shadow animated--grow-in" 
+      aria-labelledby="sidebarDropdown">
+      <a class="dropdown-item" href="{{ route('dashboard') }}">
+        <i class="fas fa-house-user fa-sm fa-fw mr-2 text-gray-400"></i>
+        Tableau de bord
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/patients">
+        <i class="fas fa-users fa-sm fa-fw mr-2 text-gray-400"></i>
+        Gestion des patients
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/products">
+        <i class="fas fa-mortar-pestle fa-sm fa-fw mr-2 text-gray-400"></i>
+        Gestion des Produits
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/soins">
+        <i class="fas fa-hand-holding-heart fa-sm fa-fw mr-2 text-gray-400"></i>
+        Gestion des soins
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/invoices">
+        <i class="fas fa-file-invoice fa-sm fa-fw mr-2 text-gray-400"></i>
+        Facture
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/visites">
+        <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
+        Visite du jour
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/rdvs">
+        <i class="fas fa-calendar fa-sm fa-fw mr-2 text-gray-400"></i>
+        Agenda
+      </a>
+      
     </div>
-  </form>
+  </li>
   
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
   
     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
     <li class="nav-item dropdown no-arrow d-sm-none">
-      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-search fa-fw"></i>
-      </a>
+    
       <!-- Dropdown - Messages -->
       <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
         <form class="form-inline mr-auto w-100 navbar-search">

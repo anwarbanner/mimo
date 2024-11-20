@@ -79,7 +79,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id,
             'phone' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
+            'adresse' => 'nullable|string|max:255',
             'cie' => 'nullable|string|max:255', // Validate CIE
             'fiscal_id' => 'nullable|string|max:255', // Validate Identifiant Fiscal
             'register_number' => 'nullable|string|max:255', // Validate Numéro de Registre
@@ -102,6 +102,14 @@ class AuthController extends Controller
     
         if ($user->register_number != $request->register_number) {
             $user->register_number = $request->register_number;
+            $changesDetected = true;
+        }
+        if ($user->adresse != $request->adresse) {
+            $user->adresse = $request->adresse;
+            $changesDetected = true;
+        }
+        if ($user->phone != $request->phone) {
+            $user->phone = $request->phone;
             $changesDetected = true;
         }
     

@@ -16,10 +16,10 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with('patient');
-    
+        $query = Invoice::with('patient')->orderBy('id', 'desc'); // Load related patient data
+        
         if ($request->has('search') && $request->search != '') {
-            $query->where('id', $request->search);
+            $query->where('id', $request->search); // Filter by invoice ID
         }
     
         $invoices = $query->get();
@@ -44,27 +44,38 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $products = $request->products ?? []; // array of product IDs
-        $soins = $request->soins ?? [];       // array of soin IDs
+        $validated = $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'products' => 'nullable|array',
+            'soins' => 'nullable|array',
+            'products.*' => 'exists:products,id',
+            'soins.*' => 'exists:soins,id',
+            'consultation_price' => 'nullable|numeric|min:0',
+        ]);
+    
+        $products = $validated['products'] ?? [];
+        $soins = $validated['soins'] ?? [];
+        $consultationPrice = $validated['consultation_price'] ?? 0;
     
         $totalProducts = Product::whereIn('id', $products)->sum('price');
         $totalSoins = Soin::whereIn('id', $soins)->sum('price');
-        $consultationPrice = $request->consultation_price ?? 0;
         $totalAmount = $totalProducts + $totalSoins + $consultationPrice;
     
-        // Create the invoice
+        // Create the invoice without setting visites_id
         $invoice = Invoice::create([
-            'patient_id' => $request->patient_id,
+            'patient_id' => $validated['patient_id'],
             'total_amount' => $totalAmount,
             'consultation_price' => $consultationPrice,
         ]);
     
-        // Sync products and soins
+        // Sync products and soins with quantities set to 1
         $invoice->products()->sync(array_fill_keys($products, ['quantity' => 1]));
         $invoice->soins()->sync(array_fill_keys($soins, ['quantity' => 1]));
     
         return redirect()->route('invoices.index')->with('success', 'Invoice created successfully.');
     }
+    
+
     
 
     

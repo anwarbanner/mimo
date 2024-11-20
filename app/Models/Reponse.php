@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Reponse extends Model
 {
     use HasFactory;
-    protected $fillable = ['valeur', 'date_reponse', 'question_id'];
+    protected $fillable = ['valeur', 'date_reponse', 'question_id','patient_id'];
 
     public function question()
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
 }

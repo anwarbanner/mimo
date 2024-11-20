@@ -1,18 +1,16 @@
+<title>Patients</title>
 <x-app-layout>
-    <x-slot name="title">Liste Patients</x-slot>
     <div class="container mx-auto p-4 lg:p-10 max-w-6xl">
         <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8">Liste des Patients</h1>
-
-        <!-- Button to add a new patient -->
         <div class="flex justify-between mb-4 lg:mb-6">
             <a href="{{ route('patients.create') }}"
-            class="text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300"
-            style="background-color: #3EB489; hover:bg-opacity-80;">
-            Ajouter un nouveau patient
-         </a>
+               class="text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300"
+               style="background-color: #3EB489; hover:bg-opacity-80;">
+                Ajouter un nouveau patient
+            </a>
             <!-- Champ de recherche -->
             <input type="text" id="patient_search" placeholder="Chercher par ID, nom ou prénom"
-           class="py-2 px-3 lg:py-3 lg:px-5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-md w-full md:w-1/2 lg:w-1/3">
+                   class="py-2 px-3 lg:py-3 lg:px-5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent shadow-md w-full md:w-1/2 lg:w-1/3">
         </div>
 
         <!-- Message de succès -->
@@ -45,6 +43,8 @@
                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 justify-center">
                                 <a href="{{ route('patients.edit', $patient->id) }}"
                                    class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-3 lg:py-2 lg:px-6 rounded-md transition duration-200 text-xs">Voir</a>
+                                <a href="{{ route('patients.startQuestionnaire', $patient->id) }}" class="btn btn-primary">Démarrer le questionnaire</a>
+
                                 <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
                                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline">
                                     @csrf
@@ -76,4 +76,5 @@
                 });
             });
         </script>
+    </div>
 </x-app-layout>

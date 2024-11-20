@@ -4,7 +4,7 @@
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
     <!-- Display Logo Image if available, otherwise fallback to default logo -->
     <img class="rounded-circle" 
-         src="" 
+         src="{{ asset('images/logo/logo-acup.jpg') }}" 
          alt="Logo" 
          style="width: 90px; height: 90px; object-fit: cover; border-radius: 50%;">
   </a>
@@ -53,6 +53,12 @@
     <a class="nav-link" href="/rdvs">
       <i class="fas fa-fw fa-solid fa-calendar"></i>
       <span>Agenda</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/visites">
+      <i class="fas fa-fw fa-solid fa-handshake"></i>
+      <span>Visites du jour</span>
     </a>
   </li>
 
