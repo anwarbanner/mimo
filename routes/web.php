@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/visite-images/{id}', [VisiteImageController::class, 'destroy']);
 
 });
+Route::get('/invoices/{invoiceId}/generate-and-share-pdf', [InvoiceController::class, 'generateAndSharePDF']);
 
 
 // Fallback route to handle unauthorized access

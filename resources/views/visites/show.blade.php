@@ -1,3 +1,4 @@
+<title>Détails de la Visite</title>
 <x-app-layout>
    <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8"  name="title">Détails de la Visite</h1>
 
@@ -13,9 +14,8 @@
         </div>
     </div>
     @foreach ($visite->images as $visiteImage)
-    <img src="{{ asset('storage/' . $visiteImage->images) }}" alt="Visite Image" class="w-32 h-32 object-cover">
-@endforeach
-
+        <img src="{{ asset('storage/' . $visiteImage->images) }}" alt="Visite Image" class="w-32 h-32 object-cover">
+    @endforeach
 
     <!-- Observation Section -->
     <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-6">
@@ -101,6 +101,19 @@
         <div class="px-6 py-4">
             <p class="text-gray-700"><strong>Total:</strong> {{ number_format($visite->invoice->total_amount, 2) }} DH</p>
         </div>
+    </div>
+
+    <!-- Buttons for Edit and Delete -->
+    <div class="flex justify-end mt-6">
+        <!-- Edit Button -->
+        <a href="{{ route('visites.edit', $visite->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Modifier la visite</a>
+
+        <!-- Delete Button -->
+        <form action="{{ route('visites.destroy', $visite->id) }}" method="POST" class="ml-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer la visite</button>
+        </form>
     </div>
 
 </x-app-layout>

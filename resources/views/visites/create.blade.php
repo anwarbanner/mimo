@@ -33,7 +33,7 @@
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Produits</label>
                 <div id="products" class="space-y-4">
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" data-index="0">
                         <select name="products[0][id]"
                             class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @foreach ($products as $product)
@@ -42,6 +42,7 @@
                         </select>
                         <input type="number" name="products[0][quantity]" placeholder="Quantité"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button type="button" onclick="removeProduct(0)" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()"
@@ -54,7 +55,7 @@
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Soins</label>
                 <div id="soins" class="space-y-4">
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" data-index="0">
                         <select name="soins[0][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @foreach ($soins as $soin)
                                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
@@ -64,6 +65,7 @@
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <input type="timer" name="soins[0][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
                         <button type="button" onclick="startTimer(0)" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
+                        <button type="button" onclick="removeSoin(0)" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
                     </div>
                 </div>
                 <button type="button" onclick="addSoin()"
@@ -88,6 +90,7 @@
         function addProduct() {
             const productDiv = document.createElement('div');
             productDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4');
+            productDiv.setAttribute('data-index', productIndex);
             productDiv.innerHTML = `
                 <select name="products[${productIndex}][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     @foreach ($products as $product)
@@ -96,6 +99,7 @@
                 </select>
                 <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité"
                     class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <button type="button" onclick="removeProduct(${productIndex})" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
             `;
             document.getElementById('products').appendChild(productDiv);
             productIndex++;
@@ -104,6 +108,7 @@
         function addSoin() {
             const soinDiv = document.createElement('div');
             soinDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4');
+            soinDiv.setAttribute('data-index', soinIndex);
             soinDiv.innerHTML = `
                 <select name="soins[${soinIndex}][id]" class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     @foreach ($soins as $soin)
@@ -114,6 +119,7 @@
                     class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <input type="timer" name="soins[${soinIndex}][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
                 <button type="button" onclick="startTimer(${soinIndex})" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
+                <button type="button" onclick="removeSoin(${soinIndex})" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
             `;
             document.getElementById('soins').appendChild(soinDiv);
             soinIndex++;
@@ -127,33 +133,34 @@
 
             let countdown = minutes * 60 + seconds;
             const timerPopup = document.createElement('div');
-            timerPopup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'bg-white', 'p-6', 'shadow-lg', 'rounded-lg', 'z-50');
+            timerPopup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'bg-white', 'p-4', 'rounded-lg', 'shadow-lg');
             const timerDisplay = document.createElement('p');
-            timerDisplay.classList.add('text-xl', 'font-bold');
-            timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timerDisplay.classList.add('text-2xl', 'font-bold', 'text-black');
 
-            const timerSound = new Audio('/mp3/Danger Alarm Sound Effect.mp3');  // Replace with actual sound file path
-
-            const countdownInterval = setInterval(function() {
+            const countdownInterval = setInterval(() => {
+                const minutesLeft = Math.floor(countdown / 60);
+                const secondsLeft = countdown % 60;
+                timerDisplay.textContent = `${minutesLeft}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
                 countdown--;
 
-                minutes = Math.floor(countdown / 60);
-                seconds = countdown % 60;
-
-                timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (countdown === 0) {
+                if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     timerSound.play();
-                    timerPopup.innerHTML = `<p class="text-red-600 text-xl">Time's up!</p>`;
-                    setTimeout(() => {
-                        timerPopup.remove();
-                    }, 2000);
                 }
             }, 1000);
 
             timerPopup.appendChild(timerDisplay);
             document.body.appendChild(timerPopup);
+        }
+
+        function removeProduct(index) {
+            const productDiv = document.querySelector(`div[data-index="${index}"]`);
+            productDiv.remove();
+        }
+
+        function removeSoin(index) {
+            const soinDiv = document.querySelector(`div[data-index="${index}"]`);
+            soinDiv.remove();
         }
     </script>
 </x-app-layout>
