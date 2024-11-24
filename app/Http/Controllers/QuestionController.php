@@ -99,17 +99,18 @@ class QuestionController extends Controller
             'texte' => 'required|string|max:255',
             'type' => 'required|in:texte,choix_unique,choix_multiple',
             'sexe' => 'required|in:Homme,Femme,Les deux',
-            'ordre' => 'required|integer|min:1',
             'choix' => 'array', // Ensure that choix is an array when provided
             'choix.*' => 'string|max:255', // Validate each choice as a string with a max length
         ]);
+        $dernierOrdre = Question::max('ordre') ?? 0;
+        $nouvelOrdre = $dernierOrdre + 1;
 
         // Create the question
         $question = Question::create([
             'texte' => $validatedData['texte'],
             'type' => $validatedData['type'],
             'sexe' => $validatedData['sexe'],
-            'ordre' => $validatedData['ordre'],
+            'ordre' => $nouvelOrdre,
         ]);
 
         // If the question type is "choix_unique" or "choix_multiple", add choices
