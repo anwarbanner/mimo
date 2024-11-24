@@ -33,45 +33,59 @@
 
             // Render event details on the calendar
             eventRender: function(event, element) {
+                // Set the event title with patient details
                 element.find('.fc-title').html(event.title + "<br>" + event.patient_nom + " " +
                     event.patient_prenom);
+
+                // Assign colors based on the event's etat
+                if (event.etat === "annulé") {
+                    element.css('background-color', '#ff4d4d'); // Red for annulé
+                    element.css('border-color', '#ff4d4d');
+                } else if (event.etat === "confirmé") {
+                    element.css('background-color', '#28a745'); // Green for confirmé
+                    element.css('border-color', '#28a745');
+                } else {
+                    element.css('background-color', '#007bff'); // Blue for others
+                    element.css('border-color', '#007bff');
+                }
             },
+
 
             selectable: true,
             selectHelper: true,
-            // Add a new event with patient information
-            select: function(start, end, allDay) {
-                var title = prompt("Titre de l'événement:");
-                var patientId = prompt("ID du patient:");
-                if (title && patientId) {
-                    var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                    var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-                    $.ajax({
-                        url: SITEURL + "/fullcalenderAjax",
-                        type: "POST",
-                        data: {
-                            title: title,
-                            patient_id: patientId,
-                            start: startDate,
-                            end: endDate,
-                            allDay: allDay,
-                            type: 'add'
-                        },
-                        success: function(data) {
-                            toastr.success("Événement créé avec succès", "Succès");
-                            $('#calendar').fullCalendar('renderEvent', {
-                                id: data.id,
-                                title: title,
-                                patient_id: patientId,
-                                start: startDate,
-                                end: endDate,
-                                allDay: allDay
-                            }, true);
-                            $('#calendar').fullCalendar('unselect');
-                        }
-                    });
-                }
-            },
+            // // Add a new event with patient information
+            // select: function(start, end, allDay) {
+            //     var title = prompt("Titre de l'événement:");
+            //     var patientId = prompt("ID du patient:");
+            //     if (title && patientId) {
+            //         var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+            //         var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+            //         $.ajax({
+            //             url: SITEURL + "/fullcalenderAjax",
+            //             type: "POST",
+            //             data: {
+            //                 title: title,
+            //                 patient_id: patientId,
+            //                 start: startDate,
+            //                 end: endDate,
+            //                 allDay: allDay,
+            //                 type: 'add'
+            //             },
+            //             success: function(data) {
+            //                 toastr.success("Événement créé avec succès", "Succès");
+            //                 $('#calendar').fullCalendar('renderEvent', {
+            //                     id: data.id,
+            //                     title: title,
+            //                     patient_id: patientId,
+            //                     start: startDate,
+            //                     end: endDate,
+            //                     allDay: allDay
+            //                 }, true);
+            //                 $('#calendar').fullCalendar('unselect');
+            //             }
+            //         });
+            //     }
+            // },
 
             // Update event start and end time
             eventDrop: function(event, delta, revertFunc) {
@@ -92,7 +106,7 @@
                     success: function(response) {
                         if (response.success) {
                             toastr.success("Événement mis à jour avec succès",
-                            "Succès");
+                                "Succès");
                         } else {
                             toastr.error("Erreur lors de la mise à jour: " + response
                                 .message, "Erreur");
@@ -152,10 +166,10 @@
                 // Confirm appointment via WhatsApp
                 $('#confirmWhatsApp').off('click').on('click', function() {
                     let patientPhoneNumber = event.telephone; // Patient's phone number
-                    let nom = event.patient_nom+" "+event.patient_prenom;
+                    let nom = event.patient_nom + " " + event.patient_prenom;
                     let noun = event.sexe === "M" ? "Monsieur" : "Madame";
                     let appointmentDate = event.start.format(
-                    "YYYY-MM-DD HH:mm");
+                        "YYYY-MM-DD HH:mm");
                     let cabinetName = "Acupencture Marrakech";
 
                     let message =
@@ -181,24 +195,62 @@
                     axios.post(`/appointments/${appointmentId}/send-confirmation-email`)
                         .then(response => {
                             console.log(response
-                            .data); // Handle success (e.g., show a success message)
+                                .data); // Handle success (e.g., show a success message)
                             toastr.success("Email de confirmation envoyé!", "Succès");
                             $('#eventDetailsModal')
-                        .hide(); // Optionally, close the modal
+                                .hide(); // Optionally, close the modal
                         })
                         .catch(error => {
                             console.error('Error:', error.response
-                            .data); // Handle error
+                                .data); // Handle error
                             toastr.error("Erreur lors de l'envoi de l'email", "Erreur");
                         });
                 });
                 // commancer la visite
                 $('#Createviste').off('click').on('click', function() {
-                      // Redirect to the visites/create route with the rdv ID as a parameter
-                      let rdvId = event.id; // Assuming the rendezvous ID is the event ID
-                        let redirectUrl = `/visites/create?rdv=${rdvId}`;
-                        window.location.href = redirectUrl;
+                    // Redirect to the visites/create route with the rdv ID as a parameter
+                    let rdvId = event.id; // Assuming the rendezvous ID is the event ID
+                    let redirectUrl = `/visites/create?rdv=${rdvId}`;
+                    window.location.href = redirectUrl;
                 });
+                // Handle updating event etat
+                $('#updateEtatForm').off('submit').on('submit', function(e) {
+                    e.preventDefault();
+
+                    let etat = $('#etat').val(); // Get the selected etat
+                    let eventId = event.id; // Use the event ID
+
+                    // AJAX request to update etat
+                    $.ajax({
+                        url: SITEURL +
+                            '/fullcalenderAjax', // Backend endpoint for updates
+                        type: 'POST',
+                        data: {
+                            id: eventId,
+                            etat: etat,
+                            type: 'update-etat'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(
+                                    "L'état de l'événement a été mis à jour avec succès",
+                                    "Succès");
+                                $('#calendar').fullCalendar(
+                                    'refetchEvents'); // Refresh the calendar
+                                $('#eventDetailsModal')
+                                    .hide(); // Close the modal
+                            } else {
+                                toastr.error("Erreur lors de la mise à jour: " +
+                                    response.message, "Erreur");
+                            }
+                        },
+                        error: function(xhr) {
+                            toastr.error("Erreur lors de la mise à jour",
+                                "Erreur");
+                        }
+                    });
+                });
+
 
             },
 
