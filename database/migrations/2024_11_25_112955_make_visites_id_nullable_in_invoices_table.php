@@ -9,7 +9,7 @@ class MakeVisitesIdNullableInInvoicesTable extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->unsignedBigInteger('visite_id')->nullable()->change();
+            $table->unsignedBigInteger('visites_id')->nullable();
         });
     }
 

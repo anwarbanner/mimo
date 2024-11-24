@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('telephone');
             $table->text('adresse');
             $table->date('date_naissance');
-            $table->enum('sexe', ['M', 'F']); // Champ pour le sexe
-            // $table->text('observations')->nullable();
+            $table->enum('sexe', ['M', 'F']);
+            $table->longText('image')->nullable();
             $table->timestamps();
         });
     }

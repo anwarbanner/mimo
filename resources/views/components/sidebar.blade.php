@@ -1,12 +1,12 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion h-100" id="accordionSidebar">
 <BR>
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center my-0" href="{{ route('dashboard') }}">
     <!-- Display Logo Image if available, otherwise fallback to default logo -->
-    <img class="rounded-circle" 
-         src="{{ asset('images/logo/logo-acup.jpg') }}" 
-         alt="Logo" 
-         style="width: 90px; height: 90px; object-fit: cover; border-radius: 50%;">
+    <img class="rounded-circle"
+         src="{{ asset('images/logo/logo-acup.jpg') }}"
+         alt="Logo"
+         style="width: 50px; height: 50px; object-fit: cover; ">
   </a>
 <BR>
 
@@ -21,7 +21,7 @@
     </a>
   </li>
 
-  
+
   <li class="nav-item">
     <a class="nav-link" href="/patients">
       <i class="fas fa-fw fa-solid fa-users"></i>
