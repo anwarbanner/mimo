@@ -10,7 +10,6 @@ use App\Models\Patient;
 use App\Models\Product;
 use App\Models\Rdv;
 use App\Models\Soin;
-use App\Models\VisiteImage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
