@@ -44,19 +44,31 @@
                             <td class="px-2 py-2">{{ $patient->sexe == 'M' ? 'M' : 'F' }}</td>
                             <td class="px-4 py-2 hidden md:table-cell">{{ \Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
                             <td class="px-4 py-2 text-center">
-                                <div class="flex flex-col sm:flex-row sm:space-x-2 justify-center space-y-2 sm:space-y-0">
+                                <!-- Actions sur PC -->
+                                <div class="hidden sm:flex sm:space-x-4 justify-center sm:mt-0">
+                                    <a href="{{ route('patients.show', $patient->id) }}"
+                                       class="bg-blue-600 hover:bg-blue-400 text-white py-2 px-4 rounded-md transition duration-200 text-xs w-full sm:w-auto text-center">
+                                       Voir
+                                    </a>
                                     <a href="{{ route('patients.edit', $patient->id) }}"
-                                       class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-3 lg:py-4 lg:px-4 rounded-md transition duration-200 text-xs">Voir</a>
-                                    <a href="{{ route('patients.startQuestionnaire', $patient->id) }}" 
-                                       class="bg-blue-600 hover:bg-blue-800 text-white py-2 px-3 lg:py-4 lg:px-4 rounded-md transition duration-200 text-xs">Questionnaire</a>
+                                       class="bg-yellow-600 hover:bg-yellow-400 text-white py-2 px-4 rounded-md transition duration-200 text-xs w-full sm:w-auto text-center">
+                                       Modifier
+                                    </a>
                                     <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline">
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="inline w-full sm:w-auto">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                class="bg-red-600 hover:bg-red-800 text-white py-2 px-3 lg:py-4 lg:px-4 rounded-md transition duration-200 text-xs">Supprimer</button>
+                                                class="bg-red-600 hover:bg-red-800 text-white py-2 px-4 rounded-md transition duration-200 text-xs w-full sm:w-auto text-center">
+                                            Supprimer
+                                        </button>
                                     </form>
                                 </div>
+                                <!-- Bouton Détails sur Mobile -->
+                                <button onclick="openDetails({{ $patient->id }})" 
+                                        class="sm:hidden bg-blue-600 hover:bg-blue-800 text-white py-2 px-3 rounded-md transition duration-200 text-xs">
+                                    Détails
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -64,22 +76,45 @@
             </table>
         </div>
 
-        <!-- Script de recherche -->
-        <script>
-            document.getElementById('patient_search').addEventListener('input', function() {
-                var searchValue = this.value.toLowerCase();
-                var patientRows = document.querySelectorAll('.patient-row');
+        <!-- Fenêtre modale pour les actions -->
+        <div id="details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-sm">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Actions pour le patient</h2>
+                <div id="modal-actions" class="flex flex-col space-y-4">
+                    <!-- Les boutons seront insérés dynamiquement -->
+                </div>
+                <button onclick="closeDetails()" 
+                        class="mt-4 w-full bg-red-600 hover:bg-red-800 text-white py-2 px-4 rounded-md">
+                    Fermer
+                </button>
+            </div>
+        </div>
 
-                patientRows.forEach(function(row) {
-                    var patientID = row.getAttribute('data-id').toLowerCase();
-                    var patientName = row.getAttribute('data-name').toLowerCase();
-                    if (patientID.includes(searchValue) || patientName.includes(searchValue)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
+        <!-- Script -->
+        <script>
+            function openDetails(patientId) {
+                const modal = document.getElementById('details-modal');
+                const modalActions = document.getElementById('modal-actions');
+
+                // Réinitialiser le contenu des actions
+                modalActions.innerHTML = `
+                    <a href="/patients/${patientId}" class="bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded-md">Voir</a>
+                    <a href="/patients/${patientId}/edit" class="bg-yellow-600 hover:bg-yellow-800 text-white py-2 px-4 rounded-md">Modifier</a>
+                    <form action="/patients/${patientId}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-600 hover:bg-red-800 text-white py-2 px-4 rounded-md">Supprimer</button>
+                    </form>
+                `;
+
+                // Afficher la modale
+                modal.classList.remove('hidden');
+            }
+
+            function closeDetails() {
+                const modal = document.getElementById('details-modal');
+                modal.classList.add('hidden');
+            }
         </script>
     </div>
 </x-app-layout>

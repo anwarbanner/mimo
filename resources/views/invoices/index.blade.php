@@ -5,7 +5,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <x-app-layout>
     <div class="container-fluid px-7">
         <!-- Heading Section -->
@@ -19,7 +18,7 @@
         <div class="row mb-4">
             <div class="col-12 text-left">
                 <a href="{{ route('invoices.create') }}" class="btn btn-primary">
-                  Créer une facture
+                    Créer une facture
                 </a>
             </div>
         </div>
@@ -96,11 +95,14 @@
                                                                 </button>
                                                             </form>
                                                         </div>
-                                                        <!-- Download PDF Button -->
+                                                        <!-- WhatsApp Confirmation -->
                                                         <div class="col-12 col-md-6">
-                                                            <a href="{{ route('invoices.download-pdf', $invoice->id) }}" class="btn btn-outline-success w-100 py-3">
-                                                                <i class="bi bi-file-earmark-pdf"></i> Télécharger PDF
-                                                            </a>
+                                                            <button 
+                                                                class="confirmWhatsApp btn btn-success w-100 py-3" 
+                                                                data-invoice-id="{{ $invoice->id }}" 
+                                                                data-patient-phone="{{ $invoice->patient->telephone }}">
+                                                                <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -124,4 +126,33 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to handle WhatsApp confirmation -->
+    <script>
+       $(document).on('click', '.confirmWhatsApp', function () {
+    let invoiceId = $(this).data('invoice-id');
+    let patientPhoneNumber = $(this).data('patient-phone');
+
+    // Make an AJAX call to generate the PDF and retrieve the public URL
+    $.ajax({
+        url: `/invoices/${invoiceId}/generate-and-share-pdf`,
+        method: 'GET',
+        success: function (response) {
+            // WhatsApp message with file link
+            let message = `Bonjour, voici votre facture en pièce jointe : ${response.url}`;
+
+            // Encode the message
+            let encodedMessage = encodeURIComponent(message);
+
+            // Open WhatsApp URL
+            let whatsappUrl = `https://wa.me/+212${patientPhoneNumber}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        },
+        error: function () {
+            alert('Erreur lors de la génération du fichier PDF.');
+        }
+    });
+});
+
+    </script>
 </x-app-layout>

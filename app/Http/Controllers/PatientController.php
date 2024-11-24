@@ -5,6 +5,8 @@ use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
 use App\Models\Product;
+use Carbon\Carbon;
+use App\Models\Rdv;
 class PatientController extends Controller
 {
 
@@ -114,16 +116,25 @@ class PatientController extends Controller
     }
 
 
-    public function dashboard()
-    {
-        // Get the count of patients and invoices
-        $patientCount = Patient::count();
-        $invoiceCount = Invoice::count();
-        $productCount = Product::count();
+    
 
-        // Pass both counts to the view
-        return view('dashboard', compact('patientCount', 'invoiceCount' ,'productCount'));
-    }
+public function dashboard()
+{
+    // Get the count of patients, invoices, and products
+    $patientCount = Patient::count();
+    $invoiceCount = Invoice::count();
+    $productCount = Product::count();
+
+    // Get today's date
+    $today = Carbon::today();
+
+    // Count today's appointments
+    $todayRdvCount = Rdv::whereDate('start', $today)->count();
+
+    // Pass all counts to the view
+    return view('dashboard', compact('patientCount', 'invoiceCount', 'productCount', 'todayRdvCount'));
+}
+
 
     /**
      * Remove the specified resource from storage.

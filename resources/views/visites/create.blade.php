@@ -34,7 +34,7 @@
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Produits</label>
                 <div id="products" class="space-y-4">
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" data-index="0">
                         <select name="products[0][id]"
                             class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @foreach ($products as $product)
@@ -43,6 +43,7 @@
                         </select>
                         <input type="number" name="products[0][quantity]" placeholder="Quantité"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button type="button" onclick="removeProduct(0)" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()"
@@ -165,26 +166,16 @@
             timerPopup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2',
                 'bg-white', 'p-6', 'shadow-lg', 'rounded-lg', 'z-50');
             const timerDisplay = document.createElement('p');
-            timerDisplay.classList.add('text-xl', 'font-bold');
-            timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timerDisplay.classList.add('text-2xl', 'font-bold', 'text-black');
 
             const timerSound = new Audio('/mp3/Danger Alarm Sound Effect.mp3'); // Replace with actual sound file path
 
             const countdownInterval = setInterval(function() {
                 countdown--;
 
-                minutes = Math.floor(countdown / 60);
-                seconds = countdown % 60;
-
-                timerDisplay.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (countdown === 0) {
+                if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     timerSound.play();
-                    timerPopup.innerHTML = `<p class="text-red-600 text-xl">Time's up!</p>`;
-                    setTimeout(() => {
-                        timerPopup.remove();
-                    }, 2000);
                 }
             }, 1000);
 

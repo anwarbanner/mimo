@@ -22,7 +22,7 @@
                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $patientCount }}</div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-solid fa-users fa-2x text-gray-300"></i>
+                    <i class="fas fa-solid fa-users fa-2x text-blak-300"></i>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $invoiceCount }}</div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-file-invoice  fa-2x text-gray-300"></i>
+                    <i class="fas fa-file-invoice  fa-2x text-black-300"></i>
                 </div>
             </div>
         </div>
@@ -56,33 +56,30 @@
                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $productCount }}</div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-fw fa-solid fa-mortar-pestle fa-2x text-gray-300"></i>
+                    <i class="fas fa-fw fa-solid fa-mortar-pestle fa-2x text-black-300"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                               ??????</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-solid fa-user-slash fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Visites du jour</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $todayRdvCount }}</div>
+                </div>
+                <div class="col-auto">
+                    <i class=" fas fa-fw fa-handshake fa-mortar  fa-2x text-black-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    <!-- Content Row -->
+                    {{-- <!-- Content Row -->
 
                     <div class="row">
 
@@ -159,5 +156,5 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 </x-app-layout>

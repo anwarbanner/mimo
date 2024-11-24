@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ use Illuminate\Support\Facades\Storage;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Product;
@@ -27,7 +27,29 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
     
+   
 
+    public function generateAndSharePDF($invoiceId)
+    {
+        // Fetch the invoice
+        $invoice = Invoice::findOrFail($invoiceId);
+    
+        // Generate the PDF
+        $pdf = \PDF::loadView('invoices.pdf', ['invoice' => $invoice]);
+    
+        // Define the file name
+        $fileName = 'invoice_' . $invoiceId . '.pdf';
+    
+        // Save the file to the public directory
+        $filePath = 'invoices/' . $fileName;
+        Storage::disk('public')->put($filePath, $pdf->output());
+    
+        // Generate the public URL
+        $publicUrl = asset('storage/' . $filePath);
+    
+        return response()->json(['url' => $publicUrl]);
+    }
+    
     /**
      * Show the form for creating a new invoice.
      */
@@ -125,10 +147,17 @@ class InvoiceController extends Controller
     public function destroy($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $invoice->delete();
-
-        return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully');
+    
+        // Check if the invoice has an associated visite
+        if ($invoice->visite) {
+            $invoice->visite->delete(); // Delete the associated visite
+        }
+    
+        $invoice->delete(); // Delete the invoice
+    
+        return redirect()->route('invoices.index')->with('success', 'Invoice and associated visit deleted successfully.');
     }
+    
 
     /**
      * Generate PDF for the specified invoice.

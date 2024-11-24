@@ -1,3 +1,4 @@
+<title>Détails de la Visite</title>
 <x-app-layout>
     <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8" name="title">
         Détails de la Visite

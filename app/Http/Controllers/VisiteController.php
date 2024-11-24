@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visite;
-use App\Http\Controllers\Controller;
+use App\Models\VisiteImage;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\Patient;
@@ -42,10 +42,6 @@ class VisiteController extends Controller
         return view('visites.index', compact('rdvs'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         $id_rdv = $request->query('id_rdv');
@@ -220,12 +216,17 @@ class VisiteController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Visite $visite)
-    {
-        $validated = $request->validate([
-            'observation' => 'nullable|string',
-        ]);
+{
+    $validated = $request->validate([
+        'observation' => 'nullable|string',
+        'products.*.id' => 'nullable|exists:products,id',
+        'products.*.quantity' => 'nullable|integer|min:1',
+        'soins.*.id' => 'nullable|exists:soins,id',
+        'soins.*.quantity' => 'nullable|integer|min:1',
+    ]);
 
-        $visite->update($validated);
+    // Update the Visite
+    $visite->update($validated);
 
         return redirect()
             ->route('visites.index')
@@ -239,8 +240,7 @@ class VisiteController extends Controller
     {
         $visite->delete();
 
-        return redirect()
-            ->route('visites.index')
-            ->with('success', 'Visite deleted successfully.');
-    }
+    return redirect()->route('visites.index')->with('success', 'Visite et facture supprimées avec succès.');
+}
+
 }
