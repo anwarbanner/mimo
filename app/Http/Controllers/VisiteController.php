@@ -23,23 +23,44 @@ class VisiteController extends Controller
      */
 
 
-    public function index()
-    {
-        // Get the current date
-        $currentDate = now()->toDateString();
-
-        // Retrieve rdvs of the current day with their associated patient information
-        $rdvs = Rdv::with('patient')->whereDate('start', $currentDate)->get();
-
-        // Ensure that the start field is parsed as a Carbon instance for formatting in the view
-        foreach ($rdvs as $rdv) {
-            $rdv->start = Carbon::parse($rdv->start);
-            $rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
-        }
-
-        // Pass the data to the view
-        return view('visites.index', compact('rdvs'));
-    }
+     public function index(Request $request)
+     {
+         // Get the filter and search parameters
+         $filter = $request->input('filter', 'today');
+         $search = $request->input('search');
+     
+         // Base query with patient relationship
+         $query = Rdv::with('patient');
+     
+         // Apply filter for 'today', 'month', or 'all'
+         if ($filter === 'today') {
+             $query->whereDate('start', now()->toDateString());
+         } elseif ($filter === 'month') {
+             $query->whereMonth('start', now()->month)->whereYear('start', now()->year);
+         }
+     
+         // Apply search by patient ID or motif
+         if ($search) {
+             $query->where(function ($q) use ($search) {
+                 $q->where('title', 'like', "%$search%")->orWhereHas('patient', function ($query) use ($search) {
+                 $query->where('id', 'like', "%$search%")->orWhere('nom', 'like', "%$search%")->orWhere('prenom', 'like', "%$search%");
+                   });
+             });
+         }
+     
+         // Retrieve filtered and/or searched RDVs
+         $rdvs = $query->get();
+     
+         // Ensure that the start field is parsed as a Carbon instance and check for existing visits
+         foreach ($rdvs as $rdv) {
+             $rdv->start = Carbon::parse($rdv->start);
+             $rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
+         }
+     
+         // Pass data to the view
+         return view('visites.index', compact('rdvs'));
+     }
+     
 
     public function create(Request $request)
     {
@@ -170,26 +191,26 @@ class VisiteController extends Controller
 
 
 
-    public function today(Request $request)
-    {
-        $query = Rdv::with('patient') // Eager load patient relationship
-            ->whereDate('start', Carbon::today());
+    // public function today(Request $request)
+    // {
+    //     $query = Rdv::with('patient') // Eager load patient relationship
+    //         ->whereDate('start', Carbon::today());
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%$search%")
-                    ->orWhereHas('patient', function ($query) use ($search) {
-                        $query->where('nom', 'like', "%$search%")
-                            ->orWhere('prenom', 'like', "%$search%");
-                    });
-            });
-        }
+    //     if ($request->filled('search')) {
+    //         $search = $request->search;
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('title', 'like', "%$search%")
+    //                 ->orWhereHas('patient', function ($query) use ($search) {
+    //                     $query->where('nom', 'like', "%$search%")
+    //                         ->orWhere('prenom', 'like', "%$search%");
+    //                 });
+    //         });
+    //     }
 
-        $rdvs = $query->get();
+    //     $rdvs = $query->get();
 
-        return view('visites.today', compact('rdvs'));
-    }
+    //     return view('visites.today', compact('rdvs'));
+    // }
 
     /**
      * Display the specified resource.
@@ -206,32 +227,111 @@ class VisiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Visite $visite)
+    public function edit($id)
     {
-        return view('visites.edit', compact('visite'));
+        // Fetch the visite by ID
+        $visite = Visite::with('rdv', 'invoice.products', 'invoice.soins', 'visiteImages')->findOrFail($id);
+    
+        // Fetch all products and soins from the database
+        $products = Product::all(); // Ensure you have a Product model
+        $soins = Soin::all();       // Ensure you have a Soin model
+    
+        // Return view with data
+        return view('visites.edit', compact('visite', 'products', 'soins'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Visite $visite)
+    public function update(Request $request, $id)
 {
+    // Validate the request data
     $validated = $request->validate([
         'observation' => 'nullable|string',
-        'products.*.id' => 'nullable|exists:products,id',
-        'products.*.quantity' => 'nullable|integer|min:1',
-        'soins.*.id' => 'nullable|exists:soins,id',
-        'soins.*.quantity' => 'nullable|integer|min:1',
+        'products' => 'array',
+        'products.*.id' => 'required|exists:products,id',
+        'products.*.quantity' => 'required|integer|min:1',
+        'soins' => 'array',
+        'soins.*.id' => 'required|exists:soins,id',
+        'soins.*.quantity' => 'required|integer|min:1',
     ]);
 
-    // Update the Visite
-    $visite->update($validated);
+    // Find the visite and invoice by ID
+    $visite = Visite::findOrFail($id);
+    $invoice = $visite->invoice;
 
-        return redirect()
-            ->route('visites.index')
-            ->with('success', 'Visite updated successfully.');
+    // Begin a database transaction to ensure all operations are atomic
+    DB::beginTransaction();
+
+    try {
+        // Update the observation field
+        $visite->update([
+            'observation' => $validated['observation'] ?? $visite->observation,
+        ]);
+
+        // Detach the existing products and soins to prevent orphaned records
+        $invoice->products()->detach();
+        $invoice->soins()->detach();
+
+        // Reattach the new products and soins with their quantities
+        $totalAmount = 0;
+
+        foreach ($validated['products'] ?? [] as $product) {
+            $invoice->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+            $totalAmount += Product::find($product['id'])->price * $product['quantity'];
+        }
+
+        foreach ($validated['soins'] ?? [] as $soin) {
+            $invoice->soins()->attach($soin['id'], ['quantity' => $soin['quantity']]);
+            $totalAmount += Soin::find($soin['id'])->price * $soin['quantity'];
+        }
+        // Handle image uploads and store them
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                if (!$image->isValid()) {
+                    Log::error('Invalid image file:', [
+                        'image' => $image->getClientOriginalName(),
+                        'error' => $image->getErrorMessage()
+                    ]);
+                    return redirect()->back()->withErrors(['images' => 'One or more image files are invalid.']);
+                }
+
+                $imageContent = file_get_contents($image->getRealPath());
+
+                // Create a VisiteImage record to associate the image with the Visite
+                VisiteImage::create([
+                    'visite_id' => $visite->id,
+                    'images' => $imageContent,  // Store the raw image data
+                    'description' => 'Image for visite',  // Modify this as per your needs
+                ]);
+            }
+        }
+        // Update the total amount of the invoice
+        $invoice->update(['total_amount' => $totalAmount]);
+
+        // Commit the transaction if everything is successful
+        DB::commit();
+
+        // Redirect with success message
+        return redirect()->route('visites.index')->with('success', 'Visite updated successfully!');
+    } catch (Exception $e) {
+        // If any exception occurs, rollback the transaction
+        DB::rollBack();
+
+        // Log the error for debugging with more details
+        Log::error('Visite update failed', [
+            'error' => $e->getMessage(),
+            'stack_trace' => $e->getTraceAsString(),
+            'input_data' => $request->all(),
+        ]);
+
+        // Return back with a more detailed error message
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
+}
 
+    
+    
     /**
      * Remove the specified resource from storage.
      */

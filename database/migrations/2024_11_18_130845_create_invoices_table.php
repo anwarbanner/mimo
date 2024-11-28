@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visite_id')->constrained()->onDelete('cascade')->null;
+            // Make visite_id nullable
+            $table->foreignId('visite_id')->nullable()->constrained()->onDelete('cascade');
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });
@@ -32,6 +33,9 @@ return new class extends Migration
 
     public function down(): void
     {
+        // Drop invoice_soin and invoice_product tables first due to foreign key constraints
+        Schema::dropIfExists('invoice_soin');
+        Schema::dropIfExists('invoice_product');
         Schema::dropIfExists('invoices');
     }
 };

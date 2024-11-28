@@ -1,11 +1,38 @@
 <title>Visites</title>
 <x-app-layout>
     <h1 class="text-lg sm:text-xl md:text-2xl lg:text-5xl text-center text-blue-700 mb-4 lg:mb-8">
-        Rendez-vous de {{ now()->toFormattedDateString() }}
+        Rendez-vous - {{ request('filter', 'Aujourd\'hui') }}
     </h1>
 
+    <!-- Filters -->
+    <div class="flex justify-center space-x-4 mb-6">
+        <a href="{{ route('visites.index', ['filter' => 'today']) }}"
+           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Visites Aujourd'hui
+        </a>
+        <a href="{{ route('visites.index', ['filter' => 'month']) }}"
+           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Visites du Mois
+        </a>
+        <a href="{{ route('visites.index', ['filter' => 'all']) }}"
+           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Tous les RDV
+        </a>
+    </div>
+
+    <!-- Search -->
+    <form method="GET" action="{{ route('visites.index') }}" class="flex justify-center mb-6">
+        <input type="text" name="search" value="{{ request('search') }}"
+               placeholder="Rechercher par ID ou Motif"
+               class="p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <button type="submit"
+                class="px-4 py-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Rechercher
+        </button>
+    </form>
+
     @if($rdvs->isEmpty())
-        <p class="text-center text-gray-600 text-sm sm:text-base">Pas de rendez-vous aujourd'hui.</p>
+        <p class="text-center text-gray-600 text-sm sm:text-base">Aucun rendez-vous trouvé.</p>
     @else
         <div class="max-w-4xl mx-auto p-4 sm:p-6 bg-white shadow-lg rounded-lg my-6">
             <div class="overflow-x-auto">
