@@ -45,11 +45,11 @@
             </div>
 
             <!-- Ordre de la question -->
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <label for="ordre" class="block text-sm font-semibold">Ordre</label>
                 <input type="number" id="ordre" name="ordre" min="1" required
                        class="border border-gray-300 rounded-lg p-2 w-full" value="{{ old('ordre') }}">
-            </div>
+            </div> --}}
 
             <!-- Zone de choix -->
             <div id="choix_zone" class="mb-4 hidden">

@@ -42,8 +42,9 @@
                             @endforeach
                         </select>
                         <input type="number" name="products[0][quantity]" placeholder="Quantité"
-                            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <button type="button" onclick="removeProduct(0)" class="mt-2 text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <button type="button" onclick="deleteProduct(this)"
+            class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()"
@@ -65,12 +66,12 @@
                         </select>
                         <input type="number" name="soins[0][quantity]" placeholder="Quantité"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <input type="timer" name="soins[0][timer]"
+                        {{-- <input type="timer" name="soins[0][timer]"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Timer (MM:SS)">
                         <button type="button" onclick="startTimer(0)"
                             class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start
-                            Timer</button>
+                            Timer</button> --}}
                     </div>
                 </div>
                 <button type="button" onclick="addSoin()"
@@ -138,15 +139,15 @@
         </select>
         <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        <input type="timer" name="soins[${soinIndex}][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
-        <button type="button" onclick="startTimer(${soinIndex})" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
         <button type="button" onclick="deleteSoin(this)"
             class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
     `;
             document.getElementById('soins').appendChild(soinDiv);
             soinIndex++;
         }
-
+        // <input type="timer" name="soins[${soinIndex}][timer]" class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Timer (MM:SS)">
+        // <button type="button" onclick="startTimer(${soinIndex})" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Start Timer</button>
+       
         function deleteProduct(button) {
             button.parentElement.remove();
         }

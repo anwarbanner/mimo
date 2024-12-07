@@ -50,6 +50,8 @@
                                        class="bg-blue-600 hover:bg-blue-400 text-white py-2 px-4 rounded-md transition duration-200 text-xs w-full sm:w-auto text-center">
                                        Voir
                                     </a>
+                                     <a href="{{ route('patients.startQuestionnaire', $patient->id) }}" 
+                                       class="bg-green-600 hover:bg-blue-800 text-white py-2 px-3 lg:py-4 lg:px-4 rounded-md transition duration-200 text-xs">Questionnaire</a>
                                     <a href="{{ route('patients.edit', $patient->id) }}"
                                        class="bg-yellow-600 hover:bg-yellow-400 text-white py-2 px-4 rounded-md transition duration-200 text-xs w-full sm:w-auto text-center">
                                        Modifier

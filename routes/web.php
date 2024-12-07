@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/questions/save-all-responses', [QuestionController::class, 'saveAllResponses'])->name('questions.saveAllResponses');
     // Route for questions completed
     Route::get('/questions/completed', [QuestionController::class, 'completed'])->name('questions.completed');
+    Route::get('/questions', [QuestionController::class, 'indexAll'])->name('questions.index');
 
     // Renamed route for completed (you can change the name to something else)
     Route::get('/completed', [QuestionController::class, 'completed'])->name('completed.questions');

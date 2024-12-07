@@ -101,7 +101,7 @@
                                                                 class="confirmWhatsApp btn btn-success w-100 py-3" 
                                                                 data-invoice-id="{{ $invoice->id }}" 
                                                                 data-patient-phone="{{ $invoice->patient->telephone }}">
-                                                                <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
+                                                                <i class="fab fa-whatsapp mr-2"></i> Envoi via WhatsApp
                                                             </button>
                                                         </div>
                                                     </div>

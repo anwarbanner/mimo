@@ -85,6 +85,7 @@ class InvoiceController extends Controller
     
         // Create the invoice without setting visites_id
         $invoice = Invoice::create([
+            'visite_id' => NULL,
             'patient_id' => $validated['patient_id'],
             'total_amount' => $totalAmount,
             'consultation_price' => $consultationPrice,

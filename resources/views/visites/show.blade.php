@@ -119,4 +119,17 @@
             <p class="text-gray-700"><strong>Total:</strong> {{ number_format($visite->invoice->total_amount, 2) }} DH</p>
         </div>
     </div>
+     <!-- Buttons for Edit and Delete -->
+     <div class="flex justify-end mt-6">
+        <!-- Edit Button -->
+        <a href="{{ route('visites.edit', $visite->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Modifier la visite</a>
+
+        <!-- Delete Button -->
+        <form action="{{ route('visites.destroy', $visite->id) }}" method="POST" class="ml-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer la visite</button>
+        </form>
+    </div>
+
 </x-app-layout>
