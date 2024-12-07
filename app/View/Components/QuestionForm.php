@@ -9,13 +9,11 @@ use Illuminate\View\Component;
 class QuestionForm extends Component
 {
     
-    public $currentQuestion;
-    public $choices;
+    public $questions;
 
-    public function __construct($currentQuestion, $choices)
+    public function __construct($questions)
     {
-        $this->currentQuestion = $currentQuestion;
-        $this->choices = $choices;
+        $this->questions = $questions;
     }
 
     /**

@@ -55,6 +55,30 @@ class QuestionController extends Controller
     //     return view('questions.index', compact('currentQuestion', 'choices', 'currentPatientId'));
     // }
 
+    // public function index(Request $request)
+    // {
+    //     $currentPatientId = $this->getCurrentPatientId();
+    //     if (!$currentPatientId) {
+    //         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    //     }
+
+    //     $currentQuestion = $this->getNextQuestion();
+    //     if (!$currentQuestion) {
+    //         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
+    //     }
+
+    //     // $choices = collect($currentQuestion['choix'])->sortBy('ordre')->values();
+    //     $choices = collect($currentQuestion['choix'])->sortBy('ordre')->map(function ($choix) {
+    //         return (object) $choix; // Convertir chaque choix en objet
+    //     })->values();
+        
+
+    //     return view('questions.index', [
+    //         'currentQuestion' => (object) $currentQuestion,
+    //         'choices' => $choices,
+    //         'currentPatientId' => $currentPatientId,
+    //     ]);
+    // }
     public function index(Request $request)
     {
         $currentPatientId = $this->getCurrentPatientId();
@@ -62,23 +86,26 @@ class QuestionController extends Controller
             return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
         }
 
-        $currentQuestion = $this->getNextQuestion();
-        if (!$currentQuestion) {
-            return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
-        }
-
-        // $choices = collect($currentQuestion['choix'])->sortBy('ordre')->values();
-        $choices = collect($currentQuestion['choix'])->sortBy('ordre')->map(function ($choix) {
-            return (object) $choix; // Convertir chaque choix en objet
-        })->values();
-        
+        // Récupérer toutes les questions
+        $allQuestions = $this->getPreloadedQuestions();
 
         return view('questions.index', [
-            'currentQuestion' => (object) $currentQuestion,
-            'choices' => $choices,
+            'allQuestions' => $allQuestions,
             'currentPatientId' => $currentPatientId,
         ]);
     }
+    public function indexAll(Request $request)
+{
+    $currentPatientId = $this->getCurrentPatientId();
+    if (!$currentPatientId) {
+        return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    }
+
+    // Charger toutes les questions avec leurs choix
+    $questions = Question::with('choix')->orderBy('ordre', 'asc')->get();
+
+    return view('questions.index', compact('questions', 'currentPatientId'));
+}
 
 
 
