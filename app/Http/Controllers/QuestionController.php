@@ -5,6 +5,7 @@ use App\Models\Choix;
 use App\Models\Reponse;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -235,38 +236,62 @@ class QuestionController extends Controller
 
 
 
-    public function storeResponses(Request $request)
-    {
-        $currentPatientId = $this->getCurrentPatientId();
-        if (!$currentPatientId) {
-            return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
-        }
+    // public function storeResponses(Request $request)
+    // {
+    //     $currentPatientId = $this->getCurrentPatientId();
+    //     if (!$currentPatientId) {
+    //         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    //     }
 
-        $validated = $request->validate([
-            'reponse' => 'nullable',
-            'question_id' => 'required|exists:questions,id',
-            'informationSup' => 'nullable|string|max:500',
-        ]);
+    //     $validated = $request->validate([
+    //         'reponse' => 'nullable',
+    //         'question_id' => 'required|exists:questions,id',
+    //         'informationSup' => 'nullable|string|max:500',
+    //     ]);
 
-        $responses = session('responses', []);
-        $responses[] = [
-            'valeur' => is_array($validated['reponse']) ? implode(',', $validated['reponse']) : $validated['reponse'],
-            'informationSup' => $validated['informationSup'] ?? null, // Ajouter l'information supplémentaire
-            'date_reponse' => now(),
-            'question_id' => $validated['question_id'],
-            'patient_id' => $currentPatientId,
+    //     $responses = session('responses', []);
+    //     $responses[] = [
+    //         'valeur' => is_array($validated['reponse']) ? implode(',', $validated['reponse']) : $validated['reponse'],
+    //         'informationSup' => $validated['informationSup'] ?? null, // Ajouter l'information supplémentaire
+    //         'date_reponse' => now(),
+    //         'question_id' => $validated['question_id'],
+    //         'patient_id' => $currentPatientId,
             
-        ];
-        session(['responses' => $responses]);
+    //     ];
+    //     session(['responses' => $responses]);
 
-        $nextQuestion = $this->getNextQuestion();
-        if ($nextQuestion) {
-            $this->setSessionData('currentQuestionId', $nextQuestion->id);
-            return redirect()->route('questions.index');
-        }
+    //     $nextQuestion = $this->getNextQuestion();
+    //     if ($nextQuestion) {
+    //         $this->setSessionData('currentQuestionId', $nextQuestion->id);
+    //         return redirect()->route('questions.index');
+    //     }
 
-        return redirect()->route('questions.completed');
+    //     return redirect()->route('questions.completed');
+    // }
+    public function storeResponses(Request $request)
+{
+    $currentPatientId = $this->getCurrentPatientId();
+    if (!$currentPatientId) {
+        return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
     }
+
+    $responses = $request->input('questions', []); // Récupérer les réponses
+
+    foreach ($responses as $response) {
+        DB::table('reponses')->insert([
+            'valeur' => isset($response['reponse']) 
+                    ? (is_array($response['reponse']) ? implode(',', $response['reponse']) : $response['reponse']) 
+                    : null,
+            'informationSup' => $response['informationSup'] ?? null,
+            'date_reponse' => now(),
+            'question_id' => $response['question_id'],
+            'patient_id' => $currentPatientId,
+        ]);
+    }
+
+    return redirect()->route('questions.merci')->with('success', 'Les réponses ont été enregistrées avec succès.');
+}
+
 
 
 
