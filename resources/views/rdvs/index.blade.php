@@ -84,6 +84,72 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+                max-width: none;
+            }
+
+            .modal-content .space-y-3 {
+                flex-direction: column;
+            }
+
+            .fc-toolbar .fc-state-active,
+            .fc-toolbar .ui-state-active {
+                z-index: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+
+            /* Styles for tablets and iPads */
+            .modal-content {
+                width: 80%;
+                max-width: none;
+            }
+
+            /* Adjust other elements as needed, e.g., font sizes, spacing */
+            .modal-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .modal-content p {
+                font-size: 1rem;
+            }
+
+            .fc-toolbar .fc-state-active,
+            .fc-toolbar .ui-state-active {
+                z-index: 0;
+            }
+        }
+
+        .fc-toolbar .fc-state-active,
+        .fc-toolbar .ui-state-active {
+            z-index: 0;
+        }
+
+        .full-width-dropdown {
+            position: absolute !important;
+            /* Allow dropdown to break out of parent */
+            left: 0;
+            right: 0;
+            width: 90vw;
+            /* Full viewport width */
+            margin: 5px;
+            /* Remove default margins */
+            padding: 5px;
+            /* Add spacing around content */
+            border-radius: 10;
+            /* Remove rounded corners for a flat design */
+            z-index: 1050;
+            /* Ensure it's above other content */
+        }
+
+        .full-width-dropdown .dropdown-item {
+            padding: 10px;
+            /* Add spacing to dropdown items */
+        }
     </style>
 </head>
 
