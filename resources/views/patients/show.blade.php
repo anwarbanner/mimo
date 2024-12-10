@@ -71,6 +71,10 @@
                    class="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
                     Retour
                 </a>
+                <a href="{{ route('reponses.show', $patient->id) }}" 
+                    class="inline-block px-4 py-2 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 transition duration-300">
+                     Voir Questionnaire
+                 </a>
                 <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-300">
                     Enregistrer
                 </button>
