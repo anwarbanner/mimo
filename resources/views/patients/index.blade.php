@@ -117,6 +117,21 @@
                 const modal = document.getElementById('details-modal');
                 modal.classList.add('hidden');
             }
+            document.getElementById('patient_search').addEventListener('input', function() {
+                var searchValue = this.value.toLowerCase();
+                var patientRows = document.querySelectorAll('.patient-row');
+
+                patientRows.forEach(function(row) {
+                    var patientID = row.getAttribute('data-id').toLowerCase();
+                    var patientName = row.getAttribute('data-name').toLowerCase();
+                    if (patientID.includes(searchValue) || patientName.includes(searchValue)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
         </script>
     </div>
 </x-app-layout>
