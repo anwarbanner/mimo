@@ -64,8 +64,8 @@
     <!-- Nav Item - Profile -->
     <li class="nav-item">
         <a class="nav-link" href="/profile">
-            <i class="fas fa-fw fa-solid fa-user"></i>
-            <span>Profile</span>
+            <i class="fas fa-fw fa-solid fa-gear"></i>
+            <span>parametre de compte</span>
         </a>
     </li>
 
