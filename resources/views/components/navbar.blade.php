@@ -13,25 +13,29 @@
 .full-width-dropdown .dropdown-item {
     padding: 10px; /* Add spacing to dropdown items */
 }
-
+@media (min-width: 768px) and (max-width: 1024px) {
+    #sidebarDropdown {
+        display: block !important; /* Ensure it overrides other styles */
+    }
+}
 </style>
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-  
+
   <!-- Sidebar Toggle (Topbar) -->
-  
-    <button 
-      class="btn btn-link d-md-none rounded-circle mr-3" 
-      id="sidebarDropdown" 
-      role="button" 
-      data-toggle="dropdown" 
-      aria-haspopup="true" 
+
+    <button
+      class="btn btn-link d-md-none rounded-circle mr-3"
+      id="sidebarDropdown"
+      role="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
       aria-expanded="false">
       <i class="fa fa-bars"></i>
     </button>
-  
+
     <!-- Dropdown menu -->
-    <div 
-      class="dropdown-menu full-width-dropdown shadow animated--grow-in" 
+    <div
+      class="dropdown-menu full-width-dropdown shadow animated--grow-in"
       aria-labelledby="sidebarDropdown">
       <a class="dropdown-item" href="{{ route('dashboard') }}">
         <i class="fas fa-house-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -67,16 +71,16 @@
         <i class="fas fa-calendar fa-sm fa-fw mr-2 text-gray-400"></i>
         Agenda
       </a>
-      
+
     </div>
   </li>
-  
+
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
-  
+
     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
     <li class="nav-item dropdown no-arrow d-sm-none">
-    
+
       <!-- Dropdown - Messages -->
       <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
         <form class="form-inline mr-auto w-100 navbar-search">
@@ -91,11 +95,11 @@
         </form>
       </div>
     </li>
-  
+
     <!-- Nav Item - Alerts -->
-    
+
     <div class="topbar-divider d-none d-sm-block"></div>
-  
+
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,7 +126,7 @@
         </a>
       </div>
     </li>
-  
+
   </ul>
-  
+
 </nav>
