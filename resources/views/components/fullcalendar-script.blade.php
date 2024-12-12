@@ -53,39 +53,7 @@
 
             selectable: true,
             selectHelper: true,
-            // // Add a new event with patient information
-            // select: function(start, end, allDay) {
-            //     var title = prompt("Titre de l'événement:");
-            //     var patientId = prompt("ID du patient:");
-            //     if (title && patientId) {
-            //         var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-            //         var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-            //         $.ajax({
-            //             url: SITEURL + "/fullcalenderAjax",
-            //             type: "POST",
-            //             data: {
-            //                 title: title,
-            //                 patient_id: patientId,
-            //                 start: startDate,
-            //                 end: endDate,
-            //                 allDay: allDay,
-            //                 type: 'add'
-            //             },
-            //             success: function(data) {
-            //                 toastr.success("Événement créé avec succès", "Succès");
-            //                 $('#calendar').fullCalendar('renderEvent', {
-            //                     id: data.id,
-            //                     title: title,
-            //                     patient_id: patientId,
-            //                     start: startDate,
-            //                     end: endDate,
-            //                     allDay: allDay
-            //                 }, true);
-            //                 $('#calendar').fullCalendar('unselect');
-            //             }
-            //         });
-            //     }
-            // },
+
 
             // Update event start and end time
             eventDrop: function(event, delta, revertFunc) {
@@ -122,12 +90,12 @@
 
             // Display event details on click
             eventClick: function(event) {
-                $('#eventId').text("Identifiant du rendez-vous : " + event.id);
-                $('#eventTitle').text("Motif : " + event.title);
-                $('#eventPatientId').text("Patient : " + event.patient_nom + " " + event
+                $('#eventId').text(event.id);
+                $('#eventTitle').text(event.title);
+                $('#eventPatientId').text(event.patient_nom + " " + event
                     .patient_prenom);
-                $('#eventStart').text("Début : " + event.start.format("YYYY-MM-DD HH:mm:ss"));
-                $('#eventEnd').text("Fin : " + (event.end ? event.end.format(
+                $('#eventStart').text(event.start.format("YYYY-MM-DD HH:mm:ss"));
+                $('#eventEnd').text((event.end ? event.end.format(
                     "YYYY-MM-DD HH:mm:ss") : "N/A"));
 
                 // Show modal with event details

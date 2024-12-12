@@ -17,12 +17,15 @@
         rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="admin_assets/img/tab-icon.png">
     <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <style>
         .modal {
             display: none;
@@ -99,6 +102,7 @@
             .fc-toolbar .ui-state-active {
                 z-index: 0;
             }
+
         }
 
         @media (max-width: 1024px) {
@@ -122,6 +126,7 @@
             .fc-toolbar .ui-state-active {
                 z-index: 0;
             }
+
         }
 
         .fc-toolbar .fc-state-active,
@@ -129,33 +134,17 @@
             z-index: 0;
         }
 
-        .full-width-dropdown {
-            position: absolute !important;
-            /* Allow dropdown to break out of parent */
-            left: 0;
-            right: 0;
-            width: 90vw;
-            /* Full viewport width */
-            margin: 5px;
-            /* Remove default margins */
-            padding: 5px;
-            /* Add spacing around content */
-            border-radius: 10;
-            /* Remove rounded corners for a flat design */
-            z-index: 1050;
-            /* Ensure it's above other content */
-        }
-
-        .full-width-dropdown .dropdown-item {
-            padding: 10px;
-            /* Add spacing to dropdown items */
+        #wrapper {
+            background-color: #244cbf;
         }
     </style>
 </head>
 
 <body class="bg-gray-100 vh-100">
     <div id="wrapper">
-        <x-sidebar />
+        <div class="hidden lg:block"> <!-- Sidebar will only appear on large screens and above -->
+            <x-sidebar />
+        </div>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <x-navbar />
@@ -208,7 +197,7 @@
 
             <!-- Modal Content -->
             <div class="space-y-3 text-gray-600">
-                <p><strong>Event ID:</strong> <span id="eventId"></span></p>
+                <p><strong>ID du rendez-vous:</strong> <span id="eventId"></span></p>
                 <p><strong>Titre:</strong> <span id="eventTitle"></span></p>
                 <p><strong>Patient:</strong> <span id="eventPatientId"></span></p>
                 <p><strong>Début:</strong> <span id="eventStart"></span></p>
@@ -231,8 +220,8 @@
             </div>
 
             <!-- Etat Update Form -->
-            <div class="mt-6 p-4 bg-gray-100 rounded-lg shadow">
-                <form id="updateEtatForm" class="space-y-4">
+            <form id="updateEtatForm" class="space-y-4">
+                <div class="mt-6 p-4 bg-gray-100 rounded-lg shadow">
                     <label for="etat" class="block text-sm font-medium text-gray-700">
                         Modifier l'état:
                     </label>
@@ -245,26 +234,26 @@
                         class="w-full px-4 py-2 text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
                         Mettre à jour
                     </button>
-                </form>
-            </div>
-
-            <!-- Delete Button -->
-            <button id="deleteEvent"
-                class="mt-4 w-full px-4 py-2 text-white bg-red-500 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">
-                Supprimer
-            </button>
-
-            <!-- Loading Spinner -->
-            <div id="loadingSpinner" class="hidden mt-4 flex items-center justify-center">
-                <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                </svg>
-                <span class="ml-2 text-gray-500">En attente...</span>
-            </div>
+            </form>
         </div>
+
+        <!-- Delete Button -->
+        <button id="deleteEvent"
+            class="mt-4 w-full px-4 py-2 text-white bg-red-500 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">
+            Supprimer
+        </button>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="hidden mt-4 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                </circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span class="ml-2 text-gray-500">En attente...</span>
+        </div>
+    </div>
     </div>
 
 
