@@ -17,12 +17,15 @@
         rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="admin_assets/img/tab-icon.png">
     <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <style>
         .modal {
             display: none;
@@ -84,12 +87,64 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+                max-width: none;
+            }
+
+            .modal-content .space-y-3 {
+                flex-direction: column;
+            }
+
+            .fc-toolbar .fc-state-active,
+            .fc-toolbar .ui-state-active {
+                z-index: 0;
+            }
+
+        }
+
+        @media (max-width: 1024px) {
+
+            /* Styles for tablets and iPads */
+            .modal-content {
+                width: 80%;
+                max-width: none;
+            }
+
+            /* Adjust other elements as needed, e.g., font sizes, spacing */
+            .modal-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .modal-content p {
+                font-size: 1rem;
+            }
+
+            .fc-toolbar .fc-state-active,
+            .fc-toolbar .ui-state-active {
+                z-index: 0;
+            }
+
+        }
+
+        .fc-toolbar .fc-state-active,
+        .fc-toolbar .ui-state-active {
+            z-index: 0;
+        }
+
+        #wrapper {
+            background-color: #244cbf;
+        }
     </style>
 </head>
 
 <body class="bg-gray-100 vh-100">
     <div id="wrapper">
-        <x-sidebar />
+        <div class="hidden lg:block"> <!-- Sidebar will only appear on large screens and above -->
+            <x-sidebar />
+        </div>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <x-navbar />
@@ -127,53 +182,80 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <div id="eventDetailsModal" class="modal" style="display: none;">
-        <div class="modal-content relative">
-            <span id="closeModal"
-                class="absolute top-0 right-0 m-4 cursor-pointer text-gray-500 hover:text-gray-800 text-2xl">&times;</span>
-            <h3>Détails du rendez-vous</h3>
-            <p id="eventId"></p>
-            <p id="eventTitle"></p>
-            <p id="eventPatientId"></p>
-            <p id="eventStart"></p>
-            <p id="eventEnd"></p>
+    <div id="eventDetailsModal"
+        class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div
+            class="modal-content bg-white w-full max-w-lg p-6 rounded-lg shadow-lg transform transition-all sm:scale-100 sm:max-w-md">
+            <!-- Close Button -->
+            <button id="closeModal" aria-label="Close"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none focus:ring focus:ring-gray-300 text-2xl">
+                &times;
+            </button>
 
-            <!-- Confirmation Buttons Row -->
-            <!-- Responsive Confirmation Buttons Row -->
-            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
-                <!-- Confirm via Email Button with Icon -->
+            <!-- Modal Header -->
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Détails du rendez-vous</h3>
+
+            <!-- Modal Content -->
+            <div class="space-y-3 text-gray-600">
+                <p><strong>ID du rendez-vous:</strong> <span id="eventId"></span></p>
+                <p><strong>Titre:</strong> <span id="eventTitle"></span></p>
+                <p><strong>Patient:</strong> <span id="eventPatientId"></span></p>
+                <p><strong>Début:</strong> <span id="eventStart"></span></p>
+                <p><strong>Fin:</strong> <span id="eventEnd"></span></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 space-y-4 sm:space-y-0 sm:flex sm:space-x-4">
+                <!-- Confirm via Email -->
                 <button id="confirmEmail"
-                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+                    class="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-white bg-blue-500 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
                     <i class="fas fa-envelope mr-2"></i> Confirmer via Email
                 </button>
 
-                <!-- Confirm via WhatsApp Button with Icon -->
+                <!-- Confirm via WhatsApp -->
                 <button id="confirmWhatsApp"
-                    class="flex items-center justify-center bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+                    class="flex items-center justify-center w-full sm:w-auto px-4 py-2 text-white bg-green-500 rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring focus:ring-green-300">
                     <i class="fab fa-whatsapp mr-2"></i> Confirmer via WhatsApp
                 </button>
             </div>
 
-<!-- Separate Row for Créer Viste Button -->
-<div class="mt-4">
-</div>
+            <!-- Etat Update Form -->
+            <form id="updateEtatForm" class="space-y-4">
+                <div class="mt-6 p-4 bg-gray-100 rounded-lg shadow">
+                    <label for="etat" class="block text-sm font-medium text-gray-700">
+                        Modifier l'état:
+                    </label>
+                    <select id="etat" name="etat" required
+                        class="block w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="confirmé">Confirmé</option>
+                        <option value="annulé">Annulé</option>
+                    </select>
+                    <button type="submit" id="updateEtatButton"
+                        class="w-full px-4 py-2 text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
+                        Mettre à jour
+                    </button>
+            </form>
+        </div>
 
+        <!-- Delete Button -->
+        <button id="deleteEvent"
+            class="mt-4 w-full px-4 py-2 text-white bg-red-500 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">
+            Supprimer
+        </button>
 
-            <!-- Delete Event Button -->
-            <button id="deleteEvent" class="bg-red-500 text-white px-4 py-2 rounded mt-4">Supprimer</button>
-
-            <!-- Loading Spinner -->
-            <div id="loadingSpinner" class="hidden flex items-center justify-center mt-4">
-                <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                </svg>
-                <span class="ml-2 text-gray-500">En attente...</span>
-            </div>
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="hidden mt-4 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                </circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span class="ml-2 text-gray-500">En attente...</span>
         </div>
     </div>
+    </div>
+
 
     <!-- SB Admin 2 Script -->
     <script src="admin_assets/js/sb-admin-2.min.js"></script>

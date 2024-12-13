@@ -1,17 +1,18 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Question;
 use App\Models\Choix;
 use App\Models\Reponse;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+
+
     private function getCurrentPatientId()
     {
         return session('currentPatientId');
@@ -20,18 +21,7 @@ class QuestionController extends Controller
     {
         session([$key => $value]);
     }
-    // public function startForPatient($patientId)
-    // { 
-    //     session(['currentPatientId' => $patientId]);
-    //     // Vérifier si le patient existe
-    //     $patient = Patient::findOrFail($patientId);
-
-    //     // Initialiser le questionnaire pour le patient
-    //     session(['currentPatientId' => $patient->id, 'currentQuestionId' => null, 'responses' => []]);
-
-    //     // Rediriger vers la première question
-    //     return redirect()->route('questions.index');
-    // }
+    
     public function startForPatient($patientId)
     {
         $patient = Patient::findOrFail($patientId);
@@ -39,11 +29,57 @@ class QuestionController extends Controller
         $this->setSessionData('currentQuestionId', null);
         $this->setSessionData('responses', []);
 
+        $this->preloadQuestions();
+
         return redirect()->route('questions.index');
     }
 
 
+
+
+
     
+    // public function index(Request $request)
+    // {
+    //     $currentPatientId = $this->getCurrentPatientId();
+    //     if (!$currentPatientId) {
+    //         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    //     }
+
+    //     $currentQuestion = $this->getNextQuestion();
+    //     if (!$currentQuestion) {
+    //         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
+    //     }
+
+    //     $choices = $currentQuestion->choix()->orderBy('ordre', 'asc')->get();
+
+    //     return view('questions.index', compact('currentQuestion', 'choices', 'currentPatientId'));
+    // }
+
+    // public function index(Request $request)
+    // {
+    //     $currentPatientId = $this->getCurrentPatientId();
+    //     if (!$currentPatientId) {
+    //         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    //     }
+
+    //     $currentQuestion = $this->getNextQuestion();
+    //     if (!$currentQuestion) {
+    //         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
+    //     }
+
+    //     // $choices = collect($currentQuestion['choix'])->sortBy('ordre')->values();
+    //     $choices = collect($currentQuestion['choix'])->sortBy('ordre')->map(function ($choix) {
+    //         return (object) $choix; // Convertir chaque choix en objet
+    //     })->values();
+        
+
+    //     return view('questions.index', [
+    //         'currentQuestion' => (object) $currentQuestion,
+    //         'choices' => $choices,
+    //         'currentPatientId' => $currentPatientId,
+    //     ]);
+    // }
     public function index(Request $request)
     {
         $currentPatientId = $this->getCurrentPatientId();
@@ -51,103 +87,91 @@ class QuestionController extends Controller
             return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
         }
 
-        $currentQuestion = $this->getNextQuestion();
-        if (!$currentQuestion) {
-            return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
-        }
+        // Récupérer toutes les questions
+        $allQuestions = $this->getPreloadedQuestions();
 
-        $choices = $currentQuestion->choix()->orderBy('ordre', 'asc')->get();
-
-        return view('questions.index', compact('currentQuestion', 'choices', 'currentPatientId'));
+        return view('questions.index', [
+            'allQuestions' => $allQuestions,
+            'currentPatientId' => $currentPatientId,
+        ]);
+    }
+    public function indexAll(Request $request)
+{
+    $currentPatientId = $this->getCurrentPatientId();
+    if (!$currentPatientId) {
+        return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
     }
 
-//     public function index(Request $request)
-// {
-//     $currentPatientId = session('currentPatientId');
-//     if (!$currentPatientId) {
-//         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
-//     }
+    // Charger toutes les questions avec leurs choix
+    $questions = Question::with('choix')->orderBy('ordre', 'asc')->get();
 
-//     // Appeler la méthode getNextQuestion
-//     $response = $this->getNextQuestion($request);
-
-//     // Vérifier si le questionnaire est terminé
-//     if ($response->getData()->status === 'completed') {
-//         $request->session()->forget('currentQuestionId');
-//         return redirect()->route('questions.completed')->with('message', 'Vous avez terminé le questionnaire.');
-//     }
-
-//     // Préparer les données pour la vue
-//     $questionData = $response->getData()->question;
-
-//     return view('questions.index', [
-//         'currentQuestion' => (object) [
-//             'id' => $questionData->id,
-//             'texte' => $questionData->texte,
-//             'type' => $questionData->type,
-//         ],
-//         'choices' => $questionData->choices,
-//         'currentPatientId' => $currentPatientId,
-//     ]);
-// }
+    return view('questions.index', compact('questions', 'currentPatientId'));
+}
 
 
 
-   
+
     public function create()
     {
         return view('questions.create');
     }
 
-    /**
-     * Store a newly created question in storage.
-     */
+   
+
+
+
     public function store(Request $request)
-{
-    // Validate the incoming data
-    $validatedData = $request->validate([
-        'texte' => 'required|string|max:255',
-        'type' => 'required|in:texte,choix_unique,choix_multiple',
-        'sexe' => 'required|in:Homme,Femme,Les deux',
-        'ordre' => 'required|integer|min:1',
-        'choix' => 'array', // Ensure that choix is an array when provided
-        'choix.*' => 'string|max:255', // Validate each choice as a string with a max length
-    ]);
+    {
+        // Validate the incoming data
+        $validatedData = $request->validate([
+            'texte' => 'required|string|max:255',
+            'type' => 'required|in:texte,choix_unique,choix_multiple',
+            'sexe' => 'required|in:Homme,Femme,Les deux',
+            'choix' => 'array', // Ensure that choix is an array when provided
+            'choix.*' => 'string|max:255', // Validate each choice as a string with a max length
+        ]);
+        $dernierOrdre = Question::max('ordre') ?? 0;
+        $nouvelOrdre = $dernierOrdre + 1;
 
-    // Create the question
-    $question = Question::create([
-        'texte' => $validatedData['texte'],
-        'type' => $validatedData['type'],
-        'sexe' => $validatedData['sexe'],
-        'ordre' => $validatedData['ordre'],
-    ]);
+        // Create the question
+        $question = Question::create([
+            'texte' => $validatedData['texte'],
+            'type' => $validatedData['type'],
+            'sexe' => $validatedData['sexe'],
+            'ordre' => $nouvelOrdre,
+        ]);
 
-    // If the question type is "choix_unique" or "choix_multiple", add choices
-    if (in_array($validatedData['type'], ['choix_unique', 'choix_multiple']) && isset($validatedData['choix'])) {
-        foreach ($validatedData['choix'] as $index => $choixTexte) {
-            $question->choix()->create([
-                'texte' => $choixTexte,
-                'ordre' => $index + 1, // Optional: save the choice order
-            ]);
+        // If the question type is "choix_unique" or "choix_multiple", add choices
+        if (in_array($validatedData['type'], ['choix_unique', 'choix_multiple']) && isset($validatedData['choix'])) {
+            foreach ($validatedData['choix'] as $index => $choixTexte) {
+                $question->choix()->create([
+                    'texte' => $choixTexte,
+                    'ordre' => $index + 1, // Optional: save the choice order
+                ]);
+            }
         }
+
+        // Redirect with a success message
+        return redirect()->route('questions.create')->with('success', 'Question créée avec succès.');
     }
 
-    // Redirect with a success message
-    return redirect()->route('questions.create')->with('success', 'Question créée avec succès.');
-}
+    
 
-    /**
-     * Show the form for editing the specified question.
-     */
+
+
+    
     public function edit($id)
     {
         $question = Question::with('choix')->findOrFail($id);
         return view('questions.edit', compact('question'));
     }
 
-    /**
-     * Update the specified question in storage.
-     */
+    
+
+
+
+
+
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -177,9 +201,11 @@ class QuestionController extends Controller
         return redirect()->route('questions.index')->with('success', 'Question mise à jour avec succès.');
     }
 
-    /**
-     * Remove the specified question from storage.
-     */
+   
+
+
+
+    
     public function destroy($id)
     {
         $question = Question::findOrFail($id);
@@ -189,16 +215,14 @@ class QuestionController extends Controller
         return redirect()->route('questions.index')->with('success', 'Question supprimée avec succès.');
     }
 
-    public function showQuestions(Request $request)
-    {
-        $patientSexe = $request->input('sexe'); // Récupérer le sexe du patient
-        $questions = Question::where(function($query) use ($patientSexe) {
-            $query->where('sexe', 'Les deux') // Questions pour les deux
-                ->orWhere('sexe', $patientSexe); // Questions spécifiques au sexe
-        })->get();
 
-        return view('questions.index', compact('questions'));
-    }
+
+
+
+
+    
+
+
 
     public function show($id)
     {
@@ -209,49 +233,102 @@ class QuestionController extends Controller
     
 
 
+
+
+
+    // public function storeResponses(Request $request)
+    // {
+    //     $currentPatientId = $this->getCurrentPatientId();
+    //     if (!$currentPatientId) {
+    //         return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
+    //     }
+
+    //     $validated = $request->validate([
+    //         'reponse' => 'nullable',
+    //         'question_id' => 'required|exists:questions,id',
+    //         'informationSup' => 'nullable|string|max:500',
+    //     ]);
+
+    //     $responses = session('responses', []);
+    //     $responses[] = [
+    //         'valeur' => is_array($validated['reponse']) ? implode(',', $validated['reponse']) : $validated['reponse'],
+    //         'informationSup' => $validated['informationSup'] ?? null, // Ajouter l'information supplémentaire
+    //         'date_reponse' => now(),
+    //         'question_id' => $validated['question_id'],
+    //         'patient_id' => $currentPatientId,
+            
+    //     ];
+    //     session(['responses' => $responses]);
+
+    //     $nextQuestion = $this->getNextQuestion();
+    //     if ($nextQuestion) {
+    //         $this->setSessionData('currentQuestionId', $nextQuestion->id);
+    //         return redirect()->route('questions.index');
+    //     }
+
+    //     return redirect()->route('questions.completed');
+    // }
     public function storeResponses(Request $request)
-    {
-        $currentPatientId = $this->getCurrentPatientId();
-        if (!$currentPatientId) {
-            return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
-        }
-
-        $validated = $request->validate([
-            'reponse' => 'nullable',
-            'question_id' => 'required|exists:questions,id',
-        ]);
-
-        $responses = session('responses', []);
-        $responses[] = [
-            'valeur' => is_array($validated['reponse']) ? implode(',', $validated['reponse']) : $validated['reponse'],
-            'date_reponse' => now(),
-            'question_id' => $validated['question_id'],
-            'patient_id' => $currentPatientId,
-        ];
-        session(['responses' => $responses]);
-
-        $nextQuestion = $this->getNextQuestion();
-        if ($nextQuestion) {
-            $this->setSessionData('currentQuestionId', $nextQuestion->id);
-            return redirect()->route('questions.index');
-        }
-
-        return redirect()->route('questions.completed');
+{
+    $currentPatientId = $this->getCurrentPatientId();
+    if (!$currentPatientId) {
+        return redirect()->route('patients.index')->with('error', 'Aucun patient sélectionné.');
     }
+
+    $responses = $request->input('questions', []); // Récupérer les réponses
+
+    foreach ($responses as $response) {
+        DB::table('reponses')->insert([
+            'valeur' => isset($response['reponse']) 
+                    ? (is_array($response['reponse']) ? implode(',', $response['reponse']) : $response['reponse']) 
+                    : null,
+            'informationSup' => $response['informationSup'] ?? null,
+            'date_reponse' => now(),
+            'question_id' => $response['question_id'],
+            'patient_id' => $currentPatientId,
+        ]);
+    }
+
+    return redirect()->route('questions.merci')->with('success', 'Les réponses ont été enregistrées avec succès.');
+}
+
+
+
+
+
+
+
+
 
     public function saveAllResponses(Request $request)
     {
         $currentPatientId = $this->getCurrentPatientId();
         $responses = session('responses', []);
 
+        // foreach ($responses as $response) {
+        //     Reponse::create($response + ['patient_id' => $currentPatientId]);
+        // }
         foreach ($responses as $response) {
-            Reponse::create($response + ['patient_id' => $currentPatientId]);
+            Reponse::create([
+                'valeur' => $response['valeur'],
+                'informationSup' => $response['informationSup'] ?? null, // Sauvegarder l'information supplémentaire
+                'question_id' => $response['question_id'],
+                'patient_id' => $currentPatientId,
+                'date_reponse' => $response['date_reponse'],
+            ]);
         }
 
         session()->forget(['responses', 'currentQuestionId', 'currentPatientId']);
 
         return redirect()->route('questions.completed')->with('message', 'Vos réponses ont été enregistrées.');
     }
+
+
+
+
+
+
+
 
     public function completed(Request $request)
     {
@@ -262,12 +339,19 @@ class QuestionController extends Controller
             $question = Question::with('choix')->find($response['question_id']);
             $questionsWithResponses[] = [
                 'question' => $question,
-                'reponse' => $response['valeur']
+                'reponse' => $response['valeur'],
+                'informationSup' => $response['informationSup'] ?? null, // Ajouter à la vue
             ];
         }
 
         return view('questions.completed', compact('questionsWithResponses'));
     }
+
+
+
+
+
+
 
     public function confirmResponses(Request $request)
     {
@@ -298,66 +382,80 @@ class QuestionController extends Controller
         // Redirect to a thank you page
         return redirect()->route('questions.merci')->with('message', 'Your responses have been saved.');
     }
-    // public function getNextQuestion(Request $request)
+    
+
+
+
+
+
+    // private function getNextQuestion()
     // {
-    //     $currentPatientId = session('currentPatientId');
-    //     if (!$currentPatientId) {
-    //         return response()->json(['status' => 'error', 'message' => 'Aucun patient sélectionné.'], 400);
-    //     }
-
-    //     $currentQuestionId = $request->session()->get('currentQuestionId');
+    //     $currentQuestionId = session('currentQuestionId');
     //     if (!$currentQuestionId) {
-    //         $choix = Choix::with('question')->first();
-    //         $currentQuestion = $choix ? $choix->question : null;
-    //     } else {
-    //         $currentQuestion = Question::with('choix')->find($currentQuestionId);
+    //         return Question::orderBy('ordre', 'asc')->first();
     //     }
 
-    //     if (!$currentQuestion) {
-    //         return response()->json(['status' => 'completed', 'message' => 'Vous avez terminé le questionnaire.']);
-    //     }
-
-    //     // Préparer les données de la question et des choix
-    //     $questionData = [
-    //         'id' => $currentQuestion->id,
-    //         'texte' => $currentQuestion->texte,
-    //         'type' => $currentQuestion->type,
-    //         'choices' => $currentQuestion->choix->map(function ($choix) {
-    //             return ['id' => $choix->id, 'texte' => $choix->texte];
-    //         })
-    //     ];
-
-    //     // Enregistrer la question actuelle dans la session
-    //     $request->session()->put('currentQuestionId', $currentQuestion->id);
-
-    //     return response()->json(['status' => 'success', 'question' => $questionData]);
+    //     $currentQuestion = Question::find($currentQuestionId);
+    //     return Question::where('ordre', '>', $currentQuestion->ordre)
+    //         ->orderBy('ordre', 'asc')
+    //         ->first();
     // }
 
     private function getNextQuestion()
     {
         $currentQuestionId = session('currentQuestionId');
+        
         if (!$currentQuestionId) {
+            // Récupérer la première question selon l'ordre
             return Question::orderBy('ordre', 'asc')->first();
         }
-
+    
+        // Récupérer la question actuelle
         $currentQuestion = Question::find($currentQuestionId);
-        return Question::where('ordre', '>', $currentQuestion->ordre)
-            ->orderBy('ordre', 'asc')
-            ->first();
+    
+        if ($currentQuestion) {
+            // Récupérer la prochaine question selon l'ordre
+            return Question::where('ordre', '>', $currentQuestion->ordre)
+                ->orderBy('ordre', 'asc')
+                ->first();
+        }
+    
+        return null; // Si aucune question n'est trouvée
+    }
+    
+
+        private function preloadQuestions()
+    {
+        // Charger toutes les questions avec leurs choix
+        $questions = Question::with('choix')->orderBy('ordre', 'asc')->get();
+
+        // Transformer les questions et leurs choix en un tableau simple
+        $questionsArray = $questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'texte' => $question->texte,
+                'type' => $question->type,
+                'ordre' => $question->ordre,
+                'choix' => $question->choix->map(function ($choix) {
+                    return [
+                        'id' => $choix->id,
+                        'texte' => $choix->texte,
+                        'ordre' => $choix->ordre,
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
+
+        // Stocker les questions dans la session
+        session(['questions' => $questionsArray]);
+    }
+
+    private function getPreloadedQuestions()
+    {
+        // Récupérer les questions depuis la session
+        return session('questions', []);
     }
 
 
-
-
-
-
-
-
     
-
-
-    
-
-
-
 }

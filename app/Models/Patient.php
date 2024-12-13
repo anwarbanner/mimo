@@ -16,7 +16,8 @@ class Patient extends Model
         'adresse',
         'date_naissance',
         'sexe',
-        'observations',
+        'image',
+
     ];
 
     public function reponses()

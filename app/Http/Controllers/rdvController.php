@@ -27,9 +27,9 @@ class RdvController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'patient_id' => 'nullable|exists:patients,id',
+            'patient_id' => 'required|exists:patients,id',
             'title' => 'required|string|max:255',
-            'start' => 'required|date',
+            'start' => 'required|date|after_or_equal:today',
             'end' => 'required|date|after:start',  // Ensure 'end' is after 'start'
         ]);
 

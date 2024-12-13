@@ -1,151 +1,178 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facture</title>
-    <style>
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-        }
-        .facture-div {
-            border: 2px solid #333;
-            padding: 20px;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-        }
-        .invoice-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .invoice-details-admin,
-        .invoice-details-client {
-            width: 45%;
-        }
-        .invoice-details-admin-infos, .invoice-details-client-infos {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        .invoice-details-admin-infos b,
-        .invoice-details-client-infos b {
-            color: #333;
-        }
-        .invoice-details-admin-facture-infos {
-            margin-top: 20px;
-        }
-        .download-btn-container {
-            text-align: right;
-            margin-top: 20px;
-        }
-        .table-details-facture {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .table-details-facture th,
-        .table-details-facture td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .invoice-items {
-            margin-bottom: 20px;
-        }
-        .invoice-items h3 {
-            margin-bottom: 10px;
-            color: #555;
-        }
-        .invoice-items ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .invoice-items ul li {
-            padding: 5px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        .total-amount {
-            text-align: right;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.7"></script>
 </head>
-<body>
-<div class="container facture-div">
-    <h1>FACTURE #{{ $invoice->id }}</h1>   
-   
-    <div class="invoice-details">
-        <div class="invoice-details-admin">
-            <div class="invoice-details-admin-infos">
-                <p><b>- Institut:</b> Mi-Acup</p>
-                <p><b>- Adresse:</b> rfgergerg 4000 gdsfgfds</p>
-                <p><b>- Cie:</b> 9223372036854775807</p>
-                <p><b>- Identifiant Fiscal:</b> 11111111111123</p>
-                <p><b>- Numéro de registre:</b> 3333333333333</p>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+
+    <div class="max-w-7xl mx-auto px-8 py-10 bg-white shadow-lg rounded-lg">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center">
+                <img src="{{ asset('images/logo/logo-acup.jpg') }}" alt="Logo" class="w-24 h-auto mr-4">
+                <h1 class="text-3xl font-bold text-gray-800">Facture #{{ $invoice->id }}</h1>
+            </div>
+            <div class="text-right">
+                <p class="text-xl text-gray-600">Date: {{ $invoice->created_at->format('Y-m-d') }}</p>
             </div>
         </div>
-        <div class="invoice-details-client">
-            <div class="invoice-details-client-infos">
-                <p><b>- Client:</b> <a href="#"> {{ $invoice->patient->nom }} </a></p>
-                <p><b>- Adresse:</b> {{ $invoice->patient->adresse ?? 'N/A' }}</p>
-                <p><b>- Téléphone:</b> {{ $invoice->patient->telephone ?? 'N/A' }}</p>
+
+        <!-- Institute and Client Details Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Institut Details -->
+            <div class="bg-gray-100 p-6 rounded-md shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Institut</h3>
+                <table class="min-w-full mt-4">
+                    <tr><td class="font-semibold text-gray-600">Nom:</td><td>{{ auth()->user()->cie }}</td></tr>
+                    <tr><td class="font-semibold text-gray-600">Adresse:</td><td>{{ auth()->user()->adresse }}</td></tr>
+                    <tr><td class="font-semibold text-gray-600">Identifiant Fiscal:</td><td>{{ auth()->user()->fiscal_id }}</td></tr>
+                    <tr><td class="font-semibold text-gray-600">Numéro de registre:</td><td>{{ auth()->user()->register_number }}</td></tr>
+                </table>
+            </div>
+
+            <!-- Client Details -->
+            <div class="bg-gray-100 p-6 rounded-md shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Client</h3>
+                <table class="min-w-full mt-4">
+                    <tr><td class="font-semibold text-gray-600">Nom:</td><td><a href="/patients/{{$invoice->patient->id }}/edit" class="text-indigo-600">{{ $invoice->patient->nom }}</a></td></tr>
+                    <tr><td class="font-semibold text-gray-600">Adresse:</td><td>{{ $invoice->patient->adresse ?? 'N/A' }}</td></tr>
+                    <tr><td class="font-semibold text-gray-600">Téléphone:</td><td>{{ $invoice->patient->telephone ?? 'N/A' }}</td></tr>
+                </table>
             </div>
         </div>
-   
-</div>
-    <div class="invoice-details-admin-facture-infos">
-        <table class="table-details-facture">
-            <thead>
-                <tr>
-                    <th>Facture n°</th>
-                    <th>Date</th>
-                    <th>Mode de payment</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ $invoice->created_at->format('Y')}}-{{ $invoice->id }}</td>
-                    <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
-                    <td>Espèces</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="invoice-items">
-        <h3>Consultation</h3>
-        <ul>
-           
-                <li>{{ $invoice->consultation_price }} DH</li>
-           
-        </ul>
-    </div>
-    <div class="invoice-items">
-        <h3>Products</h3>
-        <ul>
-            @foreach($invoice->products as $product)
-                <li>{{ $product->name }} - Quantity: {{ $product->pivot->quantity }} - Prix: {{ $product->price }} DH</li>
-            @endforeach
-        </ul>
-    </div>
 
-    <div class="invoice-items">
-        <h3>Soins</h3>
-        <ul>
-            @foreach($invoice->soins as $soin)
-                <li>{{ $soin->name }} - Quantity: {{ $soin->pivot->quantity }} - Prix: {{ $soin->price }} DH</li>
-            @endforeach
-        </ul>
+        <!-- Invoice Basic Info Section -->
+        <div class="bg-white shadow-md rounded-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Détails de la Facture</h3>
+            <table class="w-full table-auto border-collapse">
+                <thead>
+                    <tr>
+                        <th class="border px-4 py-2 text-left text-gray-600">Facture n°</th>
+                        <th class="border px-4 py-2 text-left text-gray-600">Date</th>
+                        <th class="border px-4 py-2 text-left text-gray-600">Mode de paiement</th>
+                        <th class="border px-4 py-2 text-left text-gray-600">TVA (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-2">{{ $invoice->created_at->format('Y')}}-{{ $invoice->id }}</td>
+                        <td class="border px-4 py-2">{{ $invoice->created_at->format('Y-m-d') }}</td>
+                        <td class="border px-4 py-2">Espèces</td>
+                        <td class="border px-4 py-2">{{ auth()->user()->tva }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Items Section (Consultation, Products, Soins) -->
+        <div class="bg-white shadow-md rounded-md p-6 mb-8">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Détails des Articles</h3>
+            <!-- Consultation Item -->
+            <div class="invoice-items mb-6">
+                <h4 class="font-semibold text-gray-700">Consultation</h4>
+                <table class="w-full table-auto border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Description</th>
+                            <th class="border px-4 py-2 text-left">Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border px-4 py-2">Consultation</td>
+                            <td class="border px-4 py-2">{{ $invoice->consultation_price }} DH</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Products -->
+            <div class="invoice-items mb-6">
+                <h4 class="font-semibold text-gray-700">Produits</h4>
+                <table class="w-full table-auto border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Produit</th>
+                            <th class="border px-4 py-2 text-left">Quantité</th>
+                            <th class="border px-4 py-2 text-left">Prix</th>
+                            <th class="border px-4 py-2 text-left">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($invoice->products as $product)
+                            <tr>
+                                <td class="border px-4 py-2">{{ $product->name }}</td>
+                                <td class="border px-4 py-2">{{ $product->pivot->quantity }}</td>
+                                <td class="border px-4 py-2">{{ $product->price }} DH</td>
+                                <td class="border px-4 py-2">{{ $product->price * $product->pivot->quantity }} DH</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Soins -->
+            <div class="invoice-items mb-6">
+                <h4 class="font-semibold text-gray-700">Soins</h4>
+                <table class="w-full table-auto border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Soin</th>
+                            <th class="border px-4 py-2 text-left">Quantité</th>
+                            <th class="border px-4 py-2 text-left">Prix</th>
+                            <th class="border px-4 py-2 text-left">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($invoice->soins as $soin)
+                            <tr>
+                                <td class="border px-4 py-2">{{ $soin->name }}</td>
+                                <td class="border px-4 py-2">{{ $soin->pivot->quantity }}</td>
+                                <td class="border px-4 py-2">{{ $soin->price }} DH</td>
+                                <td class="border px-4 py-2">{{ $soin->price * $soin->pivot->quantity }} DH</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Calculation of Total Before and After TVA -->
+            @php
+                $subtotal = $invoice->consultation_price;
+
+                foreach ($invoice->products as $product) {
+                    $subtotal += $product->price * $product->pivot->quantity;
+                }
+
+                foreach ($invoice->soins as $soin) {
+                    $subtotal += $soin->price * $soin->pivot->quantity;
+                }
+
+                $tva_rate = auth()->user()->tva;
+                $tva_amount = ($subtotal * $tva_rate) / 100;
+                $total_amount_with_tva = $subtotal + $tva_amount;
+            @endphp
+
+            <table class="w-full table-auto border-collapse mt-6">
+                <thead>
+                    <tr>
+                        <th class="border px-4 py-2 text-left">Sous-total</th>
+                        <th class="border px-4 py-2 text-left">TVA ({{ $tva_rate }}%)</th>
+                        <th class="border px-4 py-2 text-left">Total à Payer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-2">{{ $subtotal }} DH</td>
+                        <td class="border px-4 py-2">{{ $tva_amount }} DH</td>
+                        <td class="border px-4 py-2">{{ $total_amount_with_tva }} DH</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <p class="total-amount">Total Amount: {{ $invoice->total_amount }} DH</p>
-</div>
-
-
 </body>
 </html>
-

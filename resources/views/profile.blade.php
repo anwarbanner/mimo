@@ -80,10 +80,17 @@
                             <label class="labels">Numéro de Registre</label>
                             <input type="text" name="register_number" class="form-control" placeholder="Numéro de Registre" value="{{ auth()->user()->register_number }}">
                         </div>
+                        
+                        <div class="col-md-6">
+                            <label class="labels">TVA</label>
+                            <input type="text" name="tva" class="form-control" placeholder="TVA" value="{{ auth()->user()->tva }}">
+                        </div>
                     </div>
+                    </div>
+                    
 
                     <hr class="border-2">
-
+                    
                     
 
                     <div class="mt-5 text-center">

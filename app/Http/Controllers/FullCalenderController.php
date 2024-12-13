@@ -26,7 +26,7 @@ class FullCalenderController extends Controller
                     'patient_nom' => $event->patient->nom,
                     'patient_prenom' => $event->patient->prenom,
                     'telephone' => $event->patient->telephone,
-                    'sexe'=>$event->patient->sexe,
+                    'sexe' => $event->patient->sexe,
                 ];
             }));
         }
@@ -86,7 +86,10 @@ class FullCalenderController extends Controller
                 if (!$event) {
                     return response()->json(['success' => false, 'message' => 'Événement non trouvé.']);
                 }
+                if($event->etat=="annulé"){
+                    return response()->json(['success' => false, 'message' => 'Événement est annulé vous pouvez pas modifier sa date.']);
 
+                }
                 // Update the event
                 $event->update([
                     'title' => $request->title,
@@ -105,7 +108,14 @@ class FullCalenderController extends Controller
                     return response()->json(['success' => true]);
                 }
                 return response()->json(['success' => false, 'message' => 'Événement non trouvé.']);
-
+            case 'update-etat':
+                $event = Rdv::find($request->id);
+                if ($event) {
+                    $event->etat = $request->etat;
+                    $event->save();
+                    return response()->json(['success' => true]);
+                }
+                return response()->json(['success' => false, 'message' => 'Événement introuvable']);
             default:
                 return response()->json(['success' => false, 'message' => 'Action invalide.']);
         }

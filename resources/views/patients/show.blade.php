@@ -1,4 +1,4 @@
-{{-- <x-app-layout>
+<x-app-layout>
     <x-slot name="title">Dashboard</x-slot>
     <div class="container mx-auto p-4 sm:p-6 max-w-md md:max-w-lg lg:max-w-xl xl:max-w-4xl 2xl:max-w-6xl">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Détails du Patient</h1>
@@ -7,7 +7,14 @@
               class="bg-white shadow-md rounded-lg p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 space-y-4">
             @csrf
             @method('PUT')
-    
+
+            @if($patient->image)
+            <div class="flex justify-center mb-6">
+                <img src="data:image/jpeg;base64,{{ $patient->image }}" alt="Image du Patient"
+                     class="h-32 w-32 max-w-full rounded-full border border-gray-300 shadow-lg object-cover">
+            </div>
+            @endif
+
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="nom">Nom:</label>
                 <input type="text" id="nom" name="nom" value="{{ $patient->nom }}" 
@@ -56,26 +63,22 @@
             <div class="mb-4">
                 <label class="block text-sm font-semibold mb-2" for="observations">Observations:</label>
                 <textarea id="observations" name="observations" rows="4"
-                          class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">{{ $patient->observations }}</textarea>
+                          class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400 break-words">{{ $patient->observations }}</textarea>
             </div>
-    
-            <div class="flex flex-col space-y-4 sm:space-y-0 sm:flex-row justify-between items-center">
-                <button type="button" onclick="document.getElementById('updateForm').submit()" 
-                        class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300">
-                    Modifier
+
+            <div class="flex justify-end space-x-4">
+                <a href="{{ route('patients.index') }}" 
+                   class="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
+                    Retour
+                </a>
+                <a href="{{ route('reponses.show', $patient->id) }}" 
+                    class="inline-block px-4 py-2 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 transition duration-300">
+                     Voir Questionnaire
+                 </a>
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-300">
+                    Enregistrer
                 </button>
-    
-                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" 
-                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce patient ?');" class="w-full sm:w-auto">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                            class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300">
-                        Supprimer
-                    </button>
-                </form>
             </div>
         </form>
     </div>
-    </x-app-layout>
-     --}}
+</x-app-layout>

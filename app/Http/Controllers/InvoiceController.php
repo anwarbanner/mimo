@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Product;
@@ -16,7 +17,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with('patient')->orderBy('id', 'desc'); // Load related patient data
+        $query = Invoice::with('patient')->orderBy('id', 'desc');
         
         if ($request->has('search') && $request->search != '') {
             $query->where('id', $request->search); // Filter by invoice ID
@@ -27,7 +28,29 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
     
-
+    /**
+     * Generate and Share PDF for the specified invoice.
+     */
+    public function generateAndSharePDF($invoiceId)
+    {
+        // Fetch the invoice
+        $invoice = Invoice::findOrFail($invoiceId);
+    
+        // Generate the PDF
+        $pdf = PDF::loadView('invoices.pdf', ['invoice' => $invoice]);
+    
+        // Define the file name and save the file to storage
+        $fileName = 'invoice_' . $invoiceId . '.pdf';
+        $filePath = 'invoices/' . $fileName;
+        Storage::disk('public')->put($filePath, $pdf->output());
+    
+        // Generate the public URL
+        $publicUrl = asset('storage/' . $filePath);
+    
+        // Return the URL where the PDF can be accessed
+        return response()->json(['url' => $publicUrl]);
+    }
+    
     /**
      * Show the form for creating a new invoice.
      */
@@ -36,6 +59,7 @@ class InvoiceController extends Controller
         $patients = Patient::all();
         $products = Product::all();
         $soins = Soin::all();
+        
         return view('invoices.create', compact('patients', 'products', 'soins'));
     }
 
@@ -63,6 +87,7 @@ class InvoiceController extends Controller
     
         // Create the invoice without setting visites_id
         $invoice = Invoice::create([
+            'visite_id' => NULL,
             'patient_id' => $validated['patient_id'],
             'total_amount' => $totalAmount,
             'consultation_price' => $consultationPrice,
@@ -75,11 +100,6 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.index')->with('success', 'Invoice created successfully.');
     }
     
-
-    
-
-    
-
     /**
      * Display the specified invoice.
      */
@@ -125,19 +145,26 @@ class InvoiceController extends Controller
     public function destroy($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $invoice->delete();
-
-        return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully');
+    
+        // Check if the invoice has an associated visite
+        if ($invoice->visite) {
+            $invoice->visite->delete(); // Delete the associated visite
+        }
+    
+        $invoice->delete(); // Delete the invoice
+    
+        return redirect()->route('invoices.index')->with('success', 'Invoice and associated visit deleted successfully.');
     }
 
     /**
-     * Generate PDF for the specified invoice.
+     * Generate and download PDF for the specified invoice.
      */
     public function downloadPDF($id)
     {
         $invoice = Invoice::with(['patient', 'products', 'soins'])->findOrFail($id);
         
         $pdf = PDF::loadView('invoices.pdf', compact('invoice'));
+        
         return $pdf->download("Invoice_{$invoice->id}.pdf");
     }
 }

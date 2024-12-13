@@ -8,7 +8,7 @@
             <div>
                 <label for="patient_id" class="block text-sm font-medium text-gray-700">Patient</label>
                 <select name="patient_id" id="patient_id"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2">
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2" required>
                     <option value="">Sélectionnez un patient</option>
                     @foreach ($patients as $patient)
                         <option value="{{ $patient->id }}"

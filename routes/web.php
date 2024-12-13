@@ -6,6 +6,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SoinController;
 use App\Http\Controllers\RdvController;
+use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceController;
@@ -33,8 +34,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
-
-
+    
+    Route::get('/patients/{patient}/reponses', [ReponseController::class, 'show'])->name('reponses.show');
+    Route::put('/reponses/{patient}', [ReponseController::class, 'update'])->name('reponses.update');
 
     Route::resource('patients', PatientController::class);
 
@@ -73,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/questions/save-all-responses', [QuestionController::class, 'saveAllResponses'])->name('questions.saveAllResponses');
     // Route for questions completed
     Route::get('/questions/completed', [QuestionController::class, 'completed'])->name('questions.completed');
+    Route::get('/questions', [QuestionController::class, 'indexAll'])->name('questions.index');
 
     // Renamed route for completed (you can change the name to something else)
     Route::get('/completed', [QuestionController::class, 'completed'])->name('completed.questions');
@@ -92,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/visite-images/{id}', [VisiteImageController::class, 'destroy']);
 
 });
+Route::get('/invoices/{invoiceId}/generate-and-share-pdf', [InvoiceController::class, 'generateAndSharePDF']);
 
 
 // Fallback route to handle unauthorized access
