@@ -8,7 +8,7 @@ use App\Models\Patient;
 use App\Models\Product;
 use App\Models\Soin;
 use Illuminate\Http\Request;
-use PDF; // Import for generating PDFs
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
@@ -159,12 +159,15 @@ class InvoiceController extends Controller
     /**
      * Generate and download PDF for the specified invoice.
      */
-    public function downloadPDF($id)
-    {
-        $invoice = Invoice::with(['patient', 'products', 'soins'])->findOrFail($id);
-        
-        $pdf = PDF::loadView('invoices.pdf', compact('invoice'));
-        
-        return $pdf->download("Invoice_{$invoice->id}.pdf");
-    }
+    public function downloadPdf($invoiceId)
+{
+    $invoice = Invoice::findOrFail($invoiceId);
+
+    // Load the Blade view into the PDF
+    $pdf = PDF::loadView('invoices.pdf', compact('invoice'));
+
+    // Download the generated PDF
+    return $pdf->download('facture-' . $invoice->id . '.pdf');
+}
+    
 }

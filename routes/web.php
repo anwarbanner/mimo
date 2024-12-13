@@ -96,6 +96,8 @@ Route::middleware('auth')->group(function () {
 
 });
 Route::get('/invoices/{invoiceId}/generate-and-share-pdf', [InvoiceController::class, 'generateAndSharePDF']);
+Route::get('/invoices/{invoiceId}/generate-pdf', [InvoiceController::class, 'generatePDF']);
+
 
 
 // Fallback route to handle unauthorized access
