@@ -49,7 +49,7 @@ class VisiteController extends Controller
          }
      
          // Retrieve filtered and/or searched RDVs
-         $rdvs = $query->get();
+         $rdvs = Rdv::paginate(10);
      
          // Ensure that the start field is parsed as a Carbon instance and check for existing visits
          foreach ($rdvs as $rdv) {

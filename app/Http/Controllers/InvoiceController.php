@@ -23,7 +23,7 @@ class InvoiceController extends Controller
             $query->where('id', $request->search); // Filter by invoice ID
         }
     
-        $invoices = $query->get();
+        $invoices = Invoice::paginate(10);;
     
         return view('invoices.index', compact('invoices'));
     }

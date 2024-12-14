@@ -123,6 +123,8 @@
                 </table>
             </div>
         </div>
+        {{-- Pagination links --}}
+{{ $patients->links() }}
     </div>
 
     <!-- JavaScript for Search Functionality -->
