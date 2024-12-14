@@ -4,8 +4,11 @@
     <a class="sidebar-brand d-flex align-items-center justify-content-center my-0" href="{{ route('dashboard') }}">
         <!-- Display Logo Image if available, otherwise fallback to default logo -->
         <img class="rounded-circle" src="{{ asset('images/logo/logo-acup.jpg') }}" alt="Logo"
-            style="width: 50px; height: 50px; object-fit: cover; ">
+            class="rounded-circle object-cover"
+            style="width: 100px; height: 100px;"
+            class="w-12 h-12 sm:w-16 sm:h-16 lg:w-24 lg:h-24">
     </a>
+    
     <br />
 
     <!-- Divider -->
