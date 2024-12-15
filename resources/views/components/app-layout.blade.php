@@ -47,7 +47,7 @@
 
         </div>
     </div>
-    <a class="scroll-to-top rounded" href="#page-top">
+    <a class="scroll-to-top rounded" id="scrollToTopBtn">
         <i class="fas fa-angle-up"></i>
     </a>
 
@@ -55,5 +55,23 @@
     <script src="{{ asset('admin_assets/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin_assets/js/sb-admin-2.min.js') }}"></script>
+    <script>
+        // Get the button
+        var mybutton = document.getElementById("scrollToTopBtn");
+    
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        };
+    
+        // When the user clicks the button, scroll to the top of the document
+        mybutton.onclick = function() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+    </script>
 </body>
 </html>

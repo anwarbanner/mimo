@@ -82,6 +82,8 @@
                     </tbody>
                 </table>
             </div>
+            {{ $rdvs->links() }}
+
         </div>
     @endif
 </x-app-layout>

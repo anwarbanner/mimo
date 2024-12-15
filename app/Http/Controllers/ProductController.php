@@ -25,7 +25,7 @@ class ProductController extends Controller
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
         'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate the image
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:64000', // Validate the image
     ]);
 
     $data = $request->all();
@@ -53,7 +53,7 @@ public function edit($id)
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
         'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:64000',
     ]);
 
     $data = $request->all();

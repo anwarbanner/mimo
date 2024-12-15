@@ -125,6 +125,7 @@
                 </table>
             </div>
         </div>
+        {{ $invoices->links() }}
     </div>
 
     <!-- JavaScript to handle WhatsApp confirmation -->

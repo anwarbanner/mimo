@@ -73,56 +73,62 @@ class AuthController extends Controller
 
     
     public function updateProfile(Request $request)
-    {
-        // Validation rules
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id,
-            'phone' => 'nullable|string|max:255',
-            'adresse' => 'nullable|string|max:255',
-            'cie' => 'nullable|string|max:255', // Validate CIE
-            'fiscal_id' => 'nullable|string|max:255', // Validate Identifiant Fiscal
-            'register_number' => 'nullable|string|max:255', // Validate Numéro de Registre
-            'password' => 'nullable|confirmed|min:8',
-        ]);
-    
-        $user = auth()->user();
-        $changesDetected = false;
-    
-        // Check for changes
-        if ($user->cie != $request->cie) {
-            $user->cie = $request->cie;
-            $changesDetected = true;
-        }
-    
-        if ($user->fiscal_id != $request->fiscal_id) {
-            $user->fiscal_id = $request->fiscal_id;
-            $changesDetected = true;
-        }
-    
-        if ($user->register_number != $request->register_number) {
-            $user->register_number = $request->register_number;
-            $changesDetected = true;
-        }
-        if ($user->adresse != $request->adresse) {
-            $user->adresse = $request->adresse;
-            $changesDetected = true;
-        }
-        if ($user->phone != $request->phone) {
-            $user->phone = $request->phone;
-            $changesDetected = true;
-        }
-    
-        // (Other fields as before)
-    
-        // Save changes if detected
-        if ($changesDetected) {
-            $user->save();
-            return redirect()->back()->with('success', 'Informations modifiées avec succès.');
-        }
-    
-        return redirect()->back()->with('info', 'Aucune modification détectée.');
+{
+    // Validation rules
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id,
+        'phone' => 'nullable|string|max:255',
+        'adresse' => 'nullable|string|max:255',
+        'cie' => 'nullable|string|max:255', 
+        'fiscal_id' => 'nullable|string|max:255', 
+        'register_number' => 'nullable|string|max:255', 
+        'tva' => 'nullable|string|max:255',  // Validate TVA
+        'password' => 'nullable|confirmed|min:8',
+    ]);
+
+    $user = auth()->user();
+    $changesDetected = false;
+
+    // Check for changes
+    if ($user->cie != $request->cie) {
+        $user->cie = $request->cie;
+        $changesDetected = true;
     }
+
+    if ($user->fiscal_id != $request->fiscal_id) {
+        $user->fiscal_id = $request->fiscal_id;
+        $changesDetected = true;
+    }
+
+    if ($user->register_number != $request->register_number) {
+        $user->register_number = $request->register_number;
+        $changesDetected = true;
+    }
+
+    if ($user->tva != $request->tva) {
+        $user->tva = $request->tva;
+        $changesDetected = true;
+    }
+
+    if ($user->adresse != $request->adresse) {
+        $user->adresse = $request->adresse;
+        $changesDetected = true;
+    }
+
+    if ($user->phone != $request->phone) {
+        $user->phone = $request->phone;
+        $changesDetected = true;
+    }
+
+    // Save changes if detected
+    if ($changesDetected) {
+        $user->save();
+        return redirect()->back()->with('success', 'Informations modifiées avec succès.');
+    }
+
+    return redirect()->back()->with('info', 'Aucune modification détectée.');
+}
     
     
     
