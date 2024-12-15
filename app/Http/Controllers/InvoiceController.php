@@ -16,18 +16,22 @@ class InvoiceController extends Controller
      * Display a listing of the invoices.
      */
     public function index(Request $request)
-    {
-        $query = Invoice::with('patient')->orderBy('id', 'desc');
-        
-        if ($request->has('search') && $request->search != '') {
-            $query->where('id', $request->search); // Filter by invoice ID
-        }
+{
+    // Start building the query
+    $query = Invoice::with('patient')->orderBy('id', 'desc');
     
-        $invoices = Invoice::paginate(10);;
-    
-        return view('invoices.index', compact('invoices'));
+    // Check if there's a search term and filter by invoice ID
+    if ($request->has('search') && $request->search != '') {
+        $query->where('id', $request->search); // Filter by invoice ID
     }
-    
+
+    // Apply pagination to the query
+    $invoices = $query->paginate(10);
+
+    // Return the view with the filtered invoices
+    return view('invoices.index', compact('invoices'));
+}
+
     /**
      * Generate and Share PDF for the specified invoice.
      */
@@ -71,33 +75,46 @@ class InvoiceController extends Controller
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'products' => 'nullable|array',
+            'products.*.id' => 'exists:products,id',
+            'products.*.quantity' => 'integer|min:1',
             'soins' => 'nullable|array',
-            'products.*' => 'exists:products,id',
-            'soins.*' => 'exists:soins,id',
+            'soins.*.id' => 'exists:soins,id',
+            'soins.*.quantity' => 'integer|min:1',
             'consultation_price' => 'nullable|numeric|min:0',
         ]);
     
-        $products = $validated['products'] ?? [];
-        $soins = $validated['soins'] ?? [];
-        $consultationPrice = $validated['consultation_price'] ?? 0;
+        // Extract product and soin IDs
+        $productIds = collect($request->input('products'))->pluck('id')->toArray();
+        $soinIds = collect($request->input('soins'))->pluck('id')->toArray();
     
-        $totalProducts = Product::whereIn('id', $products)->sum('price');
-        $totalSoins = Soin::whereIn('id', $soins)->sum('price');
-        $totalAmount = $totalProducts + $totalSoins + $consultationPrice;
+        // Calculate total for products and soins
+        $totalProducts = Product::whereIn('id', $productIds)->sum('price');
+        $totalSoins = Soin::whereIn('id', $soinIds)->sum('price');
     
-        // Create the invoice without setting visites_id
+        // Calculate total invoice amount
+        $totalAmount = $totalProducts + $totalSoins + ($request->input('consultation_price') ?? 0);
+    
+        // Create the invoice
         $invoice = Invoice::create([
-            'visite_id' => NULL,
-            'patient_id' => $validated['patient_id'],
+            'patient_id' => $request->input('patient_id'),
+            'consultation_price' => $request->input('consultation_price'),
             'total_amount' => $totalAmount,
-            'consultation_price' => $consultationPrice,
         ]);
     
-        // Sync products and soins with quantities set to 1
-        $invoice->products()->sync(array_fill_keys($products, ['quantity' => 1]));
-        $invoice->soins()->sync(array_fill_keys($soins, ['quantity' => 1]));
+        // Attach products and soins with quantities
+        if (!empty($productIds)) {
+            foreach ($request->input('products') as $product) {
+                $invoice->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+            }
+        }
     
-        return redirect()->route('invoices.index')->with('success', 'Invoice created successfully.');
+        if (!empty($soinIds)) {
+            foreach ($request->input('soins') as $soin) {
+                $invoice->soins()->attach($soin['id'], ['quantity' => $soin['quantity']]);
+            }
+        }
+    
+        return redirect()->route('invoices.index')->with('success', 'Facture créée avec succès.');
     }
     
     /**

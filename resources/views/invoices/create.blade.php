@@ -5,14 +5,11 @@
 
     <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-10">
         <h1 class="text-3xl lg:text-4xl font-bold text-center text-blue-700 mb-6">
-            {{ isset($invoice) ? 'Modifier Facture' : 'Créer Facture' }}
+            Créer Facture
         </h1>
 
-        <form action="{{ isset($invoice) ? route('invoices.update', $invoice->id) : route('invoices.store') }}" method="POST">
+        <form action="{{ route('invoices.store') }}" method="POST">
             @csrf
-            @if(isset($invoice))
-                @method('PUT')
-            @endif
 
             <!-- Patient Selection -->
             <div class="mb-6">
@@ -20,66 +17,139 @@
                 <select name="patient_id" id="patient_id" class="block w-full bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 p-3">
                     <option value="" disabled selected>-- Sélectionner un patient --</option>
                     @foreach($patients as $patient)
-                        <option value="{{ $patient->id }}" {{ isset($invoice) && $invoice->patient_id == $patient->id ? 'selected' : '' }}>
-                            {{ $patient->id }} - {{ $patient->nom }}
-                        </option>
+                        <option value="{{ $patient->id }}">{{ $patient->id }} - {{ $patient->nom }}</option>
                     @endforeach
                 </select>
+                @error('patient_id')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
 
-            <!-- Products Selection -->
-            <div class="mb-6">
-                <label for="products" class="block text-sm font-medium text-gray-700 mb-2">Produits</label>
-                <select name="products[]" id="products" class="block w-full bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 p-3" multiple>
-                    @foreach($products as $product)
-                        <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                            {{ $product->name }} - {{ $product->price }} DH
-                        </option>
-                    @endforeach
-                </select>
-                <small class="text-gray-500">Maintenez la touche CTRL (ou CMD) pour sélectionner plusieurs produits.</small>
+            <!-- Dynamic Products Section -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Produits</label>
+                <div id="products" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 product-item">
+                        <select name="products[0][id]" class="product-select w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" data-price="0">-- Sélectionner un produit --</option>
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}" data-price="{{ $product->price }}">{{ $product->name }} ({{ $product->price }} DH)</option>
+                            @endforeach
+                        </select>
+                        <input type="number" name="products[0][quantity]" value="1" placeholder="Quantité" min="1" class="product-quantity w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button type="button" onclick="deleteProduct(this)" class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addProduct()" class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
+                    + Ajouter un produit
+                </button>
             </div>
 
-            <!-- Soins Selection -->
-            <div class="mb-6">
-                <label for="soins" class="block text-sm font-medium text-gray-700 mb-2">Soins</label>
-                <select name="soins[]" id="soins" class="block w-full bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 p-3" multiple>
-                    @foreach($soins as $soin)
-                        <option value="{{ $soin->id }}" data-price="{{ $soin->price }}">
-                            {{ $soin->name }} - {{ $soin->price }} DH
-                        </option>
-                    @endforeach
-                </select>
-                <small class="text-gray-500">Maintenez la touche CTRL (ou CMD) pour sélectionner plusieurs soins.</small>
+            <!-- Dynamic Soins Section -->
+            <div class="mt-6">
+                <label class="block text-gray-700 font-medium mb-2">Soins</label>
+                <div id="soins" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 soin-item">
+                        <select name="soins[0][id]" class="soin-select w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" data-price="0">-- Sélectionner un soin --</option>
+                            @foreach($soins as $soin)
+                                <option value="{{ $soin->id }}" data-price="{{ $soin->price }}">{{ $soin->name }} ({{ $soin->price }} DH)</option>
+                            @endforeach
+                        </select>
+                        <input type="number" name="soins[0][quantity]" value="1" placeholder="Quantité" min="1" class="soin-quantity w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button type="button" onclick="deleteSoin(this)" class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addSoin()" class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
+                    + Ajouter un soin
+                </button>
             </div>
 
             <!-- Total Amount -->
-            <div class="mb-6">
+            <div class="mb-6 mt-6">
                 <label for="total_amount" class="block text-sm font-medium text-gray-700 mb-2">Montant Total</label>
-                <input type="number" name="total_amount" id="total_amount" class="block w-full bg-gray-100 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 p-3" value="{{ $invoice->total_amount ?? 0 }}" readonly>
+                <input type="text" id="total_amount" class="block w-full bg-gray-100 border border-gray-300 rounded-lg shadow-sm p-3" readonly>
+                
             </div>
 
             <!-- Submit Button -->
             <div class="text-center">
                 <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300 transition duration-150">
-                    {{ isset($invoice) ? 'Mettre à Jour' : 'Créer Facture' }}
+                    Créer Facture
                 </button>
             </div>
         </form>
     </div>
 
     <script>
+        let productIndex = 1;
+        let soinIndex = 1;
+
         function calculateTotal() {
-            let productPrices = Array.from(document.getElementById('products').selectedOptions).map(option => parseFloat(option.getAttribute('data-price')) || 0);
-            let soinPrices = Array.from(document.getElementById('soins').selectedOptions).map(option => parseFloat(option.getAttribute('data-price')) || 0);
+            let total = 0;
 
-            let totalProducts = productPrices.reduce((a, b) => a + b, 0);
-            let totalSoins = soinPrices.reduce((a, b) => a + b, 0);
+            // Calculate products total
+            document.querySelectorAll('.product-item').forEach(item => {
+                const price = parseFloat(item.querySelector('.product-select option:checked').dataset.price || 0);
+                const quantity = parseInt(item.querySelector('.product-quantity').value || 1);
+                total += price * quantity;
+            });
 
-            document.getElementById('total_amount').value = totalProducts + totalSoins;
+            // Calculate soins total
+            document.querySelectorAll('.soin-item').forEach(item => {
+                const price = parseFloat(item.querySelector('.soin-select option:checked').dataset.price || 0);
+                const quantity = parseInt(item.querySelector('.soin-quantity').value || 1);
+                total += price * quantity;
+            });
+
+            document.getElementById('total_amount').value = total.toFixed(2) + ' DH';
         }
 
-        document.getElementById('products').addEventListener('change', calculateTotal);
-        document.getElementById('soins').addEventListener('change', calculateTotal);
+        function addProduct() {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4', 'product-item');
+            productDiv.innerHTML = `
+                <select name="products[${productIndex}][id]" class="product-select w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="calculateTotal()">
+                    <option value="" data-price="0">-- Sélectionner un produit --</option>
+                    @foreach($products as $product)
+                        <option value="{{ $product->id }}" data-price="{{ $product->price }}">{{ $product->name }} ({{ $product->price }} DH)</option>
+                    @endforeach
+                </select>
+                <input type="number" name="products[${productIndex}][quantity]" value="1" placeholder="Quantité" min="1" class="product-quantity w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" oninput="calculateTotal()">
+                <button type="button" onclick="deleteProduct(this)" class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+            `;
+            document.getElementById('products').appendChild(productDiv);
+            productIndex++;
+        }
+
+        function addSoin() {
+            const soinDiv = document.createElement('div');
+            soinDiv.classList.add('flex', 'flex-col', 'sm:flex-row', 'space-y-4', 'sm:space-y-0', 'sm:space-x-4', 'soin-item');
+            soinDiv.innerHTML = `
+                <select name="soins[${soinIndex}][id]" class="soin-select w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="calculateTotal()">
+                    <option value="" data-price="0">-- Sélectionner un soin --</option>
+                    @foreach($soins as $soin)
+                        <option value="{{ $soin->id }}" data-price="{{ $soin->price }}">{{ $soin->name }} ({{ $soin->price }} DH)</option>
+                    @endforeach
+                </select>
+                <input type="number" name="soins[${soinIndex}][quantity]" value="1" placeholder="Quantité" min="1" class="soin-quantity w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" oninput="calculateTotal()">
+                <button type="button" onclick="deleteSoin(this)" class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+            `;
+            document.getElementById('soins').appendChild(soinDiv);
+            soinIndex++;
+        }
+
+        function deleteProduct(button) {
+            button.parentElement.remove();
+            calculateTotal();
+        }
+
+        function deleteSoin(button) {
+            button.parentElement.remove();
+            calculateTotal();
+        }
+
+        document.querySelectorAll('.product-select, .soin-select').forEach(select => select.addEventListener('change', calculateTotal));
+        document.querySelectorAll('.product-quantity, .soin-quantity').forEach(input => input.addEventListener('input', calculateTotal));
     </script>
 </x-app-layout>

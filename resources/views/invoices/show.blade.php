@@ -48,13 +48,13 @@
             <div class="invoice-container">
                 <!-- Header Section -->
                 <div class="d-flex justify-content-between align-items-center mb-4 flex-column-reverse flex-md-row">
-                    <!-- Invoice Title -->
+                    {{-- <!-- Invoice Title -->
                     <div class="invoice-header text-center text-md-start mt-3 mt-md-0">
                         <h1 class="h5 mb-0">Facture N°{{ $invoice->id }}</h1>
-                    </div>
+                    </div> --}}
                     <!-- Logo Section -->
                     <div class="logo-section text-center text-md-end">
-                        <img src="{{ asset('images/logo/logo-acup.jpg') }}" alt="Logo" class="logo-img" style="max-width: 100px;">
+                        <img src="{{ asset('images/logo/logo-acup.jpg') }}" alt="Logo" class="logo-img" style="max-width: 150px;">
                     </div>
                 </div>
                 

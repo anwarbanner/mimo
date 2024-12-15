@@ -54,7 +54,7 @@
                             <tr>
                                 <td>{{ $invoice->id }}</td>
                                 <td>{{ $invoice->patient->id }} - {{ $invoice->patient->nom }} {{ $invoice->patient->prenom }}</td>
-                                <td>{{ $invoice->total_amount }} DH</td>
+                                <td>{{ $invoice->total_amount + ($invoice->total_amount * 20 /100)  }} DH</td>
                                 <td>
                                     <!-- Button to Open Modal -->
                                     <button type="button" class="btn btn-outline-primary bg-white" data-bs-toggle="modal" data-bs-target="#actionModal{{ $invoice->id }}">
@@ -127,7 +127,7 @@
         </div>
         {{ $invoices->links() }}
     </div>
-
+    <br> <br>
     <!-- JavaScript to handle WhatsApp confirmation -->
     <script>
        $(document).on('click', '.confirmWhatsApp', function () {
