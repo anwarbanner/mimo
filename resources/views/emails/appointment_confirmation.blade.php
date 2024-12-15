@@ -66,7 +66,7 @@
 <body>
     <div class="container">
         <!-- Image at the top of the email -->
-        <img src="{{ asset('storage/images/logo-acup.jpg') }}" alt="Logo de Votre Entreprise" class="logo">
+        <img src="{{ asset('storage/images/logo-acup.jpg') }}" alt="mi acup" class="logo">
 
 
         <h1>Bonjour {{ $appointment->patient->name }},</h1>
