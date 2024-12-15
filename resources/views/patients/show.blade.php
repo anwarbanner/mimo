@@ -1,84 +1,74 @@
+<title>Patient {{$patient->nom}}</title>
 <x-app-layout>
-    <x-slot name="title">Dashboard</x-slot>
-    <div class="container mx-auto p-4 sm:p-6 max-w-md md:max-w-lg lg:max-w-xl xl:max-w-4xl 2xl:max-w-6xl">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Détails du Patient</h1>
+    <div class="container mx-auto p-6 sm:p-8 max-w-md md:max-w-lg lg:max-w-xl xl:max-w-4xl 2xl:max-w-6xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 sm:mb-10 text-center">Détails du Patient</h1>
     
-        <form id="updateForm" action="{{ route('patients.update', $patient->id) }}" method="POST" 
-              class="bg-white shadow-md rounded-lg p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 space-y-4">
-            @csrf
-            @method('PUT')
-
-            @if($patient->image)
+        <!-- Patient Card -->
+        <div class="bg-white shadow-2xl rounded-xl p-6 sm:p-8 space-y-6 sm:space-y-8 border border-gray-100 max-w-md mx-auto sm:max-w-lg lg:max-w-xl">
+            <!-- Patient Image -->
             <div class="flex justify-center mb-6">
+                @if($patient->image)
                 <img src="data:image/jpeg;base64,{{ $patient->image }}" alt="Image du Patient"
-                     class="h-32 w-32 max-w-full rounded-full border border-gray-300 shadow-lg object-cover">
-            </div>
-            @endif
-
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="nom">Nom:</label>
-                <input type="text" id="nom" name="nom" value="{{ $patient->nom }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="prenom">Prénom:</label>
-                <input type="text" id="prenom" name="prenom" value="{{ $patient->prenom }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="email">Email:</label>
-                <input type="email" id="email" name="email" value="{{ $patient->email }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="telephone">Téléphone:</label>
-                <input type="tel" id="telephone" name="telephone" value="{{ $patient->telephone }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="adresse">Adresse:</label>
-                <input type="text" id="adresse" name="adresse" value="{{ $patient->adresse }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="date_naissance">Date de Naissance:</label>
-                <input type="date" id="date_naissance" name="date_naissance" value="{{ $patient->date_naissance }}" 
-                       class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="sexe">Sexe:</label>
-                <select id="sexe" name="sexe" 
-                        class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <option value="M" {{ $patient->sexe == 'M' ? 'selected' : '' }}>Masculin</option>
-                    <option value="F" {{ $patient->sexe == 'F' ? 'selected' : '' }}>Féminin</option>
-                </select>
-            </div>
-    
-            <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2" for="observations">Observations:</label>
-                <textarea id="observations" name="observations" rows="4"
-                          class="border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400 break-words">{{ $patient->observations }}</textarea>
+                     class="h-24 w-24 sm:h-32 sm:w-32 rounded-full border-4 border-blue-500 object-cover shadow-xl">
+                @else
+                <div class="h-24 w-24 sm:h-32 sm:w-32 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl sm:text-2xl">
+                    <span>{{ strtoupper(substr($patient->nom, 0, 1)) }}{{ strtoupper(substr($patient->prenom, 0, 1)) }}</span>
+                </div>
+                @endif
             </div>
 
-            <div class="flex justify-end space-x-4">
-                <a href="{{ route('patients.index') }}" 
-                   class="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
-                    Retour
-                </a>
-                <a href="{{ route('reponses.show', $patient->id) }}" 
-                    class="inline-block px-4 py-2 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 transition duration-300">
-                     Voir Questionnaire
-                 </a>
-                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-300">
-                    Enregistrer
+            <!-- Patient Name -->
+            <div class="text-center mb-5">
+                <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800">{{ $patient->nom }} {{ $patient->prenom }}</h2>
+            </div>
+
+            <!-- Patient Details -->
+            <div class="space-y-6 sm:space-y-8">
+
+                <!-- Email -->
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-blue-50 transition-all duration-200">
+                    <i class="fas fa-envelope text-blue-600 mr-2"></i>
+                    <span class="text-base sm:text-lg font-medium text-gray-700">{{ $patient->email }}</span>
+                </div>
+                
+
+                <!-- Phone -->
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-blue-50 transition-all duration-200">
+                    <i class="fas fa-phone-alt text-blue-600 text-2xl"></i>
+                    <span class="text-base sm:text-lg font-medium text-gray-700">{{ $patient->telephone }}</span>
+                </div>
+
+                <!-- Address -->
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-blue-50 transition-all duration-200">
+                    <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
+                    <span class="text-base sm:text-lg font-medium text-gray-700">{{ $patient->adresse }}</span>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-blue-50 transition-all duration-200">
+                    <i class="fas fa-birthday-cake text-blue-600 text-2xl"></i>
+                    <span class="text-base sm:text-lg font-medium text-gray-700">{{ $patient->date_naissance }}</span>
+                </div>
+
+                <!-- Gender -->
+                <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-blue-50 transition-all duration-200">
+                    <i class="fas fa-genderless text-blue-600 text-2xl"></i>
+                    <span class="text-base sm:text-lg font-medium text-gray-700">{{ $patient->sexe == 'M' ? 'Masculin' : 'Féminin' }}</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row justify-between space-x-0 sm:space-x-4 mt-6 sm:mt-8">
+                <button onclick="window.location='{{ route('patients.index') }}'" 
+                        class="inline-block px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out w-full sm:w-auto mb-4 sm:mb-0">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour
+                </button>
+                <button onclick="window.location='{{ route('reponses.show', $patient->id) }}'" 
+                        class="inline-block px-4 py-2 sm:px-6 sm:py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out w-full sm:w-auto mb-4 sm:mb-0">
+                    <i class="fas fa-file-alt mr-2"></i> Voir Questionnaire
                 </button>
             </div>
-        </form>
+            
+        </div>
     </div>
 </x-app-layout>
