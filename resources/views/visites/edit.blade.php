@@ -82,6 +82,7 @@
                 <p class="text-gray-700"><strong>Total:</strong> {{ number_format($visite->invoice->total_amount, 2) }} DH</p>
             </div>
         </div>
+        <br>
         <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-6">
             <div class="bg-gray-100 px-6 py-4">
                 <h3 class="text-xl font-semibold text-gray-800">Images</h3>
@@ -94,11 +95,14 @@
                 @endforeach
             </div>
         </div>
-      
-
-        <button type="submit" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">Mettre à jour</button>
+        <div class="flex justify-center mt-6">
+            <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
+                Mettre à jour
+            </button>
+        </div>
+        
     </form>
-
+<br>
     <script>
         let productIndex = {{ $visite->invoice->products->count() }};
         let soinIndex = {{ $visite->invoice->soins->count() }};
@@ -112,7 +116,7 @@
                     <option value="{{ $product->id }}">{{ $product->name }}</option>
                     @endforeach
                 </select>
-                <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité" class="w-full sm:w-1/3 p-2 border rounded-lg">
+                <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité" value="1" class="w-full sm:w-1/3 p-2 border rounded-lg">
                 <button type="button" class="text-red-500 hover:text-red-700" onclick="deleteProduct(this)">Supprimer</button>
             `;
             document.getElementById('products').appendChild(productDiv);
@@ -128,7 +132,7 @@
                     <option value="{{ $soin->id }}">{{ $soin->name }}</option>
                     @endforeach
                 </select>
-                <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité" class="w-full sm:w-1/3 p-2 border rounded-lg">
+                <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité" value="1" class="w-full sm:w-1/3 p-2 border rounded-lg">
                 <button type="button" class="text-red-500 hover:text-red-700" onclick="deleteSoin(this)">Supprimer</button>
             `;
             document.getElementById('soins').appendChild(soinDiv);

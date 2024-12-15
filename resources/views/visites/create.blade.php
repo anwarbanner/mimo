@@ -22,39 +22,9 @@
 
             <input type="hidden" name="id_rdv" value="{{ $rdv->id }}">
 
-            <!-- Observation -->
-            <div>
-                <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>
-                <textarea name="observation" id="observation" rows="4"
-                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Écrivez vos observations ici..."></textarea>
-            </div>
-
-            <!-- Products Section -->
-            <div>
-                <label class="block text-gray-700 font-medium mb-2">Produits</label>
-                <div id="products" class="space-y-4">
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" data-index="0">
-                        <select name="products[0][id]"
-                            class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="number" name="products[0][quantity]" placeholder="Quantité"
-            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        <button type="button" onclick="deleteProduct(this)"
-            class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
-                    </div>
-                </div>
-                <button type="button" onclick="addProduct()"
-                    class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
-                    + Ajouter un produit
-                </button>
-            </div>
-
-            <!-- Soins Section -->
-            <div>
+          
+             <!-- Soins Section -->
+             <div>
                 <label class="block text-gray-700 font-medium mb-2">Soins</label>
                 <div id="soins" class="space-y-4">
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
@@ -64,7 +34,7 @@
                                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
                             @endforeach
                         </select>
-                        <input type="number" name="soins[0][quantity]" placeholder="Quantité"
+                        <input type="number" name="soins[0][quantity]" placeholder="Quantité" value="1"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         {{-- <input type="timer" name="soins[0][timer]"
                             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -79,6 +49,31 @@
                     + Ajouter un soin
                 </button>
             </div>
+
+            <!-- Products Section -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Produits</label>
+                <div id="products" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" data-index="0">
+                        <select name="products[0][id]"
+                            class="w-full sm:w-2/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                        <input type="number" name="products[0][quantity]" placeholder="Quantité" value="1"
+            class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <button type="button" onclick="deleteProduct(this)"
+            class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addProduct()"
+                    class="mt-4 text-sm text-blue-500 hover:text-blue-700 focus:outline-none">
+                    + Ajouter un produit
+                </button>
+            </div>
+
+           
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Ajouter des images (max: 4)</label>
                 <div id="images" class="space-y-4">
@@ -93,8 +88,14 @@
                     + Ajouter une image
                 </button>
                 <p class="text-sm text-gray-500 mt-2">Vous pouvez ajouter jusqu'à 4 images.</p>
+            </div>  
+            <!-- Observation -->
+            <div>
+                <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>
+                <textarea name="observation" id="observation" rows="4"
+                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Écrivez vos observations ici..."></textarea>
             </div>
-
             <!-- Submit Button -->
             <button type="submit"
                 class="w-full py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-all duration-200">
@@ -118,7 +119,7 @@
                 <option value="{{ $product->id }}">{{ $product->name }}</option>
             @endforeach
         </select>
-        <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité"
+        <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité" value="1"
             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <button type="button" onclick="deleteProduct(this)"
             class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
@@ -137,7 +138,7 @@
                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
             @endforeach
         </select>
-        <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
+        <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité" value="1"
             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <button type="button" onclick="deleteSoin(this)"
             class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
