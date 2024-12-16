@@ -1,3 +1,4 @@
+<title>editer produit</title>
 <x-app-layout>
 
     

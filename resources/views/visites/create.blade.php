@@ -178,7 +178,7 @@
                 <option value="{{ $product->id }}">{{ $product->name }}</option>
             @endforeach
         </select>
-        <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité"
+        <input type="number" name="products[${productIndex}][quantity]" placeholder="Quantité" value="1"
             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <button type="button" onclick="deleteProduct(this)"
             class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>
@@ -197,7 +197,7 @@
                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
             @endforeach
         </select>
-        <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité"
+        <input type="number" name="soins[${soinIndex}][quantity]" placeholder="Quantité" value="1"
             class="w-full sm:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <button type="button" onclick="deleteSoin(this)"
             class="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none">Supprimer</button>

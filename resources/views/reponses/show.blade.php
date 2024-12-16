@@ -15,9 +15,19 @@
                 @csrf
                 @method('PUT')
 
+                <!-- Champ de recherche -->
+                <div class="mb-4">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Rechercher une question..." 
+                        class="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
+                    >
+                </div>
+
                 <!-- Table des réponses -->
                 <div class="overflow-x-auto">
-                    <table class="min-w-full border-collapse border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                    <table id="reponsesTable" class="min-w-full border-collapse border border-gray-300 shadow-md rounded-lg overflow-hidden">
                         <thead>
                             <tr class="bg-gray-100 text-left text-gray-800">
                                 <th class="border border-gray-300 px-4 py-2 text-sm font-semibold">Question</th>
@@ -29,7 +39,7 @@
                             @foreach ($reponses as $reponse)
                                 <tr class="bg-white hover:bg-gray-50 transition">
                                     <!-- Question -->
-                                    <td class="border border-gray-300 px-4 py-3 text-gray-700 text-sm">
+                                    <td class="border border-gray-300 px-4 py-3 text-gray-700 text-sm question-text">
                                         {{ $reponse->question->texte ?? 'Question supprimée' }}
                                     </td>
 
@@ -75,4 +85,21 @@
             <p class="text-gray-600 mt-4 text-center">Aucune réponse enregistrée pour ce patient.</p>
         @endif
     </div>
+
+    <!-- Script de recherche -->
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#reponsesTable tbody tr');
+
+            rows.forEach(row => {
+                const questionText = row.querySelector('.question-text').textContent.toLowerCase();
+                if (questionText.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </x-app-layout>
