@@ -172,17 +172,23 @@ class VisiteController extends Controller
             $responses = $request->input('questions', []); // Récupérer les réponses
 
             foreach ($responses as $response) {
-                
+                if (empty($response['reponse'])) {
+                    continue; // Skip this response if 'reponse' is empty
+                }
+
                 DB::table('reponses')->insert([
-                    'valeur' => isset($response['reponse'])
-                        ? (is_array($response['reponse']) ? implode(',', $response['reponse']) : $response['reponse'])
-                        : null,
+                    'valeur' => is_array($response['reponse'])
+                        ? implode(',', $response['reponse'])
+                        : $response['reponse'],
                     'informationSup' => $response['informationSup'] ?? null,
                     'date_reponse' => now(),
                     'question_id' => $response['question_id'],
                     'patient_id' => $patientId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
+
             // Commit the transaction if everything is successful
             DB::commit();
 
