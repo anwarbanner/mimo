@@ -13,8 +13,8 @@
             <div class="space-y-4">
                 @foreach ($chunks as $index => $chunk)
                     <div class="border border-gray-200 rounded-lg">
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             class="w-full flex justify-between items-center px-4 py-3 text-gray-800 font-medium text-lg focus:outline-none"
                             onclick="toggleAccordion('accordion-{{ $index }}')">
                             Partie {{ $index + 1 }}
@@ -33,8 +33,8 @@
 
                                         <!-- Options selon le type de question -->
                                         @if ($question->type === 'texte')
-                                            <input type="text" name="questions[{{ $question->id }}][reponse]" 
-                                                   class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500" 
+                                            <input type="text" name="questions[{{ $question->id }}][reponse]"
+                                                   class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500"
                                                    placeholder="Entrez votre réponse ici">
                                         @elseif ($question->type === 'choix_unique')
                                             @foreach ($question->choix as $choix)
