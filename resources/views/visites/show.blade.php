@@ -1,5 +1,6 @@
 <title>Détails de la Visite</title>
 <x-app-layout>
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-6">
     <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-blue-700 mb-6 lg:mb-8" name="title">
         Détails de la Visite
     </h1>
@@ -116,7 +117,7 @@
             <h3 class="text-xl font-semibold text-gray-800">Facturation</h3>
         </div>
         <div class="px-6 py-4">
-            <p class="text-gray-700"><strong>Total:</strong> {{ number_format($visite->invoice->total_amount, 2) }} DH</p>
+            <p class="text-gray-700"><strong>Total TTC:</strong> {{ number_format($visite->invoice->total_amount+($visite->invoice->total_amount * 20/100), 2) }} DH</p>
         </div>
     </div>
     <!-- Buttons for Edit and Delete -->

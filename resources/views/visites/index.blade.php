@@ -22,6 +22,7 @@
 
     <!-- Search -->
     <form method="GET" action="{{ route('visites.index') }}" class="flex justify-center mb-6">
+        <input type="hidden" name="filter" value="{{ request('filter', 'today') }}">
         <input type="text" name="search" value="{{ request('search') }}"
                placeholder="Rechercher par ID ou Motif"
                class="p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -30,6 +31,7 @@
             Rechercher
         </button>
     </form>
+    
 
     @if($rdvs->isEmpty())
         <p class="text-center text-gray-600 text-sm sm:text-base">Aucun rendez-vous trouvé.</p>

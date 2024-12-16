@@ -76,7 +76,7 @@
                         <div class="p-3 bg-light rounded border flex-grow-1">
                             <h5 class="section-title text-center">Client</h5>
                             <hr class="border-2">
-                            <p><strong>Nom:</strong> <a href="/patients/{{ $invoice->patient->id }}/edit" class="text-primary">{{ $invoice->patient->nom }} {{ $invoice->patient->prenom }}</a></p>
+                            <p><strong>Nom:</strong> <a href="/patients/{{ $invoice->patient->id }}" class="text-primary">{{ $invoice->patient->nom }} {{ $invoice->patient->prenom }}</a></p>
                             <p><strong>Adresse:</strong> {{ $invoice->patient->adresse ?? 'N/A' }}</p>
                             <p><strong>Téléphone:</strong> {{ $invoice->patient->telephone ?? 'N/A' }}</p>
                         </div>
