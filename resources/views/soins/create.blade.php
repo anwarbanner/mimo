@@ -1,3 +1,4 @@
+<title>Creer soin</title>
 <x-app-layout>
 
     

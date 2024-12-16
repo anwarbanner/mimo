@@ -1,3 +1,4 @@
+<title>Créer facture</title>
 <x-app-layout>
     <head>
         <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">

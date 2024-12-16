@@ -1,3 +1,4 @@
+<title>editer soin</title>
 <x-app-layout>
     
     <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">

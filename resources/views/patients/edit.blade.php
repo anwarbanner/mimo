@@ -1,3 +1,4 @@
+<title>editer patient</title>
 <x-app-layout>
     <x-slot name="title">Modifier Patient</x-slot>
     <div class="container mx-auto p-4 sm:p-6 max-w-md md:max-w-lg lg:max-w-xl xl:max-w-4xl 2xl:max-w-6xl">
