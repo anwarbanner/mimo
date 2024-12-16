@@ -66,45 +66,7 @@ class VisiteController extends Controller
          return view('visites.index', compact('rdvs'));
      }
      
-    public function index(Request $request)
-    {
-        // Get the filter and search parameters
-        $filter = $request->input('filter', 'today');
-        $search = $request->input('search');
-
-        // Base query with patient relationship
-        $query = Rdv::with('patient');
-
-        // Apply filter for 'today', 'month', or 'all'
-        if ($filter === 'today') {
-            $query->whereDate('start', now()->toDateString());
-        } elseif ($filter === 'month') {
-            $query->whereMonth('start', now()->month)->whereYear('start', now()->year);
-        }
-
-        // Apply search by patient ID or motif
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%$search%")->orWhereHas('patient', function ($query) use ($search) {
-                    $query->where('id', 'like', "%$search%")->orWhere('nom', 'like', "%$search%")->orWhere('prenom', 'like', "%$search%");
-                });
-            });
-        }
-
-        // Retrieve filtered and/or searched RDVs
-        $rdvs = Rdv::paginate(10);
-
-        // Ensure that the start field is parsed as a Carbon instance and check for existing visits
-        foreach ($rdvs as $rdv) {
-            $rdv->start = Carbon::parse($rdv->start);
-            $rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
-        }
-
-        // Pass data to the view
-        return view('visites.index', compact('rdvs'));
-    }
-
-
+   
      
 
     public function create(Request $request)
