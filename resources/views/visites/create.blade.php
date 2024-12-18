@@ -24,7 +24,7 @@
             <!-- Section Photos -->
             <div class="mb-6">
                 <label class="block text-lg font-semibold text-gray-800 mb-3">
-                    Prendre des photos de la langue <small class="text-sm font-normal text-gray-600">(maximum 4)</small>
+                    Prendre des photos de la langue <small class="text-sm font-normal text-gray-600">(maximum 6)</small>
                 </label>
                 <div id="images" class="space-y-4">
                     <div class="flex items-center space-x-4">
@@ -44,7 +44,7 @@
                     Ajouter une image
                 </button>
                 <p class="text-sm text-gray-600 mt-2">
-                    Vous pouvez ajouter jusqu'à <span class="font-semibold">4 images</span>.
+                    Vous pouvez ajouter jusqu'à <span class="font-semibold">6 images</span>.
                 </p>
             </div>
 
@@ -92,30 +92,32 @@
                                                         class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500"
                                                         placeholder="Entrez votre réponse ici">
                                                 @elseif ($question->type === 'choix_unique')
+                                                <div class="grid grid-cols-4 gap-4">
                                                     @foreach ($question->choix as $choix)
-                                                        <div class="flex items-center mb-2">
+                                                        <div class="flex items-center">
                                                             <input type="radio" id="choix_{{ $choix->id }}"
-                                                                name="questions[{{ $question->id }}][reponse]"
-                                                                value="{{ $choix->texte }}"
-                                                                class="form-radio h-5 w-5 text-blue-600"
-                                                                onclick="toggleInfoField(this, '{{ $question->id }}')">
-                                                            <label for="choix_{{ $choix->id }}"
-                                                                class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                                   name="questions[{{ $question->id }}][reponse]"
+                                                                   value="{{ $choix->texte }}"
+                                                                   class="form-radio h-5 w-5 text-blue-600"
+                                                                   onclick="toggleInfoField(this, '{{ $question->id }}')">
+                                                            <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
                                                         </div>
                                                     @endforeach
-                                                @elseif ($question->type === 'choix_multiple')
+                                                </div>
+                                            @elseif ($question->type === 'choix_multiple')
+                                                <div class="grid grid-cols-5 gap-4">
                                                     @foreach ($question->choix as $choix)
-                                                        <div class="flex items-center mb-2">
+                                                        <div class="flex items-center">
                                                             <input type="checkbox" id="choix_{{ $choix->id }}"
-                                                                name="questions[{{ $question->id }}][reponse][]"
-                                                                value="{{ $choix->texte }}"
-                                                                class="form-checkbox h-5 w-5 text-blue-600"
-                                                                onclick="toggleInfoField(this, '{{ $question->id }}')">
-                                                            <label for="choix_{{ $choix->id }}"
-                                                                class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                                   name="questions[{{ $question->id }}][reponse][]"
+                                                                   value="{{ $choix->texte }}"
+                                                                   class="form-checkbox h-5 w-5 text-blue-600"
+                                                                   onclick="toggleInfoField(this, '{{ $question->id }}')">
+                                                            <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
                                                         </div>
                                                     @endforeach
-                                                @endif
+                                                </div>
+                                            @endif
 
                                                 <!-- Champ pour les informations supplémentaires -->
                                                 <textarea name="questions[{{ $question->id }}][informationSup]" id="info_{{ $question->id }}"
@@ -272,7 +274,7 @@
         let imageCount = 1;
 
         function addImage() {
-            if (imageCount >= 4) {
+            if (imageCount >= 6) {
                 alert('Vous ne pouvez ajouter que 4 images.');
                 return;
             }
