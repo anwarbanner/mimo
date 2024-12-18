@@ -1,9 +1,8 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-6">
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-            Créer une visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}
-        </h1>
-
+       
+        <h1 class="text-4xl lg:text-5xl text-center text-blue-700 mb-6 lg:mb-8"> Créer la Visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</h1>
+        
         <!-- Gestion des erreurs -->
         @if ($errors->any())
             <div class="bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-md">
@@ -22,7 +21,7 @@
 
             <input type="hidden" name="id_rdv" value="{{ $rdv->id }}">
             <!-- Section Photos -->
-            <div class="mb-6">
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-8"">
                 <label class="block text-lg font-semibold text-gray-800 mb-3">
                     Prendre des photos de la langue <small class="text-sm font-normal text-gray-600">(maximum 4)</small>
                 </label>
@@ -49,8 +48,8 @@
             </div>
 
 
-            <!-- Section Questionnaire -->
-            <div class="w-full max-w-7xl bg-white shadow-lg rounded-lg p-8">
+            <!-- Section Questionnaire -->     
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">Questionnaire</h2>
                 <div class="w-full max-w-7xl bg-white shadow-lg rounded-lg p-8">
                     @php
@@ -135,7 +134,7 @@
             </div>
 
             <!-- Observation -->
-            <div>
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                 <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>
                 <textarea name="observation" id="observation" rows="3"
                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
@@ -143,7 +142,7 @@
             </div>
 
             <!-- Section Soins -->
-            <div>
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                 <label class="block text-gray-700 font-medium mb-2 h2">Soins</label>
                 <div id="soins" class="space-y-4">
                     <div class="flex space-x-4">
@@ -152,7 +151,7 @@
                                 <option value="{{ $soin->id }}">{{ $soin->name }}</option>
                             @endforeach
                         </select>
-                        <input type="number" name="soins[0][quantity]" placeholder="Quantité"
+                        <input type="number" name="soins[0][quantity]" placeholder="Quantité" value="1"
                             class="w-1/3 p-2 border rounded-lg">
                     </div>
                 </div>
@@ -162,7 +161,7 @@
             </div>
 
             <!-- Section Produits -->
-            <div>
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                 <label class="block text-gray-700 font-medium mb-2 h2">Produits</label>
                 <div id="products" class="space-y-4">
                     <div class="flex space-x-4">
@@ -171,7 +170,7 @@
                                 <option value="{{ $product->id }}">{{ $product->name }}</option>
                             @endforeach
                         </select>
-                        <input type="number" name="products[0][quantity]" placeholder="Quantité"
+                        <input type="number" name="products[0][quantity]" placeholder="Quantité" value="1"
                             class="w-1/3 p-2 border rounded-lg">
                         <button type="button" onclick="deleteProduct(this)"
                             class="text-red-500 hover:text-red-700">Supprimer</button>
