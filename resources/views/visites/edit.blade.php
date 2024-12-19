@@ -81,7 +81,7 @@
                 <h3 class="text-xl font-semibold text-gray-800">Facturation</h3>
             </div>
             <div class="px-6 py-4">
-                <p class="text-gray-700"><strong>Total TTC:</strong> {{ number_format($visite->invoice->total_amount+($visite->invoice->total_amount * 20/100), 2) }} DH</p>
+                <p class="text-gray-700"><strong>Total TTC:</strong> {{ number_format($visite->invoice->total_amount+($visite->invoice->total_amount * auth()->user()->tva/100), 2) }} DH</p>
             </div>
         </div>
         <br>

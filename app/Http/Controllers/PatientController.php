@@ -23,6 +23,14 @@ class PatientController extends Controller
         return view('patients.create');
     }
 
+    public function showInvoices($patientId)
+{
+    $patient = Patient::with('invoices')->findOrFail($patientId);
+
+    return view('patients.invoices', compact('patient'));
+}
+
+
     /**
      * Store a newly created resource in storage.
      */

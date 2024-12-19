@@ -16,21 +16,30 @@ class InvoiceController extends Controller
      * Display a listing of the invoices.
      */
     public function index(Request $request)
-{
-    // Start building the query
-    $query = Invoice::with('patient')->orderBy('id', 'desc');
+    {
+        // Start building the query
+        $query = Invoice::with('patient')->orderBy('id', 'desc');
     
-    // Check if there's a search term and filter by invoice ID
-    if ($request->has('search') && $request->search != '') {
-        $query->where('id', $request->search); // Filter by invoice ID
+        // Check if there's a search term
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+    
+            $query->where(function ($q) use ($search) {
+                $q->where('id', $search) // Search by Invoice ID
+                  ->orWhereHas('patient', function ($query) use ($search) {
+                      $query->where('nom', 'like', "%$search%") // Search by Patient's Nom
+                            ->orWhere('prenom', 'like', "%$search%"); // Search by Patient's Prenom
+                  });
+            });
+        }
+    
+        // Apply pagination to the query
+        $invoices = $query->paginate(10);
+    
+        // Return the view with the filtered invoices
+        return view('invoices.index', compact('invoices'));
     }
-
-    // Apply pagination to the query
-    $invoices = $query->paginate(10);
-
-    // Return the view with the filtered invoices
-    return view('invoices.index', compact('invoices'));
-}
+    
 
     /**
      * Generate and Share PDF for the specified invoice.

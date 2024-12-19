@@ -1,9 +1,19 @@
 <title>Patients</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<!-- Add Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Add Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
 <x-app-layout>
     <div class="container-fluid px-7">
@@ -41,13 +51,12 @@
         <div class="row">
             <div class="col-12 table-responsive">
                 <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
+                    <thead class="bg-blue-500">
                         <tr>
-                            <th>ID</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Sexe</th>
-                            <th>Date de Naissance</th>
+                            <th class="text-white"><i class="fas fa-id-card mr-2"></i> ID</th>
+                            <th class="text-white"><i class="fas fa-user mr-2"></i> Nom et Prénom</th>
+                            <th class="text-white"><i class="fas fa-venus-mars mr-2"></i> Sexe</th>
+                            <th class="text-white"><i class="fas fa-calendar-alt mr-2"></i> Date de Naissance</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -55,8 +64,7 @@
                         @foreach ($patients as $patient)
                             <tr class="patient-row" data-id="{{ $patient->id }}" data-name="{{ $patient->nom }} {{ $patient->prenom }}">
                                 <td>{{ $patient->id }}</td>
-                                <td>{{ $patient->nom }}</td>
-                                <td>{{ $patient->prenom }}</td>
+                                <td>{{ $patient->nom }} {{ $patient->prenom }}</td>
                                 <td>{{ $patient->sexe == 'M' ? 'M' : 'F' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
                                 <td>

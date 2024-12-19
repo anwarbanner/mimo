@@ -197,7 +197,7 @@
     <!-- Buttons for Edit and Delete -->
 <div class="flex justify-center items-center space-x-4 mt-6">
     <!-- Edit Button -->
-    <form action="{{ route('visites.edit', $visite->id) }}">
+    <form action="{{ route('visites.edit', $visite->id) }}" method="GET">
         <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-blue-600">
             Modifier visite
         </button>
