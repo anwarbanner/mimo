@@ -104,6 +104,11 @@
         </div>
         
     </form>
+    <form action="{{ route('visites.show', $visite->id) }}">
+        <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-blue-600">
+            retour
+        </button>
+    </form>
 <br>
     <script>
         let productIndex = {{ $visite->invoice->products->count() }};

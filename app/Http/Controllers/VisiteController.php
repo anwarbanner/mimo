@@ -249,7 +249,15 @@ class VisiteController extends Controller
         $visite->load('rdv.patient', 'invoice.products', 'invoice.soins', 'visiteImages');
 
         return view('visites.show', compact('visite'));
+        $visite = Visite::with('invoice')->findOrFail($id);
+    $invoice = $visite->invoice;
+
+    return view('visites.show', compact('visite', 'invoice'));
+        
     }
+
+    
+
 
 
     /**
@@ -341,7 +349,7 @@ class VisiteController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('visites.index')->with('success', 'Visite updated successfully!');
+            return redirect()->route('visites.edit')->with('success', 'Visite updated successfully!');
         } catch (Exception $e) {
             // If any exception occurs, rollback the transaction
             DB::rollBack();

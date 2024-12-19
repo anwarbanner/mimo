@@ -102,5 +102,5 @@ Route::get('/invoices/{invoiceId}/generate-pdf', [InvoiceController::class, 'gen
 
 // Fallback route to handle unauthorized access
 Route::fallback(function () {
-    return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
+    return redirect()->route('login')->with('error', 'Vous pouvez etre connecte pour acceder a cette page.');
 });
