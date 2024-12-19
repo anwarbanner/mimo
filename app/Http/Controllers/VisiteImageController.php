@@ -21,7 +21,7 @@ class VisiteImageController extends Controller
         $visiteId = $request->input('visite_id');
         $imageCount = VisiteImage::where('visite_id', $visiteId)->count();
 
-        if ($imageCount >= 4) {
+        if ($imageCount >= 6) {
             return response()->json(['error' => 'Vous pouvez ajouter 4 images maximum pour chaque visite.'], 400);
         }
 

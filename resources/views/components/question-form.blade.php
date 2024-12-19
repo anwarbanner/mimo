@@ -37,8 +37,9 @@
                                                    class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500"
                                                    placeholder="Entrez votre réponse ici">
                                         @elseif ($question->type === 'choix_unique')
+                                        <div class="grid grid-cols-3 gap-4">
                                             @foreach ($question->choix as $choix)
-                                                <div class="flex items-center mb-2">
+                                                <div class="flex items-center">
                                                     <input type="radio" id="choix_{{ $choix->id }}"
                                                            name="questions[{{ $question->id }}][reponse]"
                                                            value="{{ $choix->texte }}"
@@ -47,9 +48,11 @@
                                                     <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
                                                 </div>
                                             @endforeach
-                                        @elseif ($question->type === 'choix_multiple')
+                                        </div>
+                                    @elseif ($question->type === 'choix_multiple')
+                                        <div class="grid grid-cols-3 gap-4">
                                             @foreach ($question->choix as $choix)
-                                                <div class="flex items-center mb-2">
+                                                <div class="flex items-center">
                                                     <input type="checkbox" id="choix_{{ $choix->id }}"
                                                            name="questions[{{ $question->id }}][reponse][]"
                                                            value="{{ $choix->texte }}"
@@ -58,7 +61,8 @@
                                                     <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
                                                 </div>
                                             @endforeach
-                                        @endif
+                                        </div>
+                                    @endif
 
                                         <!-- Champ pour les informations supplémentaires -->
                                         <textarea name="questions[{{ $question->id }}][informationSup]"

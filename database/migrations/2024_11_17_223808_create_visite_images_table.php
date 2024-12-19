@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('visite_images', function (Blueprint $table) {
             $table->id();
-            $table->binary('images');
+            $table->longblob('images');
             $table->unsignedBigInteger('visite_id');
             $table->text('description');
             $table->timestamps();
