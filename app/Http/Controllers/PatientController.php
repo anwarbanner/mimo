@@ -13,7 +13,7 @@ class PatientController extends Controller
     public function index(Request $request)
 {
     // Initialize the query builder
-    $patients = Patient::query(10);
+    $patients = Patient::query();
 
     // Apply filters if search parameters are provided
     if ($request->filled('search')) {
@@ -28,7 +28,7 @@ class PatientController extends Controller
     }
 
     // Paginate results
-    $patients = $patients->paginate(1);
+    $patients = $patients->paginate(10);
 
     // Return the view with the patients data
     return view('patients.index', compact('patients'));
