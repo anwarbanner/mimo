@@ -33,12 +33,21 @@
             </div>
         </div>
 
-        <!-- Search Form -->
         <div class="row mb-4">
             <div class="col-12 col-md-6 col-lg-4 mx-auto">
-                <input type="text" id="patient_search" class="form-control" placeholder="Chercher par ID, nom ou prénom">
+                <form action="{{ route('patients.index') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="search" id="patient_search" class="form-control" placeholder="Chercher par ID, nom ou prénom" value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Chercher
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
+        
 
         <!-- Success Message -->
         @if (session('success'))
@@ -47,7 +56,6 @@
             </div>
         @endif
 
-        <!-- Patients Table -->
         <div class="row">
             <div class="col-12 table-responsive">
                 <table class="table table-striped table-bordered">
@@ -69,7 +77,7 @@
                                 <td>{{ \Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
                                 <td>
                                     <!-- Button to Open Modal -->
-                                    <button type="button" class="btn btn-primary  shadow-sm" data-bs-toggle="modal" data-bs-target="#actionModal{{ $patient->id }}">
+                                    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#actionModal{{ $patient->id }}">
                                         <i class="bi bi-gear"></i> Actions
                                     </button>
                                 
@@ -84,7 +92,7 @@
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                
+                                        
                                                 <!-- Modal Body -->
                                                 <div class="modal-body">
                                                     <div class="row g-4">
@@ -111,7 +119,7 @@
                                                             <form action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="w-100">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-outline-danger w-100 py-3 px-4 shadow-sm hover-shadow">
+                                                                <button type="submit" class="btn btn-outline-danger w-100 py-3 px-4 shadow-sm hover-shadow delete-button">
                                                                     <i class="bi bi-trash"></i> Supprimer
                                                                 </button>
                                                             </form>
@@ -122,33 +130,42 @@
                                         </div>
                                     </div>
                                 </td>
-                                
-                                
-                                
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+        
         {{-- Pagination links --}}
-{{ $patients->links() }}
+        {{ $patients->links() }}
     </div>
-
-    <!-- JavaScript for Search Functionality -->
+    
+   
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('patient_search').addEventListener('input', function() {
-            var searchValue = this.value.toLowerCase();
-            var patientRows = document.querySelectorAll('.patient-row');
-
-            patientRows.forEach(function(row) {
-                var patientID = row.getAttribute('data-id').toLowerCase();
-                var patientName = row.getAttribute('data-name').toLowerCase();
-                if (patientID.includes(searchValue) || patientName.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission immediately
+                    const form = button.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Vous ne pourrez pas revenir en arrière !",
+                        icon: 'warning', // Corrected icon type
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
             });
         });
     </script>

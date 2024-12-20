@@ -39,7 +39,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
-                                            class="inline-block mt-1 sm:mt-0 px-3 py-1 sm:px-4 sm:py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-200 text-xs sm:text-sm">
+                                            class="inline-block mt-1 sm:mt-0 px-3 py-1 sm:px-4 sm:py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-200 text-xs sm:text-sm delete-button">
                                         Supprimer
                                     </button>
                                 </form>
@@ -51,3 +51,29 @@
         </div>
     </div>
 </x-app-layout>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission immediately
+                    const form = button.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Vous ne pourrez pas revenir en arrière !",
+                        icon: 'warning', // Corrected icon type
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>

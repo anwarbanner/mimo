@@ -10,12 +10,29 @@ use App\Models\Rdv;
 class PatientController extends Controller
 {
 
-    public function index()
-    {
+    public function index(Request $request)
+{
+    // Initialize the query builder
+    $patients = Patient::query(10);
 
-        $patients = Patient::paginate(10);
-        return view('patients.index', compact('patients'));
+    // Apply filters if search parameters are provided
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        
+        $patients->where(function ($query) use ($search) {
+            $query->where('id', 'like', "%$search%")
+                  ->orWhere('nom', 'like', "%$search%")
+                  ->orWhere('prenom', 'like', "%$search%")
+                  ->orWhere('telephone', 'like', "%$search%");
+        });
     }
+
+    // Paginate results
+    $patients = $patients->paginate(1);
+
+    // Return the view with the patients data
+    return view('patients.index', compact('patients'));
+}
 
 
     public function create()

@@ -59,7 +59,7 @@
                     <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white text-xs rounded-full hover:bg-red-700 transition duration-200 transform">
+                        <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white text-xs rounded-full hover:bg-red-700 transition duration-200 transform delete-button">
                             <i class="fas fa-trash-alt mr-2"></i> Supprimer
                         </button>
                     </form>
@@ -99,4 +99,29 @@
 
 <!-- Add Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission immediately
+                    const form = button.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Vous ne pourrez pas revenir en arrière !",
+                        icon: 'warning', // Corrected icon type
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
