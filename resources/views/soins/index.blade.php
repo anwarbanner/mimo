@@ -35,14 +35,14 @@
                                    class="inline-block mb-1 sm:mb-0 px-3 py-1 sm:px-4 sm:py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-200 text-xs sm:text-sm">
                                     Modifier
                                 </a>
-                                <form action="{{ route('soins.destroy', $soin->id) }}" method="POST" class="inline">
+                                <!--<form action="{{ route('soins.destroy', $soin->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
                                             class="inline-block mt-1 sm:mt-0 px-3 py-1 sm:px-4 sm:py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-200 text-xs sm:text-sm delete-button">
                                         Supprimer
                                     </button>
-                                </form>
+                                </form>-->
                             </td>
                         </tr>
                     @endforeach

@@ -77,6 +77,10 @@
                 <label for="total_amount" class="block text-sm font-medium text-gray-700 mb-2">Montant Total</label>
                 <input type="text" id="total_amount" name="total_amount" value="{{ $invoice->total_amount }}" class="block w-full bg-gray-100 border border-gray-300 rounded-lg shadow-sm p-3" readonly>
             </div>
+            <div class="mb-6 mt-6">
+                <label for="total_amount" class="block text-sm font-medium text-gray-700 mb-2">Montant Total avec TVA ( {{ auth()->user()->tva }} %)</label>
+                <input type="text" id="total_amount" name="total_amount" value="{{ $invoice->total_amount + ($invoice->total_amount * auth()->user()->tva/100) }}" class="block w-full bg-gray-100 border border-gray-300 rounded-lg shadow-sm p-3" readonly>
+            </div>
 
             <!-- Submit Button -->
             <div class="text-center">
