@@ -2,7 +2,10 @@
     <x-slot name="title">Réponses de {{ $patient->nom }}</x-slot>
     <div class="container mx-auto p-6 max-w-7xl">
         <h1 class="text-2xl font-bold mb-6 text-center">Réponses de {{ $patient->nom }} {{ $patient->prenom }}</h1>
-        
+        <button onclick="window.history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour
+        </button>
+
         <!-- Message de succès -->
         @if (session('success'))
             <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg mb-4">
@@ -17,10 +20,10 @@
 
                 <!-- Champ de recherche -->
                 <div class="mb-4">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Rechercher une question..." 
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Rechercher une question..."
                         class="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                     >
                 </div>
@@ -45,10 +48,10 @@
 
                                     <!-- Réponse (Editable) -->
                                     <td class="border border-gray-300 px-4 py-3 text-gray-700 text-sm">
-                                        <input 
-                                            type="text" 
-                                            name="responses[{{ $reponse->question->id }}][reponse]" 
-                                            value="{{ $reponse->valeur ?? '' }}" 
+                                        <input
+                                            type="text"
+                                            name="responses[{{ $reponse->question->id }}][reponse]"
+                                            value="{{ $reponse->valeur ?? '' }}"
                                             class="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
                                             placeholder="Réponse"
                                         >
@@ -56,8 +59,8 @@
 
                                     <!-- Informations Supplémentaires (Editable) -->
                                     <td class="border border-gray-300 px-4 py-3 text-gray-700 text-sm">
-                                        <textarea 
-                                            name="responses[{{ $reponse->question->id }}][informationSup]" 
+                                        <textarea
+                                            name="responses[{{ $reponse->question->id }}][informationSup]"
                                             rows="2"
                                             class="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
                                             placeholder="Informations supplémentaires (facultatif)"
@@ -71,11 +74,11 @@
 
                 <!-- Boutons de soumission -->
                 <div class="mt-6 flex justify-end space-x-4">
-                    <a href="{{ route('patients.show', $patient->id) }}" 
+                    <a href="{{ route('patients.show', $patient->id) }}"
                        class="px-6 py-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition">
                         Annuler
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             class="px-6 py-3 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition">
                         Enregistrer les Modifications
                     </button>

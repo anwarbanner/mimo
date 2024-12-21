@@ -48,7 +48,7 @@
                 </p>
             </div>
 
-            @if ($reponses->isNotEmpty())
+            @if (!$alreadyPassed)
                 <!-- Section Questionnaire -->
                 <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Questionnaire</h2>
@@ -139,9 +139,19 @@
                     </div>
 
                 </div>
+            @else
+                <div class="w-full max-w-7xl bg-white  rounded-lg p-2">
+                    <div class="alert alert-warning">
+                        Vous avez déjà remplis le questionnaire pour ce patient veuillez voire les reponse.
+                    </div>
+                    <a href="{{ route('reponses.show', $rdv->patient->id) }}"
+                        class="inline-block px-4 py-2 sm:px-6 sm:py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out w-full sm:w-auto mb-4 sm:mb-0">
+                        <i class="fas fa-file-alt mr-2"></i> Voir Questionnaire
+                    </a>
+                </div>
             @endif
             <!-- Observation -->
-            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
+            <div class="w-full max-w-7xl bg-white  rounded-lg p-2">
                 <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>
                 <textarea name="observation" id="observation" rows="3"
                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"

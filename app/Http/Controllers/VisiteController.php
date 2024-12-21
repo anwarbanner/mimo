@@ -10,6 +10,7 @@ use App\Models\Patient;
 use App\Models\Product;
 use App\Models\Question;
 use App\Models\Rdv;
+use App\Models\Reponse;
 use App\Models\Soin;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -60,13 +61,18 @@ class VisiteController extends Controller
     {
         $id_rdv = $request->query('id_rdv');
         $rdv = Rdv::with('patient')->where('id', $id_rdv)->first();
+        // Check if the patient has already passed the questionnaire
+        $patientId = $rdv->patient->id;
+        $alreadyPassed = Reponse::where('patient_id', $patientId)->exists();
+
         // Pass necessary data to the view
         $products = Product::all();
         $soins = Soin::all();
         $questions = Question::with('choix')->orderBy('ordre', 'asc')->get();
 
-        return view('visites.create', compact('rdv', 'products', 'soins', 'questions'));
+        return view('visites.create', compact('rdv', 'products', 'soins', 'questions', 'alreadyPassed'));
     }
+
 
     /**
      * Store a newly created resource in storage.
