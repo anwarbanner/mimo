@@ -206,7 +206,7 @@
     <form action="{{ route('visites.destroy', $visite->id) }}" method="POST">
         @csrf
         @method('DELETE')
-        <button type="submit" class="bg-red-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-red-600">
+        <button type="submit" class="bg-red-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-red-600 delete-button">
             Supprimer la visite
         </button>
     </form>
@@ -221,3 +221,29 @@
     }
 </script>
 </x-app-layout>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission immediately
+                    const form = button.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Vous ne pourrez pas revenir en arrière !",
+                        icon: 'warning', // Corrected icon type
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>

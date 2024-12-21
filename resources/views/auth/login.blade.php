@@ -51,7 +51,7 @@
                       <div class="col-lg-6">
                           <div class="p-5">
                               <div class="text-center">
-                                  <h1 class="h4 text-gray-900 mb-4">Bienvenu!</h1>
+                                  <h1 class="h5 text-gray-900 mb-4">Connectez-vous pour acceder à votre compte</h1>
                               </div>
                               <form action="{{ route('login.action') }}" method="POST" class="user">
                                   @csrf

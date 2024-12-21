@@ -103,7 +103,7 @@
                                                             <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST" class="w-100">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-outline-danger w-100 py-3">
+                                                                <button type="submit" class="btn btn-outline-danger w-100 py-3 delete-button">
                                                                     <i class="bi bi-trash"></i> Supprimer
                                                                 </button>
                                                             </form>
@@ -138,6 +138,7 @@
     </div>
     <br> <br>
     <!-- JavaScript to handle WhatsApp confirmation -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
        $(document).on('click', '.confirmWhatsApp', function () {
     let invoiceId = $(this).data('invoice-id');
@@ -164,5 +165,30 @@
     });
 });
 
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission immediately
+                    const form = button.closest('form');
+                    
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Vous ne pourrez pas revenir en arrière !",
+                        icon: 'warning', // Corrected icon type
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
     </script>
 </x-app-layout>
