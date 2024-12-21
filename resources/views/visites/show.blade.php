@@ -72,8 +72,8 @@
             @foreach ($visite->visiteImages as $image)
                 <div class="image-container flex-shrink-0 w-64">
                     <!-- Thumbnail Image -->
-                    <img src="data:image/png;base64,{{ base64_encode($image->images) }}" 
-                         alt="Visite Image" 
+                    <img src="data:image/png;base64,{{ base64_encode($image->images) }}"
+                         alt="Visite Image"
                          class="w-full h-40 rounded-lg object-cover border border-gray-300 shadow-sm cursor-pointer"
                          data-bs-toggle="modal" data-bs-target="#imageModal" onclick="openModal('{{ base64_encode($image->images) }}')" />
                 </div>
@@ -131,7 +131,7 @@
                 <p class="text-gray-600 text-center">Aucun produit utilisé.</p>
             @endif
         </div>
-        
+
     </div>
 
     <!-- Soins Réalisés Section -->
@@ -169,7 +169,7 @@
             @else
                 <p class="text-gray-600 text-center">Aucun soin réalisé.</p>
             @endif
-        </div>        
+        </div>
     </div>
 
   <!-- Facturation Section -->
@@ -187,6 +187,22 @@
                 Voir Facture de Visite
             </button>
         </form>
+    </div>
+</div>
+  <div class="bg-gradient-to-br from-white to-gray-50 rounded-xl mb-8 border border-gray-300 shadow-md">
+    <!-- Header -->
+    <div class="bg-blue-500 text-white px-6 py-4 rounded-t-xl flex items-center">
+        <i class="fas fa-invoice text-3xl mr-3"></i>
+        <span class="text-xl font-semibold">Questionnaire</span>
+    </div>
+
+    <!-- Button Wrapper -->
+    <div class="px-6 py-4">
+        <a href="{{ route('reponses.show', $visite->rdv->patient->id) }}"
+            class="bg-green-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-600bg-green-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-600">
+            <i class="fas fa-file-alt mr-2"></i> Voir Questionnaire
+        </a>
+
     </div>
 </div>
 
@@ -228,7 +244,7 @@
                 button.addEventListener('click', function(event) {
                     event.preventDefault(); // Prevent form submission immediately
                     const form = button.closest('form');
-                    
+
                     Swal.fire({
                         title: 'Êtes-vous sûr ?',
                         text: "Vous ne pourrez pas revenir en arrière !",
