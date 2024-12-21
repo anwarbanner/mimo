@@ -152,18 +152,30 @@ class InvoiceController extends Controller
      * Update the specified invoice in storage.
      */
     public function update(Request $request, $id)
-    {
-        $invoice = Invoice::findOrFail($id);
-        $invoice->update([
-            'patient_id' => $request->patient_id,
-            'total_amount' => $request->total_amount,
-        ]);
+{
+    $invoice = Invoice::findOrFail($id);
+    
+    // Update basic invoice data
+    $invoice->update([
+        'patient_id' => $request->patient_id,
+        'total_amount' => $request->total_amount,
+    ]);
 
-        $invoice->products()->sync($request->products);
-        $invoice->soins()->sync($request->soins);
+    // Sync products with quantities
+    $products = collect($request->products)->mapWithKeys(function ($item) {
+        return [$item['id'] => ['quantity' => $item['quantity']]];
+    });
 
-        return redirect()->route('invoices.index')->with('success', 'Invoice updated successfully');
-    }
+    $soins = collect($request->soins)->mapWithKeys(function ($item) {
+        return [$item['id'] => ['quantity' => $item['quantity']]];
+    });
+
+    $invoice->products()->sync($products);
+    $invoice->soins()->sync($soins);
+
+    return redirect()->route('invoices.index')->with('success', 'Invoice updated successfully');
+}
+
 
     /**
      * Remove the specified invoice from storage.
