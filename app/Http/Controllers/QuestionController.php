@@ -21,7 +21,7 @@ class QuestionController extends Controller
     {
         session([$key => $value]);
     }
-    
+
     public function startForPatient($patientId)
     {
         $patient = Patient::findOrFail($patientId);
@@ -38,7 +38,7 @@ class QuestionController extends Controller
 
 
 
-    
+
     // public function index(Request $request)
     // {
     //     $currentPatientId = $this->getCurrentPatientId();
@@ -72,7 +72,7 @@ class QuestionController extends Controller
     //     $choices = collect($currentQuestion['choix'])->sortBy('ordre')->map(function ($choix) {
     //         return (object) $choix; // Convertir chaque choix en objet
     //     })->values();
-        
+
 
     //     return view('questions.index', [
     //         'currentQuestion' => (object) $currentQuestion,
@@ -116,7 +116,7 @@ class QuestionController extends Controller
         return view('questions.create');
     }
 
-   
+
 
 
 
@@ -155,18 +155,18 @@ class QuestionController extends Controller
         return redirect()->route('questions.create')->with('success', 'Question créée avec succès.');
     }
 
-    
 
 
 
-    
+
+
     public function edit($id)
     {
         $question = Question::with('choix')->findOrFail($id);
         return view('questions.edit', compact('question'));
     }
 
-    
+
 
 
 
@@ -201,11 +201,11 @@ class QuestionController extends Controller
         return redirect()->route('questions.index')->with('success', 'Question mise à jour avec succès.');
     }
 
-   
 
 
 
-    
+
+
     public function destroy($id)
     {
         $question = Question::findOrFail($id);
@@ -220,7 +220,7 @@ class QuestionController extends Controller
 
 
 
-    
+
 
 
 
@@ -229,8 +229,8 @@ class QuestionController extends Controller
         $question = Question::with('choix')->findOrFail($id);
         return view('questions.show', compact('question'));
     }
-    
-    
+
+
 
 
 
@@ -256,7 +256,7 @@ class QuestionController extends Controller
     //         'date_reponse' => now(),
     //         'question_id' => $validated['question_id'],
     //         'patient_id' => $currentPatientId,
-            
+
     //     ];
     //     session(['responses' => $responses]);
 
@@ -279,8 +279,8 @@ class QuestionController extends Controller
 
     foreach ($responses as $response) {
         DB::table('reponses')->insert([
-            'valeur' => isset($response['reponse']) 
-                    ? (is_array($response['reponse']) ? implode(',', $response['reponse']) : $response['reponse']) 
+            'valeur' => isset($response['reponse'])
+                    ? (is_array($response['reponse']) ? implode(',', $response['reponse']) : $response['reponse'])
                     : null,
             'informationSup' => $response['informationSup'] ?? null,
             'date_reponse' => now(),
@@ -382,7 +382,7 @@ class QuestionController extends Controller
         // Redirect to a thank you page
         return redirect()->route('questions.merci')->with('message', 'Your responses have been saved.');
     }
-    
+
 
 
 
@@ -404,25 +404,25 @@ class QuestionController extends Controller
     private function getNextQuestion()
     {
         $currentQuestionId = session('currentQuestionId');
-        
+
         if (!$currentQuestionId) {
             // Récupérer la première question selon l'ordre
             return Question::orderBy('ordre', 'asc')->first();
         }
-    
+
         // Récupérer la question actuelle
         $currentQuestion = Question::find($currentQuestionId);
-    
+
         if ($currentQuestion) {
             // Récupérer la prochaine question selon l'ordre
             return Question::where('ordre', '>', $currentQuestion->ordre)
                 ->orderBy('ordre', 'asc')
                 ->first();
         }
-    
+
         return null; // Si aucune question n'est trouvée
     }
-    
+
 
         private function preloadQuestions()
     {
@@ -457,5 +457,5 @@ class QuestionController extends Controller
     }
 
 
-    
+
 }

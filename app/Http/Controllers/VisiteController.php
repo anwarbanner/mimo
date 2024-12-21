@@ -24,50 +24,37 @@ class VisiteController extends Controller
      */
 
 
-     public function index(Request $request)
-     {
-         // Get the filter and search parameters
-         $filter = $request->input('filter', 'today');
-         $search = $request->input('search');
-     
-         // Start building the query with patient relationship
-         $query = Rdv::with('patient');
-     
-         // Apply filter for 'today', 'month', or 'all'
-         if ($filter === 'today') {
-             $query->whereDate('start', now()->toDateString());
-         } elseif ($filter === 'month') {
-             $query->whereMonth('start', now()->month)->whereYear('start', now()->year);
-         }
-         // Note: No filter applied if 'all' is selected.
-     
-         // Apply search by title, patient ID, or name
-         if ($search) {
-             $query->where(function ($q) use ($search) {
-                 $q->where('title', 'like', "%$search%")
-                     ->orWhereHas('patient', function ($query) use ($search) {
-                         $query->where('id', 'like', "%$search%")
-                             ->orWhere('nom', 'like', "%$search%")
-                             ->orWhere('prenom', 'like', "%$search%");
-                     });
-             });
-         }
-     
-         // Retrieve filtered and/or searched RDVs with pagination
-         $rdvs = $query->paginate(10);
-     
-         // Ensure the 'start' field is a Carbon instance and check for existing visits
-         foreach ($rdvs as $rdv) {
-             $rdv->start = Carbon::parse($rdv->start);
-             $rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
-         }
-     
-         // Pass data to the view
-         return view('visites.index', compact('rdvs'));
-     }
-     
-   
-     
+    public function index(Request $request)
+    {
+        $filter = $request->input('filter', 'today');
+        $search = $request->input('search');
+        $query = Rdv::with('patient');
+        if ($filter === 'today') {
+            $query->whereDate('start', now()->toDateString());
+        } elseif ($filter === 'month') {
+            $query->whereMonth('start', now()->month)->whereYear('start', now()->year);
+        }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                    ->orWhereHas('patient', function ($query) use ($search) {
+                        $query->where('id', 'like', "%$search%")
+                            ->orWhere('nom', 'like', "%$search%")
+                            ->orWhere('prenom', 'like', "%$search%");
+                    });
+            });
+        }
+        $query->orderBy('start', 'desc');
+        $rdvs = $query->paginate(10);
+        foreach ($rdvs as $rdv) {
+            $rdv->start = Carbon::parse($rdv->start);
+            $rdv->visite_exists = Visite::where('id_rdv', $rdv->id)->exists();
+        }
+        return view('visites.index', compact('rdvs'));
+    }
+
+
+
 
     public function create(Request $request)
     {
@@ -102,7 +89,7 @@ class VisiteController extends Controller
 
         // Check if a Visite already exists for the given RDV
         if (Visite::where('id_rdv', $validated['id_rdv'])->exists()) {
-            return redirect()->back()->withErrors(['id_rdv' => 'A Visite for this RDV already exists.']);
+            return redirect()->back()->withErrors(['id_rdv' => 'Une Visite pour ce RDV existe déjà.']);
         }
 
         // Begin a database transaction to ensure all operations are atomic
@@ -156,12 +143,12 @@ class VisiteController extends Controller
                             'image' => $image->getClientOriginalName(),
                             'error' => $image->getErrorMessage()
                         ]);
-                        return redirect()->back()->withErrors(['images' => 'One or more image files are invalid.']);
+                        return redirect()->back()->withErrors(['images' => 'Un ou plusieurs fichiers image ne sont pas valides.']);
                     }
 
                     // Check if file is too large or invalid format
-                    if ($image->getSize() > 2048000) { // 2MB size limit
-                        return redirect()->back()->withErrors(['images' => 'One of the images exceeds the maximum size of 2MB.']);
+                    if ($image->getSize() > 10485760) { // 10MB size limit
+                        return redirect()->back()->withErrors(['images' => "L'une des images dépasse la taille maximale de 10 Mo."]);
                     }
 
                     // Get the image content as a string
@@ -199,7 +186,7 @@ class VisiteController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('visites.index')->with('success', 'Visite submitted successfully!');
+            return redirect()->route('visites.index')->with('success', 'Visite soumise avec succès !');
         } catch (Exception $e) {
             // If any exception occurs, rollback the transaction
             DB::rollBack();
@@ -216,30 +203,6 @@ class VisiteController extends Controller
         }
     }
 
-
-
-
-    // public function today(Request $request)
-    // {
-    //     $query = Rdv::with('patient') // Eager load patient relationship
-    //         ->whereDate('start', Carbon::today());
-
-    //     if ($request->filled('search')) {
-    //         $search = $request->search;
-    //         $query->where(function ($q) use ($search) {
-    //             $q->where('title', 'like', "%$search%")
-    //                 ->orWhereHas('patient', function ($query) use ($search) {
-    //                     $query->where('nom', 'like', "%$search%")
-    //                         ->orWhere('prenom', 'like', "%$search%");
-    //                 });
-    //         });
-    //     }
-
-    //     $rdvs = $query->get();
-
-    //     return view('visites.today', compact('rdvs'));
-    // }
-
     /**
      * Display the specified resource.
      */
@@ -249,14 +212,13 @@ class VisiteController extends Controller
         $visite->load('rdv.patient', 'invoice.products', 'invoice.soins', 'visiteImages');
 
         return view('visites.show', compact('visite'));
-        $visite = Visite::with('invoice')->findOrFail($id);
-    $invoice = $visite->invoice;
+        $visite = Visite::with('invoice')->findOrFail($visite->id);
+        $invoice = $visite->invoice;
 
-    return view('visites.show', compact('visite', 'invoice'));
-        
+        return view('visites.show', compact('visite', 'invoice'));
     }
 
-    
+
 
 
 
@@ -329,7 +291,7 @@ class VisiteController extends Controller
                             'image' => $image->getClientOriginalName(),
                             'error' => $image->getErrorMessage()
                         ]);
-                        return redirect()->back()->withErrors(['images' => 'One or more image files are invalid.']);
+                        return redirect()->back()->withErrors(['images' => 'Un ou plusieurs fichiers image ne sont pas valides.']);
                     }
 
                     $imageContent = file_get_contents($image->getRealPath());
@@ -349,7 +311,7 @@ class VisiteController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('visites.edit')->with('success', 'Visite updated successfully!');
+            return redirect()->route('visites.edit')->with('success', 'Visite mise à jour avec succès !');
         } catch (Exception $e) {
             // If any exception occurs, rollback the transaction
             DB::rollBack();
