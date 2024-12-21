@@ -49,21 +49,22 @@
                 </div>
 
                 <!-- Product Actions -->
-                <div class="px-4 pt-3 pb-2 flex justify-between items-center">
+                <div class="px-4 pt-3 pb-2 flex justify-center items-center">
                     <form action="{{ route('products.edit', $product->id) }}" method="GET">
                         <button type="submit" class="inline-block px-4 py-2 bg-indigo-600 text-white text-xs rounded-full hover:bg-indigo-700 transition duration-200 transform">
                             <i class="fas fa-edit mr-2"></i> Modifier
                         </button>
                     </form>
-                    
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
+                </div>
+                   
+                   <!-- <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="inline-block px-4 py-2 bg-red-600 text-white text-xs rounded-full hover:bg-red-700 transition duration-200 transform delete-button">
                             <i class="fas fa-trash-alt mr-2"></i> Supprimer
                         </button>
-                    </form>
-                </div>
+                    </form>-->
+                
 
             </div>
         </div>
