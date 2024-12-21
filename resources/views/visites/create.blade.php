@@ -1,8 +1,9 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-6">
-       
-        <h1 class="text-4xl lg:text-5xl text-center text-blue-700 mb-6 lg:mb-8"> Créer la Visite pour {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</h1>
-        
+
+        <h1 class="text-4xl lg:text-5xl text-center text-blue-700 mb-6 lg:mb-8"> Créer la Visite pour
+            {{ $rdv->patient->nom }} {{ $rdv->patient->prenom }}</h1>
+
         <!-- Gestion des erreurs -->
         @if ($errors->any())
             <div class="bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-md">
@@ -47,94 +48,98 @@
                 </p>
             </div>
 
+            @if ($reponses->isNotEmpty())
+                <!-- Section Questionnaire -->
+                <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Questionnaire</h2>
+                    <div class="w-full max-w-7xl bg-white shadow-lg rounded-lg p-8">
+                        @php
+                            $chunks = $questions->chunk(ceil($questions->count() / 3)); // Diviser en 3 parties
+                        @endphp
 
-            <!-- Section Questionnaire -->     
-            <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Questionnaire</h2>
-                <div class="w-full max-w-7xl bg-white shadow-lg rounded-lg p-8">
-                    @php
-                        $chunks = $questions->chunk(ceil($questions->count() / 3)); // Diviser en 3 parties
-                    @endphp
+                        <!-- Accordéon -->
+                        <div class="space-y-4">
+                            @foreach ($chunks as $index => $chunk)
+                                <div class="border border-gray-200 rounded-lg">
+                                    <button type="button"
+                                        class="w-full flex justify-between items-center px-4 py-3 text-gray-800 font-medium text-lg focus:outline-none"
+                                        onclick="toggleAccordion('accordion-{{ $index }}')">
+                                        Partie {{ $index + 1 }}
+                                        <svg id="icon-accordion-{{ $index }}" xmlns="http://www.w3.org/2000/svg"
+                                            class="h-6 w-6 transition-transform transform" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    <div id="accordion-{{ $index }}"
+                                        class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                                        <div class="p-4 bg-gray-50">
+                                            @foreach ($chunk as $question)
+                                                <div class="mb-6">
+                                                    <h3 class="text-lg font-medium text-gray-800 mb-2">
+                                                        {{ $question->texte }}</h3>
 
-                    <!-- Accordéon -->
-                    <div class="space-y-4">
-                        @foreach ($chunks as $index => $chunk)
-                            <div class="border border-gray-200 rounded-lg">
-                                <button type="button"
-                                    class="w-full flex justify-between items-center px-4 py-3 text-gray-800 font-medium text-lg focus:outline-none"
-                                    onclick="toggleAccordion('accordion-{{ $index }}')">
-                                    Partie {{ $index + 1 }}
-                                    <svg id="icon-accordion-{{ $index }}" xmlns="http://www.w3.org/2000/svg"
-                                        class="h-6 w-6 transition-transform transform" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-                                <div id="accordion-{{ $index }}"
-                                    class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                                    <div class="p-4 bg-gray-50">
-                                        @foreach ($chunk as $question)
-                                            <div class="mb-6">
-                                                <h3 class="text-lg font-medium text-gray-800 mb-2">
-                                                    {{ $question->texte }}</h3>
+                                                    <!-- Input caché pour question_id -->
+                                                    <input type="hidden"
+                                                        name="questions[{{ $question->id }}][question_id]"
+                                                        value="{{ $question->id }}">
 
-                                                <!-- Input caché pour question_id -->
-                                                <input type="hidden"
-                                                    name="questions[{{ $question->id }}][question_id]"
-                                                    value="{{ $question->id }}">
-
-                                                <!-- Options selon le type de question -->
-                                                @if ($question->type === 'texte')
-                                                    <input type="text"
-                                                        name="questions[{{ $question->id }}][reponse]"
-                                                        class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500"
-                                                        placeholder="Entrez votre réponse ici">
-                                                @elseif ($question->type === 'choix_unique')
-                                                <div class="grid grid-cols-4 gap-4">
-                                                    @foreach ($question->choix as $choix)
-                                                        <div class="flex items-center">
-                                                            <input type="radio" id="choix_{{ $choix->id }}"
-                                                                   name="questions[{{ $question->id }}][reponse]"
-                                                                   value="{{ $choix->texte }}"
-                                                                   class="form-radio h-5 w-5 text-blue-600"
-                                                                   onclick="toggleInfoField(this, '{{ $question->id }}')">
-                                                            <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                    <!-- Options selon le type de question -->
+                                                    @if ($question->type === 'texte')
+                                                        <input type="text"
+                                                            name="questions[{{ $question->id }}][reponse]"
+                                                            class="border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500"
+                                                            placeholder="Entrez votre réponse ici">
+                                                    @elseif ($question->type === 'choix_unique')
+                                                        <div class="grid grid-cols-4 gap-4">
+                                                            @foreach ($question->choix as $choix)
+                                                                <div class="flex items-center">
+                                                                    <input type="radio"
+                                                                        id="choix_{{ $choix->id }}"
+                                                                        name="questions[{{ $question->id }}][reponse]"
+                                                                        value="{{ $choix->texte }}"
+                                                                        class="form-radio h-5 w-5 text-blue-600"
+                                                                        onclick="toggleInfoField(this, '{{ $question->id }}')">
+                                                                    <label for="choix_{{ $choix->id }}"
+                                                                        class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
-                                                </div>
-                                            @elseif ($question->type === 'choix_multiple')
-                                                <div class="grid grid-cols-5 gap-4">
-                                                    @foreach ($question->choix as $choix)
-                                                        <div class="flex items-center">
-                                                            <input type="checkbox" id="choix_{{ $choix->id }}"
-                                                                   name="questions[{{ $question->id }}][reponse][]"
-                                                                   value="{{ $choix->texte }}"
-                                                                   class="form-checkbox h-5 w-5 text-blue-600"
-                                                                   onclick="toggleInfoField(this, '{{ $question->id }}')">
-                                                            <label for="choix_{{ $choix->id }}" class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                    @elseif ($question->type === 'choix_multiple')
+                                                        <div class="grid grid-cols-5 gap-4">
+                                                            @foreach ($question->choix as $choix)
+                                                                <div class="flex items-center">
+                                                                    <input type="checkbox"
+                                                                        id="choix_{{ $choix->id }}"
+                                                                        name="questions[{{ $question->id }}][reponse][]"
+                                                                        value="{{ $choix->texte }}"
+                                                                        class="form-checkbox h-5 w-5 text-blue-600"
+                                                                        onclick="toggleInfoField(this, '{{ $question->id }}')">
+                                                                    <label for="choix_{{ $choix->id }}"
+                                                                        class="ml-2 text-gray-700">{{ $choix->texte }}</label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
-                                                </div>
-                                            @endif
+                                                    @endif
 
-                                                <!-- Champ pour les informations supplémentaires -->
-                                                <textarea name="questions[{{ $question->id }}][informationSup]" id="info_{{ $question->id }}"
-                                                    placeholder="Ajoutez des informations supplémentaires (facultatif)"
-                                                    class="mt-2 border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500 hidden"></textarea>
-                                            </div>
-                                        @endforeach
+                                                    <!-- Champ pour les informations supplémentaires -->
+                                                    <textarea name="questions[{{ $question->id }}][informationSup]" id="info_{{ $question->id }}"
+                                                        placeholder="Ajoutez des informations supplémentaires (facultatif)"
+                                                        class="mt-2 border border-gray-300 rounded-lg p-4 w-full focus:ring-2 focus:ring-blue-500 hidden"></textarea>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+
+
                     </div>
 
-
                 </div>
-
-            </div>
-
+            @endif
             <!-- Observation -->
             <div class="w-full max-w-7xl bg-white  rounded-lg p-8">
                 <label for="observation" class="block text-gray-700 font-medium mb-2">Observation</label>

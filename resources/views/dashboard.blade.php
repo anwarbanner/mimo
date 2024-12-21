@@ -1,6 +1,6 @@
+<title>Tableau de bord</title>
 <x-app-layout>
-<x-slot name="title">Tableau de bord</x-slot>
-        
+
 
 <div class="container-fluid">
 
@@ -143,13 +143,13 @@
                                     </div>
                                     <div class="mt-4 text-center small">
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-primary">?????</i> 
+                                            <i class="fas fa-circle text-primary">?????</i>
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-success">?????</i> 
+                                            <i class="fas fa-circle text-success">?????</i>
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info">?????</i> 
+                                            <i class="fas fa-circle text-info">?????</i>
                                         </span>
                                     </div>
                                 </div>
