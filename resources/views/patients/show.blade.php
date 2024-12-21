@@ -92,48 +92,55 @@
     </div>
     <!-- Modal -->
     <div class="modal fade" id="invoicesModal" tabindex="-1" aria-labelledby="invoicesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg md:modal-md sm:modal-sm"> <!-- Responsive modal sizes -->
             <div class="modal-content">
-                <div class="modal-header bg-blue-500 text-white">
-                    <h5 class="modal-title" id="invoicesModalLabel">Historique des Factures</h5>
+                <div class="modal-header bg-blue-500 text-white py-3"> <!-- Header with proper padding -->
+                    <h5 class="modal-title text-base md:text-lg" id="invoicesModalLabel">Historique des Factures</h5>
                     <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4 md:p-3 sm:p-2 max-h-96 overflow-y-auto"> <!-- Make modal body scrollable -->
                     @if($patient->invoices->isEmpty())
-                        <p class="text-gray-700">Aucune facture trouvée pour ce patient.</p>
+                        <p class="text-gray-700 text-sm md:text-base">Aucune facture trouvée pour ce patient.</p>
                     @else
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID Facture</th>
-                                    <th>Date</th>
-                                    <th>Montant Total</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($patient->invoices as $invoice)
+                        <div class="overflow-auto"> <!-- Scrollable table for smaller screens -->
+                            <table class="table table-bordered table-sm md:table-md lg:table-lg"> <!-- Responsive table size -->
+                                <thead class="table-light">
                                     <tr>
-                                        <td>{{ $invoice->id }}</td>
-                                        <td>{{ $invoice->created_at->format('d/m/Y') }}</td>
-                                        <td>{{ $invoice->total_amount + ($invoice->total_amount * auth()->user()->tva/100), 2  }} DH</td>
-                                        <td><form action="{{ route('invoices.show', $invoice->id) }}">
-                                            <button type="submit" class="bg-green-500 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-600">
-                                                Voir Facture de Visite
-                                            </button>
-                                        </form></td>
+                                        <th>ID Facture</th>
+                                        <th>Date</th>
+                                        <th>Montant Total</th>
+                                        <th>Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach($patient->invoices as $invoice)
+                                        <tr>
+                                            <td>{{ $invoice->id }}</td>
+                                            <td>{{ $invoice->created_at->format('d/m/Y') }}</td>
+                                            <td>{{ number_format($invoice->total_amount + ($invoice->total_amount * auth()->user()->tva / 100), 2) }} DH</td>
+                                            <td>
+                                                <form action="{{ route('invoices.show', $invoice->id) }}">
+                                                    <button type="submit" class="bg-green-500 text-white px-3 md:px-4 lg:px-6 py-2 md:py-3 lg:py-4 rounded-md text-xs md:text-sm font-medium hover:bg-green-600">
+                                                        Voir
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        
                     @endif
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <div class="modal-footer py-2 md:py-3 lg:py-4"> <!-- Adjusted padding -->
+                    <button type="button" class="btn btn-secondary btn-sm md:btn-md lg:btn-lg" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
     </div>
+    
+
 
     <!-- Bootstrap 5 JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
